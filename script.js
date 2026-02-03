@@ -1,12 +1,40 @@
-// ==========================================
-// 1. CONFIGURATION
-// ==========================================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+/**
+ * ============================================================================
+ * ZULORA AI - MASTER CONTROLLER
+ * ============================================================================
+ * @version 3.0.0
+ * @author Zulora Inc.
+ * @description Handles Auth, Database, AI Generation (Groq), and UI Logic.
+ */
 
+// ----------------------------------------------------------------------------
+// 1. IMPORTS & CONFIGURATION
+// ----------------------------------------------------------------------------
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+    getAuth, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    signOut, 
+    onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { 
+    getDatabase, 
+    ref, 
+    set, 
+    get, 
+    update, 
+    push, 
+    child,
+    serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+/**
+ * FIREBASE CONFIGURATION
+ * Please ensure these are your correct project details.
+ */
 const firebaseConfig = {
-    apiKey: "AIzaSyC4XXmvYQap_Y1tXF-mWG82rL5MsBXjcvQ", // REPLACE THIS
+    apiKey: "AIzaSyC4XXmvYQap_Y1tXF-mWG82rL5MsBXjcvQ", // YOUR KEY
     authDomain: "zulorain.firebaseapp.com",
     projectId: "zulorain",
     storageBucket: "zulorain.firebasestorage.app",
@@ -14,202 +42,704 @@ const firebaseConfig = {
     appId: "1:972907481049:web:b4d02b9808f9e2f3f8bbc8"
 };
 
+/**
+ * AI CONFIGURATION (GROQ API)
+ * Using the Llama3-70b-8192 model for high-speed generation.
+ */
+const AI_CONFIG = {
+    apiKey: "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", // Groq Key
+    endpoint: "https://api.groq.com/openai/v1/chat/completions",
+    model: "llama3-70b-8192"
+};
+
+// Initialize Services
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 const provider = new GoogleAuthProvider();
 
-// State
-let currentUser = null;
-let currentProject = { name: "", template: "" };
-
-// ==========================================
-// 2. SUBDOMAIN CHECKER (The "Receptionist")
-// ==========================================
-(function checkSubdomain() {
-    const host = window.location.hostname; // e.g., shiven.zulora.in
-    const parts = host.split('.');
-    
-    // If running locally or on main domain
-    if (host.includes('localhost') || host === 'zulora.in' || host === 'www.zulora.in' || host.includes('vercel.app')) {
-        // Show Landing Page
-        return; 
+// ----------------------------------------------------------------------------
+// 2. STATE MANAGEMENT (Global Application State)
+// ----------------------------------------------------------------------------
+const AppState = {
+    currentUser: null,
+    userData: null,
+    currentProject: {
+        name: "",
+        method: "", // 'AI' or 'Template'
+        prompt: "",
+        templateId: ""
+    },
+    config: {
+        freeCredits: 10,
+        generationCost: 15, // As requested
+        referralReward: 10,
+        premiumCost: 199,
+        premiumCredits: 1000
     }
+};
+
+// ----------------------------------------------------------------------------
+// 3. CLASS: NOTIFICATION SYSTEM (Toast Manager)
+// ----------------------------------------------------------------------------
+class ToastManager {
+    static show(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        // Icon selection based on type
+        let icon = 'fa-check-circle';
+        if (type === 'error') icon = 'fa-exclamation-circle';
+        if (type === 'info') icon = 'fa-info-circle';
+
+        toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
+        
+        container.appendChild(toast);
+
+        // Remove after 4 seconds
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+}
+
+// ----------------------------------------------------------------------------
+// 4. CLASS: DATABASE MANAGER (Handles Firebase Logic)
+// ----------------------------------------------------------------------------
+class DatabaseManager {
     
-    // If we are here, it's a USER SUBDOMAIN (e.g. shiven.zulora.in)
-    const subdomain = parts[0];
-    document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px;'>Loading " + subdomain + "...</h1>";
-    
-    // Fetch User Site Data
-    const usersRef = ref(db, 'websites');
-    get(usersRef).then((snap) => {
-        let found = false;
-        snap.forEach(site => {
-            if (site.val().subdomain === subdomain) {
-                found = true;
-                renderLiveSite(site.val());
+    /**
+     * Creates or updates a user profile upon login.
+     * Handles Referral Code generation and attribution.
+     */
+    static async handleUserLogin(user) {
+        const userRef = ref(db, `users/${user.uid}`);
+        const snapshot = await get(userRef);
+
+        if (!snapshot.exists()) {
+            // NEW USER REGISTRATION
+            const refCode = this.generateReferralCode(user.uid);
+            
+            // Check if they came from a referral link (URL param)
+            const urlParams = new URLSearchParams(window.location.search);
+            const referredBy = urlParams.get('ref');
+
+            const newUserProfile = {
+                uid: user.uid,
+                name: user.displayName,
+                email: user.email,
+                photo: user.photoURL,
+                credits: AppState.config.freeCredits, // 10 Free Credits
+                isPremium: false,
+                referralCode: refCode,
+                referredBy: referredBy || null,
+                createdAt: serverTimestamp()
+            };
+
+            await set(userRef, newUserProfile);
+            
+            // If referred, reward the referrer
+            if (referredBy) {
+                this.processReferralReward(referredBy);
             }
-        });
-        if (!found) document.body.innerHTML = "<h1>404 - Site Not Found</h1>";
-    });
-})();
 
-function renderLiveSite(data) {
-    document.body.innerHTML = data.htmlContent;
-}
+            ToastManager.show("Welcome! 10 Free Credits Added.", "success");
+        } else {
+            // EXISTING USER
+            ToastManager.show(`Welcome back, ${user.displayName.split(' ')[0]}`, "success");
+        }
+        
+        // Start listening to live data
+        this.syncUserData(user.uid);
+    }
 
-// ==========================================
-// 3. AUTHENTICATION (Smart Trigger)
-// ==========================================
-window.showAuthModal = function() {
-    document.getElementById('modal-auth').style.display = 'flex';
-}
+    /**
+     * Generates a unique 6-character referral code
+     */
+    static generateReferralCode(uid) {
+        return (uid.substring(0, 3) + Math.floor(Math.random() * 999)).toUpperCase();
+    }
 
-window.triggerGoogleLogin = function() {
-    signInWithPopup(auth, provider).then((result) => {
-        const user = result.user;
-        // Save User if New
-        const userRef = ref(db, 'users/' + user.uid);
-        get(userRef).then((snap) => {
-            if (!snap.exists()) {
-                set(userRef, {
-                    name: user.displayName,
-                    email: user.email,
-                    photo: user.photoURL,
-                    plan: 'free'
+    /**
+     * Rewards the person who referred the new user
+     */
+    static async processReferralReward(refCode) {
+        // Find user ID by referral code (This requires a query, simplified here for performance)
+        // Note: For large scale, we would use a lookup table `referralCodes/{code}`.
+        // Implementing simple scan for now.
+        
+        const usersRef = ref(db, 'users');
+        const snapshot = await get(usersRef);
+        
+        snapshot.forEach((childSnap) => {
+            const userData = childSnap.val();
+            if (userData.referralCode === refCode) {
+                // Found the referrer! Add credits.
+                const newCredits = (userData.credits || 0) + AppState.config.referralReward;
+                const newRefCount = (userData.referralCount || 0) + 1;
+                
+                update(ref(db, `users/${userData.uid}`), {
+                    credits: newCredits,
+                    referralCount: newRefCount
                 });
             }
         });
+    }
+
+    /**
+     * Live Sync of User Data (Credits, Plan) to UI
+     */
+    static syncUserData(uid) {
+        const userRef = ref(db, `users/${uid}`);
         
-        document.getElementById('modal-auth').style.display = 'none';
+        // Real-time listener
+        onAuthStateChanged(auth, (user) => {
+           if(user) {
+               get(userRef).then(snap => {
+                   AppState.userData = snap.val();
+                   UIManager.updateDashboardUI(AppState.userData);
+               });
+           } 
+        });
+    }
+
+    /**
+     * Deducts credits from the user
+     */
+    static async deductCredits(amount) {
+        if (!AppState.currentUser || !AppState.userData) return false;
         
-        // If we were creating a site, continue saving
-        if(currentProject.name !== "") {
-            saveWebsiteToDB();
+        if (AppState.userData.credits < amount) {
+            ToastManager.show("Insufficient Credits! Please top up.", "error");
+            UIManager.openPremiumModal();
+            return false;
         }
 
-    }).catch((error) => {
-        alert("Login Error: " + error.message);
-    });
-}
-
-window.logout = function() {
-    signOut(auth).then(() => window.location.reload());
-}
-
-// Monitor Login Status
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        currentUser = user;
-        document.getElementById('view-landing').classList.remove('active-view');
-        document.getElementById('view-dashboard').classList.add('active-view');
+        const newBalance = AppState.userData.credits - amount;
+        await update(ref(db, `users/${AppState.currentUser.uid}`), {
+            credits: newBalance
+        });
         
-        // Update Sidebar
-        document.getElementById('user-name').innerText = user.displayName;
-        document.getElementById('user-avatar').src = user.photoURL;
+        // Update local state immediately for UI responsiveness
+        AppState.userData.credits = newBalance;
+        UIManager.updateDashboardUI(AppState.userData);
+        return true;
+    }
+
+    /**
+     * Upgrades user to Premium and adds credits
+     */
+    static async activatePremium() {
+        if (!AppState.currentUser) return;
         
-        loadUserWebsites();
+        const updates = {
+            isPremium: true,
+            credits: (AppState.userData.credits || 0) + AppState.config.premiumCredits,
+            planName: "Zulora Pro"
+        };
+        
+        await update(ref(db, `users/${AppState.currentUser.uid}`), updates);
+        ToastManager.show("Premium Activated! 1000 Credits Added.", "success");
     }
-});
 
-// ==========================================
-// 4. WIZARD & BUILDER LOGIC
-// ==========================================
-window.openProjectWizard = function() {
-    document.getElementById('modal-wizard').style.display = 'flex';
-}
+    /**
+     * Saves a published website to the Public Directory
+     */
+    static async publishWebsite(htmlContent, subdomain) {
+        const siteId = subdomain.toLowerCase(); // Using subdomain as key
+        
+        const siteData = {
+            owner: AppState.currentUser.uid,
+            subdomain: siteId,
+            html: htmlContent,
+            createdAt: serverTimestamp(),
+            views: 0
+        };
 
-window.closeModal = function(id) {
-    document.getElementById(id).style.display = 'none';
-}
+        // Save to public 'websites' node (for wildcard routing)
+        await set(ref(db, `websites/${siteId}`), siteData);
 
-window.wizardNextStep = function() {
-    const name = document.getElementById('new-site-name').value;
-    if (name.length < 3) {
-        alert("Subdomain must be at least 3 characters");
-        return;
-    }
-    currentProject.name = name;
-    document.getElementById('wiz-step-1').classList.remove('active');
-    document.getElementById('wiz-step-2').classList.add('active');
-}
+        // Add reference to user's profile
+        await update(ref(db, `users/${AppState.currentUser.uid}/sites/${siteId}`), {
+            subdomain: siteId,
+            publishedAt: Date.now()
+        });
 
-window.selectTemplate = function(tpl) {
-    currentProject.template = tpl;
-    document.getElementById('modal-wizard').style.display = 'none';
-    
-    // Go to Editor
-    document.getElementById('view-dashboard').classList.remove('active-view');
-    document.getElementById('view-editor').classList.add('active-view');
-    document.getElementById('editor-site-name').innerText = currentProject.name + ".zulora.in";
-    
-    // Generate Template HTML
-    const canvas = document.getElementById('website-preview');
-    canvas.innerHTML = `
-        <div style="font-family:sans-serif; text-align:center; padding:50px;">
-            <nav style="padding:20px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                <h3 contenteditable="true">${currentProject.name}</h3>
-                <div><a>Home</a> <a>Contact</a></div>
-            </nav>
-            <div style="padding:80px 20px; background:#f8fafc;">
-                <h1 contenteditable="true" style="font-size:3rem; color:#333;">Welcome to ${currentProject.name}</h1>
-                <p contenteditable="true" style="color:#666;">This is a ${tpl} template. Click text to edit.</p>
-                <button style="margin-top:20px; padding:10px 20px; background:#6366f1; color:white; border:none; border-radius:5px;">Get Started</button>
-            </div>
-        </div>
-    `;
-}
-
-// ==========================================
-// 5. PUBLISHING LOGIC
-// ==========================================
-window.publishSite = function() {
-    if (!currentUser) {
-        // User is not logged in? FORCE LOGIN NOW
-        window.showAuthModal(); 
-    } else {
-        saveWebsiteToDB();
+        return true;
     }
 }
 
-function saveWebsiteToDB() {
-    const html = document.getElementById('website-preview').innerHTML;
-    const siteId = Date.now(); // Simple ID
+// ----------------------------------------------------------------------------
+// 5. CLASS: AI ENGINE (Groq / Gemini)
+// ----------------------------------------------------------------------------
+class AIEngine {
     
-    // Save to 'websites' collection (for public access)
-    set(ref(db, 'websites/' + siteId), {
-        owner: currentUser.uid,
-        subdomain: currentProject.name,
-        htmlContent: html,
-        template: currentProject.template
-    });
-    
-    // Add to user's list
-    set(ref(db, 'users/' + currentUser.uid + '/sites/' + siteId), {
-        subdomain: currentProject.name
-    }).then(() => {
-        alert("Site Published! Live at: https://" + currentProject.name + ".zulora.in");
-        window.location.reload();
-    });
+    /**
+     * Calls Groq API to generate website code
+     */
+    static async generateWebsite(prompt) {
+        const systemPrompt = `
+            You are an expert Frontend Developer. 
+            Create a modern, responsive single-page website based on the user's description.
+            RULES:
+            1. Return ONLY raw HTML code. Do not include markdown blocks (like \`\`\`html).
+            2. Include embedded CSS in <style> tags within the head.
+            3. Use FontAwesome via CDN.
+            4. Make it look professional like Stripe or Linear.
+            5. Ensure it is fully responsive (mobile-friendly).
+            6. Do NOT include explanations, only code.
+        `;
+
+        const requestBody = {
+            model: AI_CONFIG.model,
+            messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: prompt }
+            ],
+            temperature: 0.7,
+            max_tokens: 8000
+        };
+
+        try {
+            const response = await fetch(AI_CONFIG.endpoint, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${AI_CONFIG.apiKey}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error.message);
+            }
+
+            // Extract content and clean markdown if present
+            let content = data.choices[0].message.content;
+            content = content.replace(/```html/g, '').replace(/```/g, '');
+            
+            return content;
+
+        } catch (error) {
+            console.error("AI Generation Error:", error);
+            ToastManager.show("AI Error: " + error.message, "error");
+            return null;
+        }
+    }
 }
 
-function loadUserWebsites() {
-    const sitesRef = ref(db, 'users/' + currentUser.uid + '/sites');
-    get(sitesRef).then((snap) => {
-        const container = document.getElementById('website-list-container');
-        if (snap.exists()) {
+// ----------------------------------------------------------------------------
+// 6. CLASS: UI MANAGER (Handles DOM Interaction)
+// ----------------------------------------------------------------------------
+class UIManager {
+    
+    // --- Navigation ---
+    static switchView(viewId) {
+        document.querySelectorAll('.app-view, .app-view-overlay').forEach(el => {
+            el.classList.remove('active-view');
+            el.classList.add('hidden-view');
+        });
+        
+        const target = document.getElementById(viewId);
+        if (target) {
+            target.classList.remove('hidden-view');
+            target.classList.add('active-view');
+        }
+    }
+
+    // --- Dashboard Updates ---
+    static updateDashboardUI(data) {
+        if (!data) return;
+
+        // Header
+        const avatar = document.getElementById('dash-user-avatar');
+        const name = document.getElementById('dash-user-name');
+        const credits = document.getElementById('dash-user-credits');
+        
+        // Sidebar
+        const sideAvatar = document.getElementById('dash-user-avatar');
+        const sideName = document.getElementById('dash-user-name');
+        const sideCredits = document.getElementById('dash-user-credits');
+
+        if(avatar) avatar.src = data.photo || "https://via.placeholder.com/40";
+        if(name) name.innerText = data.name;
+        if(credits) credits.innerText = data.credits;
+
+        // Referral Modal Updates
+        const refLink = `https://zulora.in?ref=${data.referralCode}`;
+        const refInput = document.getElementById('my-ref-link');
+        if(refInput) refInput.value = refLink;
+        
+        const refCount = document.getElementById('total-referrals');
+        if(refCount) refCount.innerText = data.referralCount || 0;
+        
+        const refEarned = document.getElementById('earned-credits');
+        if(refEarned) refEarned.innerText = (data.referralCount || 0) * AppState.config.referralReward;
+
+        // Load Projects
+        this.loadUserProjects();
+    }
+
+    // --- Project Listing ---
+    static async loadUserProjects() {
+        const container = document.getElementById('projects-container');
+        if (!container || !AppState.currentUser) return;
+
+        const sitesRef = ref(db, `users/${AppState.currentUser.uid}/sites`);
+        const snapshot = await get(sitesRef);
+
+        if (snapshot.exists()) {
             container.innerHTML = ""; // Clear empty state
-            snap.forEach(s => {
-                container.innerHTML += `
-                    <div class="project-card">
-                        <div class="card-preview"><i class="fas fa-globe"></i></div>
-                        <div class="card-info">
-                            <h4>${s.val().subdomain}.zulora.in</h4>
-                            <a href="https://${s.val().subdomain}.zulora.in" target="_blank" class="card-link">Visit Site <i class="fas fa-external-link-alt"></i></a>
+            
+            snapshot.forEach(siteSnap => {
+                const site = siteSnap.val();
+                // Create Card Element
+                const card = document.createElement('div');
+                card.className = "project-card";
+                card.innerHTML = `
+                    <div class="card-preview">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <div class="card-info">
+                        <h4>${site.subdomain}.zulora.in</h4>
+                        <div class="card-actions">
+                            <a href="https://${site.subdomain}.zulora.in" target="_blank" class="card-link">Visit</a>
+                            <button class="card-edit-btn" onclick="editWebsite('${site.subdomain}')">Edit</button>
                         </div>
                     </div>
                 `;
+                container.appendChild(card);
             });
         }
+    }
+
+    // --- Wizard Controls ---
+    static openWizard() {
+        document.getElementById('wizard-overlay').style.display = 'flex';
+        // Reset steps
+        this.resetWizard();
+    }
+
+    static closeWizard() {
+        document.getElementById('wizard-overlay').style.display = 'none';
+    }
+
+    static resetWizard() {
+        document.querySelectorAll('.wiz-step').forEach(s => s.classList.remove('active'));
+        document.getElementById('wiz-step-1').classList.add('active');
+        document.getElementById('wiz-subdomain').value = "";
+        document.getElementById('ai-prompt-text').value = "";
+    }
+
+    // --- Modals ---
+    static openPremiumModal() {
+        document.getElementById('modal-premium').style.display = 'flex';
+    }
+    
+    static openReferralModal() {
+        document.getElementById('modal-referral').style.display = 'flex';
+    }
+
+    static closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+}
+
+// ----------------------------------------------------------------------------
+// 7. MAIN LOGIC & EVENT LISTENERS
+// ----------------------------------------------------------------------------
+
+/**
+ * Global Initialization
+ */
+window.onload = function() {
+    
+    // 1. Subdomain Router Check
+    const host = window.location.hostname;
+    const parts = host.split('.');
+    
+    // Ignore localhost, main domain, or vercel app domain
+    if (parts.length > 2 && parts[0] !== 'www' && parts[0] !== 'zulora') {
+        const subdomain = parts[0];
+        // Fetch and Render User Site
+        renderSubdomainSite(subdomain);
+        return; // Stop loading main app
+    }
+    
+    // 2. Hide Loader
+    setTimeout(() => {
+        document.getElementById('global-loader').style.display = 'none';
+    }, 800);
+};
+
+// --- Subdomain Renderer ---
+async function renderSubdomainSite(subdomain) {
+    document.body.innerHTML = `
+        <div style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;font-family:sans-serif;">
+            <div style="width:50px;height:50px;border:4px solid #eee;border-top:4px solid #6366f1;border-radius:50%;animation:spin 1s linear infinite;"></div>
+            <h2 style="margin-top:20px;color:#333;">Loading ${subdomain}...</h2>
+        </div>
+        <style>@keyframes spin { 0% {transform:rotate(0deg);} 100% {transform:rotate(360deg);} }</style>
+    `;
+
+    const siteRef = ref(db, `websites/${subdomain}`);
+    const snapshot = await get(siteRef);
+
+    if (snapshot.exists()) {
+        const html = snapshot.val().html;
+        document.open();
+        document.write(html);
+        document.close();
+    } else {
+        document.body.innerHTML = `
+            <div style="text-align:center;padding:50px;font-family:sans-serif;">
+                <h1>404</h1>
+                <p>Website <strong>${subdomain}</strong> not found.</p>
+                <a href="https://zulora.in" style="color:#6366f1;">Build your own site at Zulora</a>
+            </div>
+        `;
+    }
+}
+
+// --- Auth Functions ---
+window.triggerGoogleLogin = function() {
+    signInWithPopup(auth, provider).then((result) => {
+        DatabaseManager.handleUserLogin(result.user);
+    }).catch((error) => {
+        ToastManager.show(error.message, "error");
     });
+};
+
+window.logoutUser = function() {
+    signOut(auth).then(() => {
+        window.location.reload();
+    });
+};
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        AppState.currentUser = user;
+        UIManager.switchView('view-dashboard');
+        DatabaseManager.handleUserLogin(user);
+    } else {
+        UIManager.switchView('view-landing');
+    }
+});
+
+
+// --- Wizard & Builder Functions ---
+window.openBuilderWizard = () => UIManager.openWizard();
+window.closeBuilderWizard = () => UIManager.closeWizard();
+
+window.wizardNext = function(step) {
+    if (step === 2) {
+        const sub = document.getElementById('wiz-subdomain').value;
+        if (sub.length < 3) {
+            ToastManager.show("Project name too short!", "error");
+            return;
+        }
+        AppState.currentProject.name = sub;
+    }
+    
+    // Switch Wizard Tab
+    document.querySelectorAll('.wiz-step').forEach(s => s.classList.remove('active'));
+    document.getElementById(`wiz-step-${step}`).classList.add('active');
+};
+
+window.selectMethod = function(method) {
+    AppState.currentProject.method = method;
+    if (method === 'AI') {
+        window.wizardNext('3a');
+        // Update balance display
+        const balance = AppState.userData ? AppState.userData.credits : 0;
+        document.getElementById('wiz-balance').innerText = balance;
+    } else {
+        window.wizardNext('3b');
+    }
+};
+
+// --- AI GENERATION LOGIC ---
+window.startGeneration = async function() {
+    const prompt = document.getElementById('ai-prompt-text').value;
+    if (!prompt) {
+        ToastManager.show("Please describe your website first.", "error");
+        return;
+    }
+
+    // 1. Check Credits
+    if (!await DatabaseManager.deductCredits(AppState.config.generationCost)) {
+        return; // Failed to deduct (not enough balance)
+    }
+
+    // 2. Show Loader
+    document.querySelectorAll('.wiz-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('wiz-step-loading').classList.add('active');
+
+    // 3. Call AI
+    const generatedHTML = await AIEngine.generateWebsite(prompt);
+
+    if (generatedHTML) {
+        // 4. Success -> Go to Editor
+        document.getElementById('website-canvas').innerHTML = generatedHTML;
+        document.getElementById('editor-domain-display').innerText = AppState.currentProject.name + ".zulora.in";
+        
+        UIManager.closeWizard();
+        UIManager.switchView('view-editor');
+        ToastManager.show("Website Generated Successfully!", "success");
+    } else {
+        // Failed
+        UIManager.openWizard(); // Reopen to try again
+        // Ideally refund credits here, skipping for simplicity in this demo
+    }
+};
+
+// --- Template Logic ---
+window.finalizeTemplate = function(templateName) {
+    // Load a hardcoded template for demo
+    const templateHTML = getTemplateHTML(templateName, AppState.currentProject.name);
+    document.getElementById('website-canvas').innerHTML = templateHTML;
+    document.getElementById('editor-domain-display').innerText = AppState.currentProject.name + ".zulora.in";
+    
+    UIManager.closeWizard();
+    UIManager.switchView('view-editor');
+    ToastManager.show(`Loaded ${templateName} Template`, "success");
+};
+
+// --- Editor Functions ---
+window.setCanvasWidth = (width) => {
+    document.querySelector('.canvas-container').style.width = width;
+};
+
+window.exitEditor = () => {
+    if(confirm("Discard unsaved changes?")) {
+        UIManager.switchView('view-dashboard');
+    }
+};
+
+window.saveAndPublish = async function() {
+    const html = document.getElementById('website-canvas').innerHTML;
+    const sub = AppState.currentProject.name;
+    
+    ToastManager.show("Publishing to global servers...", "info");
+    
+    await DatabaseManager.publishWebsite(html, sub);
+    
+    ToastManager.show("Live at: " + sub + ".zulora.in", "success");
+    
+    setTimeout(() => {
+        UIManager.switchView('view-dashboard');
+    }, 2000);
+};
+
+// --- Editor Tools ---
+window.enableTextEdit = () => {
+    const canvas = document.getElementById('website-canvas');
+    canvas.contentEditable = "true";
+    ToastManager.show("Text Editing Enabled. Click any text.", "info");
+};
+
+window.handleImageUpload = (event) => {
+    // Basic file reader implementation
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            // Insert image at cursor or append
+            // For simplicity in this demo, we replace the first image found or alert user
+            const img = document.querySelector('#website-canvas img');
+            if (img) {
+                img.src = e.target.result;
+                ToastManager.show("Image Replaced", "success");
+            } else {
+                ToastManager.show("Drag image to place it", "info");
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+// --- Modal Controls ---
+window.openPremiumModal = () => UIManager.openPremiumModal();
+window.openReferralModal = () => UIManager.openReferralModal();
+window.closeModal = (id) => UIManager.closeModal(id);
+
+window.copyUPI = () => {
+    navigator.clipboard.writeText("shivenpanwar@fam");
+    ToastManager.show("UPI ID Copied!", "success");
+};
+
+window.copyRefLink = () => {
+    const input = document.getElementById('my-ref-link');
+    input.select();
+    navigator.clipboard.writeText(input.value);
+    ToastManager.show("Referral Link Copied!", "success");
+};
+
+// --- Payment Verification (Simulation) ---
+window.verifyPayment = () => {
+    const btn = document.getElementById('verify-pay-btn');
+    const originalText = btn.innerText;
+    
+    btn.innerText = "Verifying with Bank...";
+    btn.disabled = true;
+    
+    setTimeout(async () => {
+        await DatabaseManager.activatePremium();
+        
+        btn.innerText = "Verified!";
+        btn.style.background = "#10b981";
+        
+        setTimeout(() => {
+            UIManager.closeModal('modal-premium');
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }, 2000);
+        
+    }, 2500); // 2.5s simulated delay
+};
+
+// --- Helpers: Template Data ---
+function getTemplateHTML(name, siteName) {
+    const colors = name === 'Agency' ? '#6366f1' : (name === 'SaaS' ? '#10b981' : '#f59e0b');
+    return `
+        <div style="font-family: 'Inter', sans-serif; color: #333;">
+            <nav style="padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee;">
+                <h3 style="font-weight: 800; color: ${colors};">${siteName}</h3>
+                <div>
+                    <a style="margin-right: 20px; cursor: pointer;">Home</a>
+                    <a style="margin-right: 20px; cursor: pointer;">Services</a>
+                    <a style="cursor: pointer; padding: 8px 16px; background: ${colors}; color: white; border-radius: 6px;">Contact</a>
+                </div>
+            </nav>
+            <header style="padding: 100px 20px; text-align: center; background: #f8fafc;">
+                <h1 style="font-size: 3.5rem; margin-bottom: 20px;">We are ${siteName}</h1>
+                <p style="font-size: 1.2rem; color: #666; max-width: 600px; margin: 0 auto 40px;">
+                    The best ${name} solution for your needs. Professional, reliable, and fast.
+                </p>
+                <button style="padding: 15px 30px; background: ${colors}; color: white; border: none; font-size: 1.1rem; border-radius: 8px; cursor: pointer;">
+                    Get Started
+                </button>
+            </header>
+            <div style="padding: 80px 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;">
+                <div style="padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <h3 style="margin-bottom: 10px;">Quality</h3>
+                    <p>We deliver the best results.</p>
+                </div>
+                <div style="padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <h3 style="margin-bottom: 10px;">Speed</h3>
+                    <p>Fast turnaround times.</p>
+                </div>
+                <div style="padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <h3 style="margin-bottom: 10px;">Support</h3>
+                    <p>24/7 customer service.</p>
+                </div>
+            </div>
+        </div>
+    `;
 }
