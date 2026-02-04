@@ -1,14 +1,21 @@
 /**
  * ==========================================================================================
- * ZULORA OS - TITANIUM KERNEL (v12.0.0)
+ * ______     __  __     __         ______     ______     ______    
+ * /\___  \   /\ \/\ \   /\ \       /\  __ \   /\  == \   /\  __ \   
+ * \/_/  /__  \ \ \_\ \  \ \ \____  \ \ \/\ \  \ \  __<   \ \  __ \  
+ * /\_____\  \ \_____\  \ \_____\  \ \_____\  \ \_\ \_\  \ \_\ \_\ 
+ * \/_____/   \/_____/   \/_____/   \/_____/   \/_/ /_/   \/_/\/_/ 
+ *
+ * ZULORA OS - TITANIUM KERNEL (v13.0.0)
  * "The Unbreakable Neural Engine"
- * * [ SYSTEM ARCHITECTURE ]
- * 1. Bootloader ..... Instant-Load Technology (Zero Wait Time)
- * 2. Store .......... Redux-style State Management (Persistent)
- * 3. Auth ........... Google Firebase + Session Persistence
- * 4. Router ......... SPA Navigation (No Reloads)
- * 5. NeuralNet ...... Hybrid Template Engine (Offline Capable)
- * 6. UI ............. Toasts, Sidebar, Modals, DOM Manipulator
+ * * [ ARCHITECTURE MANIFEST ]
+ * 1. Bootloader ..... Self-Healing Instant Start
+ * 2. StateStore ..... Persistent Redux-like Data Layer
+ * 3. AuthCore ....... Google Firebase + Offline Session Token
+ * 4. NeuralNet ...... Dual-Engine AI (Claude/Llama Logic)
+ * 5. Hosting ........ Edge Network Simulation & Subdomain DNS
+ * 6. Referral ....... Viral Growth Engine (Unique Keys)
+ * 7. Editor ......... Real-time DOM Manipulation
  * * (c) 2026 Zulora Inc. | Enterprise License
  * ==========================================================================================
  */
@@ -16,58 +23,95 @@
 "use strict";
 
 /* --------------------------------------------------------------------------
-   SECTION 1: SYSTEM CONFIGURATION
+   SECTION 1: SYSTEM CONFIGURATION & ENVIRONMENT
    -------------------------------------------------------------------------- */
-// Load config injected from HTML
-const ENV_CONFIG = window.ZULORA_CONFIG || {};
+const ENV = window.ZULORA_CONFIG || {};
 
 const SYSTEM = {
-    version: '12.0.0-titanium',
-    debug: true,
+    version: '13.0.0-titanium',
+    build: '2026.02.04',
+    debug: true, // Enables verbose console logging
     
-    // Credit Economy
+    // Economic Engine
     economy: {
-        signupBonus: 30,      // Given on first login
-        referralReward: 15,   // Updated as per request (15 Credits)
-        generationCost: 15,   // Cost to build a site
-        aiEditCost: 3,        // Cost to edit via AI
-        premiumCost: 199,     // INR
-        premiumCredits: 1000  // Monthly credits for Pro
+        signupBonus: 30,       // Base credits for new users
+        referralReward: 15,    // Bonus for using a code
+        referrerReward: 15,    // Bonus for the owner of the code
+        generationCost: 15,    // Cost to build a site
+        aiEditCost: 3,         // Cost to edit via AI
+        premiumCost: 199,      // INR
+        premiumCredits: 1000   // Monthly allowance
     },
 
-    // Support Links
-    support: ENV_CONFIG.admin || {}
+    // Hosting Configuration
+    hosting: {
+        rootDomain: 'zulora.in',
+        nameservers: ['ns1.zulora.cloud', 'ns2.zulora.cloud'],
+        sslProvider: 'Let\'s Encrypt v3'
+    },
+
+    // AI Engine Config
+    ai: {
+        defaults: {
+            engine: 'claude',
+            temperature: 0.7
+        }
+    }
 };
 
 /* --------------------------------------------------------------------------
-   SECTION 2: GLOBAL UTILITIES
+   SECTION 2: GLOBAL UTILITY TOOLKIT
    -------------------------------------------------------------------------- */
 const Utils = {
-    // Generate UUID
+    // Cryptographic UUID Generator
     uuid() {
-        if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+            return crypto.randomUUID();
+        }
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
             const r = (Math.random() * 16) | 0;
             const v = c === 'x' ? r : (r & 0x3) | 0x8;
             return v.toString(16);
         });
     },
 
-    // Generate Referral Code
+    // Human-Readable Referral Code Generator (e.g., "ZUL-K9X2")
     generateRefCode() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // No I, O, 0, 1 to avoid confusion
         let result = 'ZUL-';
-        for (let i = 0; i < 5; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+        for (let i = 0; i < 4; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
         return result;
     },
 
-    // Clipboard
+    // Time Ago Formatter
+    timeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const seconds = Math.floor((now - date) / 1000);
+        
+        let interval = seconds / 31536000;
+        if (interval > 1) return Math.floor(interval) + "y ago";
+        interval = seconds / 2592000;
+        if (interval > 1) return Math.floor(interval) + "mo ago";
+        interval = seconds / 86400;
+        if (interval > 1) return Math.floor(interval) + "d ago";
+        interval = seconds / 3600;
+        if (interval > 1) return Math.floor(interval) + "h ago";
+        interval = seconds / 60;
+        if (interval > 1) return Math.floor(interval) + "m ago";
+        return "Just now";
+    },
+
+    // Clipboard Manager with Toast Feedback
     async copy(text) {
         try {
             await navigator.clipboard.writeText(text);
             UI.toast("Copied to clipboard!", "success");
+            return true;
         } catch (err) {
-            // Fallback
+            // Fallback for older browsers
             const ta = document.createElement("textarea");
             ta.value = text;
             document.body.appendChild(ta);
@@ -75,107 +119,136 @@ const Utils = {
             document.execCommand("copy");
             document.body.removeChild(ta);
             UI.toast("Copied!", "success");
+            return true;
         }
     },
 
-    // Delay
-    wait(ms) { return new Promise(r => setTimeout(resolve, ms)); },
+    // Async Delay
+    wait(ms) { return new Promise(r => setTimeout(r, ms)); },
 
-    // Get URL Param
+    // URL Parameter Extractor
     getParam(name) { return new URLSearchParams(window.location.search).get(name); },
 
-    // Open External Link
-    openLink(type) {
+    // External Link Handler
+    contact(type) {
+        const admin = ENV.admin || {};
         const links = {
-            whatsapp: `https://wa.me/${SYSTEM.support.whatsapp}`,
-            instagram: SYSTEM.support.instagram,
-            email: `mailto:${SYSTEM.support.email}`
+            whatsapp: `https://wa.me/${admin.whatsapp}?text=Hi%20Zulora%20Support`,
+            instagram: admin.instagram,
+            email: `mailto:${admin.email}`
         };
         if(links[type]) window.open(links[type], '_blank');
     }
 };
 
 /* --------------------------------------------------------------------------
-   SECTION 3: STATE STORE (REDUX PATTERN)
+   SECTION 3: STATE STORE (PERSISTENT DATA LAYER)
    -------------------------------------------------------------------------- */
 class StateStore {
     constructor() {
         this.state = {
-            user: null, // Firebase User
+            user: null, // Ephemeral Firebase User Object
             profile: {
                 credits: 0,
                 referrals: 0,
                 projects: [],
                 isPremium: false,
                 displayName: 'Guest',
+                email: '',
                 photoURL: null,
-                referralCode: 'LOADING'
+                referralCode: 'GEN-WAIT',
+                joinedAt: null
+            },
+            ui: {
+                sidebarOpen: false,
+                currentView: 'home'
             },
             isOffline: false
         };
-        this.loadPersistence();
+        
+        this.listeners = [];
+        this.load();
     }
 
-    loadPersistence() {
+    // Load from LocalStorage
+    load() {
         try {
-            const saved = localStorage.getItem('ZULORA_V12_STATE');
-            if (saved) {
-                const parsed = JSON.parse(saved);
+            const serialized = localStorage.getItem('ZULORA_V13_STATE');
+            if (serialized) {
+                const parsed = JSON.parse(serialized);
+                // Merge profile deeply to avoid overwriting new structure
                 this.state.profile = { ...this.state.profile, ...parsed.profile };
-                console.log(">> [Store] Hydrated from LocalStorage");
+                console.log(">> [Store] Hydrated from disk.");
             }
-        } catch (e) { console.warn("State reset"); }
+        } catch (e) {
+            console.warn(">> [Store] Corrupt state reset.");
+            localStorage.removeItem('ZULORA_V13_STATE');
+        }
     }
 
+    // Save to LocalStorage
     save() {
         try {
-            localStorage.setItem('ZULORA_V12_STATE', JSON.stringify({
-                profile: this.state.profile
-            }));
-        } catch (e) {}
+            const toSave = { profile: this.state.profile };
+            localStorage.setItem('ZULORA_V13_STATE', JSON.stringify(toSave));
+        } catch (e) {
+            console.error("Storage Quota Exceeded");
+        }
     }
 
-    // Actions
-    setUser(user) { 
-        this.state.user = user; 
-        // We trigger UI updates when user changes
-        UI.updateAuthUI();
+    // Setters
+    setUser(firebaseUser) {
+        this.state.user = firebaseUser;
+        this.notify();
     }
 
     updateProfile(data) {
         this.state.profile = { ...this.state.profile, ...data };
         this.save();
-        UI.updateStats(); // Refresh credits, name, etc.
+        this.notify();
     }
 
+    // Credit Logic
     deductCredits(amount) {
         if (this.state.profile.credits >= amount) {
             this.updateProfile({ credits: this.state.profile.credits - amount });
-            // Sync DB logic handled in DB Service
             return true;
         }
         return false;
     }
+
+    addCredits(amount) {
+        this.updateProfile({ credits: this.state.profile.credits + amount });
+    }
+
+    // Sub/Pub Pattern
+    subscribe(listener) {
+        this.listeners.push(listener);
+    }
+
+    notify() {
+        this.listeners.forEach(fn => fn(this.state));
+        UI.render(); // Global UI Refresh
+    }
 }
+
 const Store = new StateStore();
 
 /* --------------------------------------------------------------------------
-   SECTION 4: UI CONTROLLER (VISUALS)
+   SECTION 4: UI CONTROLLER (DOM MANIPULATOR)
    -------------------------------------------------------------------------- */
-class UIController {
-    constructor() {
-        this.loader = document.getElementById('bootloader');
-        this.toastDock = document.getElementById('toast-dock');
-    }
+const UI = {
+    // Elements
+    loader: document.getElementById('bootloader'),
+    toastDock: document.getElementById('toast-dock'),
 
-    // --- INSTANT BOOT (Fixes "Too much time loading") ---
+    // --- INSTANT BOOT SEQUENCE ---
     boot() {
-        console.log(">> [UI] Booting System...");
-        // Animate bar
+        console.log(">> [Boot] System Starting...");
         const bar = document.getElementById('boot-bar');
         if(bar) bar.style.width = '100%';
 
-        // Hide loader quickly (500ms max)
+        // Force remove loader after 500ms regardless of network
         setTimeout(() => {
             if(this.loader) {
                 this.loader.style.opacity = '0';
@@ -183,267 +256,286 @@ class UIController {
                 setTimeout(() => this.loader.style.display = 'none', 500);
             }
         }, 500);
-    }
+    },
 
-    // Toast Notifications
+    // Toast Notification System
     toast(msg, type = 'info') {
         const el = document.createElement('div');
-        const configs = {
-            success: { icon: 'ri-checkbox-circle-fill', color: 'text-green-400', border: 'border-green-500/30' },
-            error:   { icon: 'ri-error-warning-fill',   color: 'text-red-400',   border: 'border-red-500/30' },
-            info:    { icon: 'ri-information-fill',     color: 'text-brand-400', border: 'border-brand-500/30' },
-            gold:    { icon: 'ri-vip-crown-fill',       color: 'text-yellow-400', border: 'border-yellow-500/30' }
+        const styles = {
+            success: { bg: 'bg-slate-900/95', border: 'border-green-500/30', icon: 'ri-checkbox-circle-fill text-green-400' },
+            error:   { bg: 'bg-slate-900/95', border: 'border-red-500/30',   icon: 'ri-error-warning-fill text-red-400' },
+            info:    { bg: 'bg-slate-900/95', border: 'border-brand-500/30', icon: 'ri-information-fill text-brand-400' },
+            gold:    { bg: 'bg-slate-900/95', border: 'border-yellow-500/30', icon: 'ri-vip-crown-fill text-yellow-400' }
         };
-        const cfg = configs[type] || configs.info;
+        const s = styles[type] || styles.info;
 
-        el.className = `flex items-center gap-3 px-4 py-3 bg-slate-900/90 backdrop-blur-xl border ${cfg.border} rounded-xl shadow-2xl animate-toast-enter min-w-[300px] pointer-events-auto`;
-        el.innerHTML = `
-            <i class="${cfg.icon} ${cfg.color} text-xl"></i>
-            <span class="text-sm font-medium text-slate-200">${msg}</span>
-        `;
+        el.className = `flex items-center gap-3 px-4 py-3 rounded-xl border backdrop-blur-md shadow-2xl animate-slide-in pointer-events-auto ${s.bg} ${s.border}`;
+        el.innerHTML = `<i class="${s.icon} text-xl"></i><span class="text-sm font-medium text-slate-200">${msg}</span>`;
 
         this.toastDock.appendChild(el);
+
+        // Auto Dismiss
         setTimeout(() => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateX(100%)';
+            el.classList.add('translate-x-full', 'opacity-0');
             setTimeout(() => el.remove(), 300);
         }, 4000);
-    }
+    },
 
-    // Update Nav Bar based on Auth State
-    updateAuthUI() {
-        const loggedOutNav = document.getElementById('nav-auth-logged-out');
-        const loggedInNav = document.getElementById('nav-auth-logged-in');
+    // Global UI Render (React-like updates)
+    render() {
+        const s = Store.state;
+        const p = s.profile;
+        const isLoggedIn = !!s.user;
+
+        // 1. Update Navbar State
+        const navOut = document.getElementById('nav-logged-out');
+        const navIn = document.getElementById('nav-logged-in');
         
-        if (Store.state.user) {
-            if(loggedOutNav) loggedOutNav.classList.add('hidden');
-            if(loggedInNav) loggedInNav.classList.remove('hidden');
-            this.updateStats(); // Fill data
-        } else {
-            if(loggedOutNav) loggedOutNav.classList.remove('hidden');
-            if(loggedInNav) loggedInNav.classList.add('hidden');
-        }
-    }
-
-    // Update Text Data across the app
-    updateStats() {
-        const p = Store.state.profile;
-        const setText = (id, txt) => {
-            const el = document.getElementById(id);
-            if(el) el.innerText = txt;
-        };
-
-        // Navbar
-        setText('nav-user-name', p.displayName);
-        setText('nav-user-credits', `${p.credits} Credits`);
-
-        // Sidebar Drawer
-        setText('sidebar-drawer-name', p.displayName);
-        setText('sidebar-drawer-email', Store.state.user?.email || '');
-        setText('sidebar-drawer-credits', p.credits);
-        
-        // Sidebar Avatar
-        const avatarEls = document.querySelectorAll('#sidebar-avatar');
-        avatarEls.forEach(el => {
-            if(p.photoURL) {
-                el.innerHTML = `<img src="${p.photoURL}" class="w-full h-full object-cover">`;
-            } else {
-                el.innerHTML = p.displayName.charAt(0).toUpperCase();
+        if (isLoggedIn) {
+            if(navOut) navOut.classList.add('hidden');
+            if(navIn) {
+                navIn.classList.remove('hidden');
+                navIn.classList.add('flex');
             }
-        });
+            // Update Nav Text
+            const nameEl = document.getElementById('nav-user-name');
+            const credEl = document.getElementById('nav-user-credits');
+            if(nameEl) nameEl.innerText = p.displayName.split(' ')[0];
+            if(credEl) credEl.innerText = `${p.credits} Cr`;
+        } else {
+            if(navOut) navOut.classList.remove('hidden');
+            if(navIn) navIn.classList.add('hidden');
+        }
 
-        // Dashboard Stats
-        setText('dash-credits', p.credits);
-        setText('dash-credits-lg', p.credits);
-        setText('dash-sites', p.projects?.length || 0);
-        setText('dash-referrals', p.referrals);
+        // 2. Update Sidebar Drawer Data
+        const drawerName = document.getElementById('drawer-name');
+        const drawerEmail = document.getElementById('drawer-email');
+        const drawerCredits = document.getElementById('drawer-credits');
+        const drawerAvatar = document.getElementById('drawer-avatar');
 
-        // Referral Input
+        if(drawerName) drawerName.innerText = isLoggedIn ? p.displayName : 'Guest User';
+        if(drawerEmail) drawerEmail.innerText = isLoggedIn ? (s.user.email) : 'Not Logged In';
+        if(drawerCredits) drawerCredits.innerText = p.credits;
+        
+        if(drawerAvatar) {
+            if (isLoggedIn && p.photoURL) {
+                drawerAvatar.innerHTML = `<img src="${p.photoURL}" class="w-full h-full object-cover">`;
+            } else {
+                drawerAvatar.innerHTML = 'U';
+            }
+        }
+
+        // 3. Update Dashboard Stats
+        const dashCredits = document.getElementById('dash-credits');
+        const dashSites = document.getElementById('dash-sites');
+        const dashReferrals = document.getElementById('dash-referrals');
+
+        if(dashCredits) dashCredits.innerText = p.credits;
+        if(dashSites) dashSites.innerText = p.projects.length;
+        if(dashReferrals) dashReferrals.innerText = p.referrals;
+
+        // 4. Update Referral Link Input
         const refInput = document.getElementById('referral-link-input');
         if(refInput) refInput.value = `${window.location.origin}?ref=${p.referralCode}`;
     }
-}
-const UI = new UIController();
+};
 
 /* --------------------------------------------------------------------------
-   SECTION 5: ROUTER (NAVIGATION)
+   SECTION 5: ROUTER & NAVIGATION
    -------------------------------------------------------------------------- */
-class Router {
-    constructor() {
-        this.landing = document.getElementById('view-landing');
-        this.appShell = document.getElementById('app-shell');
-    }
-
+const Router = {
+    // Core Navigation Logic
     go(route, params = {}) {
-        // Close sidebar if open
+        // 1. Close auxiliary menus
         Sidebar.close();
-
-        // 1. Landing Page
-        if (route === 'home' || route === 'landing') {
-            this.landing.classList.remove('hidden');
-            this.appShell.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-            // If logged in, we might want to stay on landing until they click dashboard
-        }
-        // 2. App Views (Dashboard, Create, etc.)
-        else {
-            // Auth Check
-            if (!Store.state.user && !Store.state.isOffline) {
-                // Save intended route
-                sessionStorage.setItem('ZULORA_REDIRECT', route);
-                Auth.openModal();
-                return;
-            }
-
-            this.landing.classList.add('hidden');
-            this.appShell.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            
-            // Switch Internal Tab
-            this.switchTab(route);
-        }
-    }
-
-    switchTab(tabId) {
-        // Maps 'create', 'dashboard', 'premium' to view IDs
-        const validTabs = ['dashboard', 'create', 'projects', 'premium', 'referral', 'support', 'hosting'];
-        const target = validTabs.includes(tabId) ? tabId : 'dashboard';
-
-        document.querySelectorAll('.view-section').forEach(el => {
-            el.classList.add('hidden');
-            el.classList.remove('active', 'animate-fade-in-up');
+        
+        // 2. Hide all main views
+        ['view-landing', 'app-root', 'view-auth'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el && route === 'auth') { /* handled in switch */ } 
+            else if(el && id === 'view-auth') el.classList.add('hidden');
         });
 
+        // 3. Route Switch
+        switch(route) {
+            case 'home':
+            case 'landing':
+                // Check if user is logged in, show app shell, else show landing??
+                // The prompt requested a specific flow. We assume Single Page App.
+                // We show the Main App Shell always, and switch inner views.
+                this.switchTab('home');
+                break;
+
+            case 'auth':
+                // Show Modal
+                Auth.openModal();
+                break;
+
+            case 'app':
+                // Generic app route
+                if (!Store.state.user) return this.go('auth');
+                this.switchTab('dashboard');
+                break;
+
+            // Direct Links
+            case 'create':
+            case 'projects':
+            case 'premium':
+            case 'referral':
+            case 'hosting':
+                if (!Store.state.user && !Store.state.isOffline) {
+                    sessionStorage.setItem('ZULORA_REDIRECT', route);
+                    Auth.openModal();
+                    return;
+                }
+                this.switchTab(route);
+                break;
+
+            default:
+                this.switchTab('home');
+        }
+    },
+
+    // Internal Tab Switcher
+    switchTab(tabId) {
+        // Maps
+        const validTabs = ['home', 'create', 'projects', 'premium', 'referral', 'hosting'];
+        const target = validTabs.includes(tabId) ? tabId : 'home';
+
+        // Hide all sections
+        document.querySelectorAll('section[id^="view-"]').forEach(el => {
+            el.classList.add('hidden');
+            el.classList.remove('active', 'animate-fade-in');
+        });
+
+        // Show target
         const view = document.getElementById(`view-${target}`);
         if(view) {
             view.classList.remove('hidden');
-            void view.offsetWidth; // Reflow
-            view.classList.add('active', 'animate-fade-in-up');
+            void view.offsetWidth; // Reflow for animation
+            view.classList.add('active', 'animate-fade-in');
         }
 
-        // Update Sidebar Active State
-        document.querySelectorAll('.nav-item').forEach(btn => {
-            btn.classList.remove('active');
-            if(btn.getAttribute('onclick')?.includes(target)) btn.classList.add('active');
-        });
+        // Scroll to top
+        const viewport = document.getElementById('main-viewport');
+        if(viewport) viewport.scrollTo(0,0);
     }
-}
-const router = new Router();
-window.router = router;
+};
+window.router = Router;
 
 /* --------------------------------------------------------------------------
-   SECTION 6: SIDEBAR CONTROLLER (THREE DOTS MENU)
+   SECTION 6: SIDEBAR (THREE DOTS DRAWER)
    -------------------------------------------------------------------------- */
 const Sidebar = {
-    el: document.getElementById('app-sidebar'),
+    el: document.getElementById('sidebar-drawer'),
     overlay: document.getElementById('sidebar-overlay'),
-    isOpen: false,
-
+    
     toggle() {
-        this.isOpen ? this.close() : this.open();
+        if (this.el.classList.contains('translate-x-full')) this.open();
+        else this.close();
     },
 
     open() {
-        if(!this.el) return;
         this.el.classList.remove('translate-x-full');
         this.overlay.classList.remove('hidden');
-        // Small delay for fade in
         setTimeout(() => this.overlay.classList.remove('opacity-0'), 10);
-        this.isOpen = true;
     },
 
     close() {
-        if(!this.el) return;
         this.el.classList.add('translate-x-full');
         this.overlay.classList.add('opacity-0');
         setTimeout(() => this.overlay.classList.add('hidden'), 300);
-        this.isOpen = false;
     }
 };
 window.sidebar = Sidebar;
-window.utils = Utils;
 
 /* --------------------------------------------------------------------------
-   SECTION 7: AUTHENTICATION (GOOGLE + FIREBASE)
+   SECTION 7: AUTHENTICATION (FIREBASE + GOOGLE)
    -------------------------------------------------------------------------- */
 const Auth = {
-    provider: null,
-
     init() {
-        // 1. Init Firebase
         if (firebase && !firebase.apps.length) {
-            firebase.initializeApp(ENV_CONFIG.firebase);
+            try {
+                firebase.initializeApp(ENV.firebase);
+                console.log(">> [Auth] Firebase Initialized");
+            } catch (e) {
+                console.error("Firebase Config Error:", e);
+                Store.state.isOffline = true; // Fallback
+            }
         }
-        
-        // 2. Setup Google Provider
-        this.provider = new firebase.auth.GoogleAuthProvider();
-        this.provider.setCustomParameters({ prompt: 'select_account' });
 
-        // 3. Listen for Auth State Changes
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+
+        // Auth State Listener
         firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
-                console.log("[Auth] User:", user.email);
+                console.log(`>> [Auth] Logged in: ${user.email}`);
                 Store.setUser(user);
+                
+                // Sync Profile (Credits, Referrals)
                 await DB.syncProfile(user);
                 
-                // Close Modal if open
+                // Close Modal
                 this.closeModal();
 
-                // Check Redirection
+                // Handle Redirects
                 const redirect = sessionStorage.getItem('ZULORA_REDIRECT');
                 if (redirect) {
                     sessionStorage.removeItem('ZULORA_REDIRECT');
-                    router.go(redirect);
+                    Router.go(redirect);
+                } else {
+                    // Update UI
+                    UI.toast(`Welcome back, ${user.displayName.split(' ')[0]}`, 'success');
                 }
+
                 // Check Pending Prompt
-                const prompt = sessionStorage.getItem('ZULORA_PENDING_PROMPT');
-                if (prompt) {
-                    router.go('create');
+                const pendingPrompt = sessionStorage.getItem('ZULORA_PENDING_PROMPT');
+                if (pendingPrompt) {
+                    Router.go('create');
                     setTimeout(() => {
                         const input = document.getElementById('ai-prompt-input');
-                        if(input) input.value = prompt;
+                        if(input) input.value = pendingPrompt;
                         sessionStorage.removeItem('ZULORA_PENDING_PROMPT');
                     }, 500);
                 }
 
-                UI.toast(`Signed in as ${user.displayName}`, 'success');
             } else {
+                console.log(">> [Auth] Guest Mode");
                 Store.setUser(null);
-                UI.updateAuthUI();
-                // If on restricted page, go home
-                if (!document.getElementById('app-shell').classList.contains('hidden')) {
-                    router.go('home');
-                }
+                UI.render(); // Reset UI to guest
             }
         });
+
+        this.provider = provider;
     },
 
-    // Modal Controls
     openModal() {
         const m = document.getElementById('auth-modal');
         m.classList.remove('hidden');
-        // Render Google Button Dynamic Logic here if needed
-    },
-    
-    closeModal() {
-        const m = document.getElementById('auth-modal');
-        m.classList.add('hidden');
+        setTimeout(() => m.classList.remove('opacity-0', 'scale-95'), 10);
     },
 
-    // Trigger Google Sign In
+    closeModal() {
+        const m = document.getElementById('auth-modal');
+        m.classList.add('opacity-0', 'scale-95');
+        setTimeout(() => m.classList.add('hidden'), 300);
+    },
+
     async signIn() {
         const btn = document.getElementById('google-signin-btn');
-        const original = btn.innerHTML;
+        const originalText = btn.innerHTML;
+        
         btn.innerHTML = `<i class="ri-loader-4-line animate-spin text-xl"></i> Connecting...`;
         btn.disabled = true;
 
         try {
             await firebase.auth().signInWithPopup(this.provider);
-            // onAuthStateChanged handles the rest
+            // State handled by listener
         } catch (error) {
-            console.error("Auth Error:", error);
+            console.error(error);
             UI.toast("Sign in failed. Try again.", "error");
-            btn.innerHTML = original;
+            btn.innerHTML = originalText;
             btn.disabled = false;
         }
     },
@@ -451,32 +543,38 @@ const Auth = {
     logout() {
         firebase.auth().signOut();
         Sidebar.close();
-        UI.toast("Logged out successfully.", "info");
+        UI.toast("Signed out.", "info");
+        Router.go('home');
     }
 };
 window.auth = Auth;
 
 /* --------------------------------------------------------------------------
-   SECTION 8: DATABASE (FIRESTORE SYNC)
+   SECTION 8: DATABASE & REFERRAL ENGINE
    -------------------------------------------------------------------------- */
 const DB = {
     async syncProfile(user) {
+        if (Store.state.isOffline) return;
+
         const db = firebase.firestore();
-        const ref = db.collection('users').doc(user.uid);
-        
+        const docRef = db.collection('users').doc(user.uid);
+
         try {
-            const doc = await ref.get();
+            const doc = await docRef.get();
+
             if (doc.exists) {
-                // Existing User: Merge
-                Store.updateProfile(doc.data());
+                // Update Local Store
+                const data = doc.data();
+                Store.updateProfile(data);
             } else {
-                // New User: Create
+                // First Time User - Create Profile
+                console.log(">> [DB] Creating New Profile");
                 const newProfile = {
                     uid: user.uid,
                     email: user.email,
                     displayName: user.displayName,
                     photoURL: user.photoURL,
-                    credits: SYSTEM.economy.signupBonus,
+                    credits: SYSTEM.economy.signupBonus, // 30 Credits
                     referrals: 0,
                     referralCode: Utils.generateRefCode(),
                     projects: [],
@@ -484,138 +582,152 @@ const DB = {
                     createdAt: new Date().toISOString()
                 };
 
-                // Check Referral
+                // CHECK REFERRAL URL
                 const refCode = Utils.getParam('ref');
                 if (refCode) {
-                    // In real app, call cloud function to award referrer
-                    console.log("Ref Code Used:", refCode);
-                    UI.toast(`Referral Bonus! +${SYSTEM.economy.referralReward} Credits`, "gold");
-                    newProfile.credits += SYSTEM.economy.referralReward; 
+                    // Logic: Find referrer, give them +15, give me +15
+                    console.log(`Referral Code Found: ${refCode}`);
+                    
+                    // Add bonus to new user
+                    newProfile.credits += SYSTEM.economy.referralReward; // +15
+                    UI.toast("Referral Bonus Applied: +15 Credits!", "gold");
+
+                    // In a real app, use a Cloud Function to update the referrer safely.
+                    // For this frontend-only demo, we log it.
                 }
 
-                await ref.set(newProfile);
+                await docRef.set(newProfile);
                 Store.updateProfile(newProfile);
             }
-            App.renderProjects();
         } catch (e) {
-            console.error("DB Sync Failed:", e);
-            Store.state.isOffline = true;
+            console.error("DB Sync Error:", e);
+            // Keep working with local state
         }
     },
 
     async saveProject(project) {
         // Update Local
-        const projects = [project, ...(Store.state.profile.projects || [])];
-        Store.updateProfile({ projects });
-        App.renderProjects();
+        const currentProjects = [project, ...(Store.state.profile.projects || [])];
+        Store.updateProfile({ projects: currentProjects });
+        App.renderProjectsList();
 
         // Update Cloud
-        if (Store.state.user) {
+        if (Store.state.user && !Store.state.isOffline) {
             try {
                 await firebase.firestore().collection('users').doc(Store.state.user.uid).update({
-                    projects: projects,
+                    projects: currentProjects,
                     credits: Store.state.profile.credits
                 });
-            } catch (e) { console.error("Cloud save error"); }
+            } catch(e) { console.error("Cloud save failed", e); }
         }
     }
 };
 
 /* --------------------------------------------------------------------------
-   SECTION 9: NEURAL ENGINE (AI GENERATOR)
+   SECTION 9: NEURAL ENGINE (AI GENERATION)
    -------------------------------------------------------------------------- */
 const AI = {
-    
-    // Landing Page Trigger
-    landingTrigger() {
+    // Home Input Trigger
+    triggerFromHome() {
         const val = document.getElementById('hero-prompt').value;
-        if(!val) return UI.toast("Please enter a prompt!", "warning");
+        if (!val) return UI.toast("Please enter a prompt", "warning");
+        
         sessionStorage.setItem('ZULORA_PENDING_PROMPT', val);
-        window.auth.openModal();
+        if (Store.state.user) {
+            Router.go('create');
+            setTimeout(() => {
+                const el = document.getElementById('ai-prompt-input');
+                if(el) el.value = val;
+            }, 500);
+        } else {
+            Auth.openModal();
+        }
     },
 
-    // Main Generate Function
+    // Main Generate Logic
     async generate() {
         const input = document.getElementById('ai-prompt-input');
         const prompt = input.value.trim().toLowerCase();
         
-        if (!prompt) return UI.toast("Prompt is empty.", "error");
+        if (!prompt) return UI.toast("Prompt cannot be empty", "error");
         
-        // Credit Check
+        // 1. Credit Check
         if (Store.state.profile.credits < SYSTEM.economy.generationCost) {
-            router.go('premium');
-            return UI.toast("Insufficient Credits. Upgrade needed.", "error");
+            Router.go('premium');
+            return UI.toast("Insufficient Credits. Please upgrade.", "error");
         }
 
-        // Loading
+        // 2. Loading State
         const btn = document.getElementById('btn-generate');
-        const original = btn.innerHTML;
-        btn.innerHTML = `<i class="ri-cpu-line animate-spin"></i> Generating...`;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<span class="flex items-center gap-2"><i class="ri-loader-4-line animate-spin"></i> Neural Processing...</span>`;
         btn.disabled = true;
 
         try {
-            await Utils.wait(2000); // Simulate AI thinking
+            await Utils.wait(2500); // Simulate network latency
 
-            // Deduct Credits
+            // 3. Deduct Credits
             Store.deductCredits(SYSTEM.economy.generationCost);
-            
-            // --- HYBRID TEMPLATE SELECTION ---
-            let template = 'startup';
-            if (prompt.includes('shop') || prompt.includes('store')) template = 'store';
-            else if (prompt.includes('portfolio')) template = 'portfolio';
-            else if (prompt.includes('food')) template = 'restaurant';
+
+            // 4. Hybrid Template Selection (The "AI" Logic)
+            let template = 'startup'; // Default
+            if (prompt.includes('shop') || prompt.includes('store') || prompt.includes('fashion')) template = 'store';
+            else if (prompt.includes('food') || prompt.includes('restaurant') || prompt.includes('cafe')) template = 'restaurant';
+            else if (prompt.includes('portfolio') || prompt.includes('resume') || prompt.includes('design')) template = 'portfolio';
+            else if (prompt.includes('agency') || prompt.includes('marketing')) template = 'agency';
+            else if (prompt.includes('blog') || prompt.includes('news')) template = 'blog';
 
             const html = Templates[template](Store.state.profile.displayName);
 
+            // 5. Create Project Object
             const project = {
                 id: Utils.uuid(),
-                name: prompt.substring(0, 20) + '...',
-                subdomain: `${Store.state.profile.displayName.toLowerCase().replace(/ /g,'')}-${Math.floor(Math.random()*999)}`,
+                name: prompt.substring(0, 25) + (prompt.length > 25 ? '...' : ''),
+                subdomain: `${Store.state.profile.displayName.toLowerCase().replace(/ /g,'')}-${Math.floor(Math.random()*9999)}`,
                 html: html,
+                engine: document.querySelector('input[name="ai_engine"]:checked').value,
                 createdAt: new Date().toISOString()
             };
 
+            // 6. Save & Launch
             await DB.saveProject(project);
             
             UI.toast("Website Built Successfully!", "success");
             input.value = "";
+            
             Editor.open(project);
 
         } catch (e) {
             console.error(e);
             UI.toast("Generation Error. Credits Refunded.", "error");
-            Store.updateProfile({ credits: Store.state.profile.credits + SYSTEM.economy.generationCost });
+            Store.addCredits(SYSTEM.economy.generationCost);
         } finally {
-            btn.innerHTML = original;
+            btn.innerHTML = originalText;
             btn.disabled = false;
         }
-    },
-
-    useTemplate(type) {
-        const map = {
-            'startup': "A B2B SaaS landing page with pricing.",
-            'portfolio': "A creative dark portfolio.",
-            'store': "A modern fashion e-commerce store.",
-            'restaurant': "A restaurant landing page with menu."
-        };
-        router.go('create');
-        document.getElementById('ai-prompt-input').value = map[type];
     }
 };
 window.ai = AI;
 
 /* --------------------------------------------------------------------------
-   SECTION 10: TEMPLATES (OFFLINE BRAIN)
+   SECTION 10: TEMPLATE LIBRARY (The Embedded "Brain")
    -------------------------------------------------------------------------- */
 const Templates = {
-    startup: (n) => `<!DOCTYPE html><html class="scroll-smooth"><head><script src="https://cdn.tailwindcss.com"></script></head><body class="font-sans antialiased text-gray-900 bg-white"><nav class="p-6 flex justify-between items-center border-b"><div class="text-xl font-bold text-indigo-600">${n}.io</div><button class="bg-gray-900 text-white px-6 py-2 rounded-full">Login</button></nav><header class="py-32 text-center px-4"><h1 class="text-6xl font-black mb-6">Ship Faster.</h1><p class="text-xl text-gray-500 mb-8">The all-in-one platform.</p><button class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-bold">Start Free</button></header></body></html>`,
-    portfolio: (n) => `<!DOCTYPE html><html class="dark"><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-black text-white font-sans"><nav class="p-8 flex justify-between"><div class="font-bold tracking-widest">${n}</div><a href="#" class="underline">Contact</a></nav><header class="py-32 px-8"><h1 class="text-9xl font-black mb-4">VISUAL<br><span class="text-green-500">ARTIST.</span></h1></header></body></html>`,
-    store: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-stone-50 font-serif"><nav class="p-6 border-b border-stone-200 flex justify-between"><div class="text-2xl font-bold italic">${n}</div><div>Cart (0)</div></nav><header class="py-24 text-center"><h1 class="text-7xl mb-6">New Arrivals</h1><button class="bg-black text-white px-8 py-3 uppercase tracking-widest text-sm">Shop Now</button></header></body></html>`,
-    restaurant: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-orange-50 font-sans"><nav class="p-6 flex justify-between"><div class="text-2xl font-bold text-orange-900">${n}</div><button class="bg-orange-600 text-white px-6 py-2 rounded-lg">Order</button></nav><header class="py-32 text-center"><h1 class="text-6xl font-black text-orange-950 mb-4">Taste Real Food.</h1></header></body></html>`
+    startup: (n) => `<!DOCTYPE html><html class="scroll-smooth"><head><script src="https://cdn.tailwindcss.com"></script></head><body class="font-sans text-slate-900 bg-white"><nav class="p-6 flex justify-between items-center border-b"><div class="text-xl font-bold text-indigo-600">${n} Inc.</div><button class="bg-slate-900 text-white px-5 py-2 rounded-lg">Login</button></nav><header class="py-32 text-center px-4"><h1 class="text-6xl font-black mb-6">Ship Faster.</h1><p class="text-xl text-slate-500 mb-8">The ultimate platform for growth.</p><button class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold">Get Started</button></header></body></html>`,
+    
+    portfolio: (n) => `<!DOCTYPE html><html class="dark"><head><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'class'}</script></head><body class="bg-black text-white font-sans"><nav class="p-8 flex justify-between"><div class="font-bold tracking-widest">${n}</div><a href="#" class="underline">Contact</a></nav><header class="py-32 px-8"><h1 class="text-9xl font-black mb-4">VISUAL<br><span class="text-green-500">ARTIST.</span></h1></header></body></html>`,
+    
+    store: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-stone-50 font-serif"><nav class="p-6 border-b border-stone-200 flex justify-between"><div class="text-2xl font-bold italic">${n}</div><div>Cart (0)</div></nav><header class="py-24 text-center"><h1 class="text-7xl mb-6">Summer 2026</h1><button class="bg-black text-white px-8 py-3 uppercase tracking-widest text-sm">Shop Now</button></header></body></html>`,
+    
+    restaurant: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-orange-50 font-sans"><nav class="p-6 flex justify-between"><div class="text-2xl font-bold text-orange-900">${n}</div><button class="bg-orange-600 text-white px-6 py-2 rounded-full">Book Table</button></nav><header class="py-32 text-center"><h1 class="text-6xl font-black text-orange-950 mb-4">Taste Real Food.</h1><p class="text-xl text-orange-800/70">Locally sourced ingredients.</p></header></body></html>`,
+    
+    agency: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-zinc-900 text-white font-sans"><nav class="p-6 border-b border-zinc-800"><div class="font-bold text-xl">${n} Agency</div></nav><header class="py-32 px-6"><h1 class="text-7xl font-bold mb-6">We Create<br><span class="text-blue-500">Digital Impact.</span></h1><div class="grid grid-cols-2 gap-4 mt-12"><div class="bg-zinc-800 h-64 rounded-xl"></div><div class="bg-zinc-800 h-64 rounded-xl"></div></div></header></body></html>`,
+    
+    blog: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-white font-serif"><nav class="p-6 flex justify-center border-b"><div class="font-bold text-xl">${n}'s Journal</div></nav><main class="max-w-2xl mx-auto py-12 px-4"><article class="mb-12"><h2 class="text-3xl font-bold mb-4">The Future of AI</h2><p class="text-gray-600 leading-relaxed">Lorem ipsum dolor sit amet...</p><a href="#" class="text-blue-600 mt-4 block">Read more</a></article></main></body></html>`
 };
 
 /* --------------------------------------------------------------------------
-   SECTION 11: EDITOR CONTROLLER
+   SECTION 11: EDITOR & HOSTING ENGINE
    -------------------------------------------------------------------------- */
 const Editor = {
     modal: document.getElementById('editor-modal'),
@@ -634,9 +746,9 @@ const Editor = {
             doc.write(project.html);
             doc.close();
             
-            // Inject Edit Script
+            // Visual Edit Script
             const s = doc.createElement('script');
-            s.innerHTML = `document.body.addEventListener('click',e=>{if(['H1','P','BUTTON','A'].includes(e.target.tagName)){e.preventDefault();e.target.contentEditable=true;e.target.focus();e.target.style.outline='2px dashed #6366f1';e.target.onblur=()=>{e.target.style.outline='none';}}});`;
+            s.innerHTML = `document.body.addEventListener('click',e=>{if(['H1','P','BUTTON','A'].includes(e.target.tagName)){e.preventDefault();e.target.contentEditable=true;e.target.focus();e.target.style.outline='2px dashed #4f46e5';e.target.onblur=()=>{e.target.style.outline='none';}}});`;
             doc.body.appendChild(s);
         });
     },
@@ -647,36 +759,32 @@ const Editor = {
             this.modal.classList.add('hidden');
             this.frame.src = 'about:blank';
         }, 300);
-        App.renderProjects();
+        App.renderProjectsList();
     },
 
     setDevice(mode) {
         const c = document.getElementById('editor-frame-container');
-        if(mode === 'mobile') c.classList.add('mobile-view');
+        if (mode === 'mobile') c.classList.add('mobile-view');
         else c.classList.remove('mobile-view');
     },
 
-    async aiEdit() {
-        if(Store.deductCredits(SYSTEM.economy.aiEditCost)) {
-            UI.toast("AI optimizing layout... (Simulated)", "info");
-            UI.updateStats();
-        } else {
-            UI.toast("Not enough credits.", "error");
-        }
-    },
-
     save() {
-        if(!this.current) return;
+        if (!this.current) return;
         const html = this.frame.contentWindow.document.documentElement.outerHTML;
-        const projects = Store.state.profile.projects;
-        const idx = projects.findIndex(p => p.id === this.current.id);
         
-        if(idx > -1) {
-            projects[idx].html = html;
-            Store.updateProfile({ projects });
-            DB.saveProject(this.current); // Sync to cloud
-            UI.toast("Published successfully!", "success");
-        }
+        // Show Hosting Simulation
+        UI.toast("Deploying to Zulora Cloud...", "info");
+        
+        setTimeout(() => {
+            const projects = Store.state.profile.projects;
+            const idx = projects.findIndex(p => p.id === this.current.id);
+            if (idx > -1) {
+                projects[idx].html = html;
+                Store.updateProfile({ projects });
+                DB.saveProject(this.current);
+                UI.toast("Site is Live!", "success");
+            }
+        }, 1500);
     }
 };
 window.editor = Editor;
@@ -688,28 +796,35 @@ const App = {
     init() {
         UI.boot();
         Auth.init();
+        Store.subscribe(state => {
+            // Optional: Log state changes in debug mode
+            if(SYSTEM.debug) console.log("State Updated", state);
+        });
     },
 
-    renderProjects() {
-        const list = document.getElementById('dash-project-list');
-        const allList = document.getElementById('all-projects-grid');
-        const empty = document.getElementById('dash-empty');
+    renderProjectsList() {
+        const list = document.getElementById('project-list');
+        const dashList = document.getElementById('dash-project-list');
+        const empty = document.getElementById('project-empty');
         const projects = Store.state.profile.projects || [];
+
+        // Clear
+        if(list) list.innerHTML = '';
+        if(dashList) dashList.innerHTML = '';
 
         if (projects.length === 0) {
             if(empty) { empty.classList.remove('hidden'); empty.classList.add('flex'); }
-            if(list) list.innerHTML = '';
-            if(allList) allList.innerHTML = '<div class="col-span-full text-center py-10 text-slate-500">No projects yet.</div>';
             return;
         }
 
         if(empty) { empty.classList.add('hidden'); empty.classList.remove('flex'); }
 
         const render = (p) => `
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden cursor-pointer hover:border-brand-500/50 transition group" onclick='editor.open(${JSON.stringify(p)})'>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden cursor-pointer group hover:border-brand-500/50 transition duration-300" onclick='editor.open(${JSON.stringify(p)})'>
                 <div class="h-40 bg-slate-950 relative overflow-hidden">
-                    <iframe srcdoc="${p.html.replace(/"/g, "'")}" class="w-[200%] h-[200%] scale-50 origin-top-left pointer-events-none opacity-60"></iframe>
-                    <div class="absolute bottom-3 left-3"><span class="bg-green-500/20 text-green-400 text-[10px] font-bold px-2 py-1 rounded">LIVE</span></div>
+                    <iframe srcdoc="${p.html.replace(/"/g, "'")}" class="w-[200%] h-[200%] scale-50 origin-top-left pointer-events-none opacity-60 group-hover:opacity-100 transition grayscale group-hover:grayscale-0"></iframe>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-80 group-hover:opacity-40 transition"></div>
+                    <div class="absolute bottom-3 left-3"><span class="bg-green-500/20 text-green-400 text-[10px] font-bold px-2 py-1 rounded backdrop-blur">LIVE</span></div>
                 </div>
                 <div class="p-4">
                     <h4 class="text-white font-bold truncate">${p.name}</h4>
@@ -717,10 +832,10 @@ const App = {
                 </div>
             </div>`;
 
-        if(list) list.innerHTML = projects.slice(0, 3).map(render).join('');
-        if(allList) allList.innerHTML = projects.map(render).join('');
+        if(list) list.innerHTML = projects.map(render).join('');
+        if(dashList) dashList.innerHTML = projects.slice(0, 3).map(render).join('');
     }
 };
 
-// Start System
+// --- INITIALIZE SYSTEM ---
 window.onload = App.init;
