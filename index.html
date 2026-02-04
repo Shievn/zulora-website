@@ -4,108 +4,223 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zulora OS | AI Website Builder</title>
-    <meta name="description" content="Build, deploy, and scale websites with Zulora AI.">
-
+    <title>Zulora | Build Your Dream Website</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
     <link rel="stylesheet" href="style.css">
 
+    <style>
+        /* Landing Page Specific Overrides */
+        .landing-gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-glow {
+            box-shadow: 0 0 80px -20px rgba(99, 102, 241, 0.4);
+        }
+    </style>
 </head>
 <body class="bg-slate-950 text-slate-200 antialiased selection:bg-indigo-500 selection:text-white overflow-hidden">
 
-    <div id="master-loader" class="fixed inset-0 z-[9999] bg-slate-950 flex flex-col items-center justify-center">
-        <div class="w-16 h-16 border-4 border-slate-800 border-t-indigo-500 rounded-full animate-spin mb-4"></div>
-        <h2 class="text-white font-bold tracking-widest text-sm animate-pulse">BOOTING ZULORA OS...</h2>
+    <div id="master-loader" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="w-16 h-16 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+        <h2 class="text-slate-900 font-bold tracking-widest text-sm animate-pulse">ZULORA...</h2>
     </div>
 
     <div id="toast-container" class="fixed top-6 right-6 z-[10000] flex flex-col gap-3 pointer-events-none"></div>
 
-    <main id="view-auth" class="relative w-full h-screen flex items-center justify-center overflow-hidden">
+    <main id="view-landing" class="relative w-full h-screen overflow-y-auto overflow-x-hidden bg-white text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
         
+        <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">Z</div>
+                        <span class="font-bold text-xl tracking-tight text-slate-900">Zulora<span class="text-indigo-600">.in</span></span>
+                    </div>
+                    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+                        <a href="#features" class="hover:text-indigo-600 transition">Features</a>
+                        <a href="#templates" class="hover:text-indigo-600 transition">Templates</a>
+                        <a href="#pricing" class="hover:text-indigo-600 transition">Pricing</a>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button onclick="window.router.go('auth')" class="text-sm font-bold text-slate-600 hover:text-indigo-600">Log In</button>
+                        <button onclick="document.getElementById('hero-input').focus()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-indigo-600/20 transition-all transform hover:-translate-y-0.5">
+                            Start Building &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section class="pt-32 pb-20 px-4 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-indigo-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-50 rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+                
+                <div class="text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-xs font-bold mb-6">
+                        <i class="ri-flashlight-fill"></i> Powered by Gemini 1.5 AI
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6 tracking-tight">
+                        Build your <br> dream website <br>
+                        <span class="landing-gradient-text">with a single prompt.</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 mb-8 max-w-lg leading-relaxed">
+                        Zulora is the all-in-one OS for business. Create websites, manage CRM, and track sales.
+                        <span class="font-bold text-slate-900">Get 10 Free Credits on Sign Up.</span>
+                    </p>
+
+                    <div class="bg-white p-2 rounded-2xl shadow-xl border border-slate-200 flex items-center gap-2 max-w-md hero-glow transition-all focus-within:ring-2 focus-within:ring-indigo-500/50">
+                        <div class="w-10 h-10 flex items-center justify-center text-slate-400">
+                            <i class="ri-magic-line text-xl"></i>
+                        </div>
+                        <input type="text" id="hero-input" class="flex-1 bg-transparent border-none outline-none text-slate-900 placeholder-slate-400 font-medium" placeholder="Describe your business (e.g. A pizza shop...)">
+                        <button onclick="window.ai.generateFromLanding()" class="bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-xl font-bold transition-colors">
+                            Generate
+                        </button>
+                    </div>
+
+                    <div class="mt-8 flex items-center gap-4">
+                        <div class="flex -space-x-2">
+                            <img class="w-8 h-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=1" alt="User">
+                            <img class="w-8 h-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=2" alt="User">
+                            <img class="w-8 h-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=3" alt="User">
+                            <img class="w-8 h-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=4" alt="User">
+                        </div>
+                        <p class="text-sm text-slate-500 font-medium">Trusted by <span class="text-slate-900 font-bold">15,000+</span> creators worldwide.</p>
+                    </div>
+                </div>
+
+                <div class="relative hidden lg:block">
+                    <div class="relative z-10 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 transform rotate-2 hover:rotate-0 transition duration-500">
+                        <img src="https://cdn.dribbble.com/users/418188/screenshots/16436665/media/32185567c9c228203f5729792697843d.png" alt="Dashboard Preview" class="rounded-xl w-full">
+                        
+                        <div class="absolute top-10 -left-10 bg-white p-3 rounded-xl shadow-lg border border-slate-100 flex items-center gap-3 animate-bounce">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600"><i class="ri-check-line"></i></div>
+                            <div>
+                                <p class="text-xs text-slate-500 font-bold">Sales</p>
+                                <p class="text-sm font-bold text-slate-900">+120% Growth</p>
+                            </div>
+                        </div>
+
+                        <div class="absolute bottom-10 -right-5 bg-white p-3 rounded-xl shadow-lg border border-slate-100 flex items-center gap-3">
+                            <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600"><i class="ri-robot-line"></i></div>
+                            <p class="text-sm font-bold text-slate-900">AI Optimized</p>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-2xl blur-2xl opacity-20 -z-10 transform translate-x-4 translate-y-4"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-24 bg-slate-50/50">
+            <div class="max-w-7xl mx-auto px-4 text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Everything you need to grow</h2>
+                <p class="text-slate-500 max-w-2xl mx-auto">We replaced 10+ expensive tools with one integrated platform.</p>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl transition-all group">
+                    <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="ri-robot-2-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">AI Website Builder</h3>
+                    <p class="text-slate-500 leading-relaxed">Describe it, and our Gemini API writes the code, selects images, and publishes it instantly.</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl transition-all group">
+                    <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="ri-global-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Custom Subdomains</h3>
+                    <p class="text-slate-500 leading-relaxed">Get yourname.zulora.in instantly or connect a custom domain.</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl transition-all group">
+                    <div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="ri-shopping-bag-3-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">eCommerce Ready</h3>
+                    <p class="text-slate-500 leading-relaxed">Sell products with integrated payment gateways and inventory management.</p>
+                </div>
+
+                 <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl transition-all group md:col-span-3 lg:col-span-1">
+                    <div class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="ri-group-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Referral System</h3>
+                    <p class="text-slate-500 leading-relaxed">Invite friends and earn credits. Create an income stream. 10 Credits / Invite.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <main id="view-auth" class="hidden relative w-full h-screen flex items-center justify-center overflow-hidden bg-slate-950">
         <div class="absolute inset-0 z-0 pointer-events-none">
             <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[100px] animate-pulse"></div>
             <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[100px]"></div>
         </div>
-
         <div class="relative z-10 w-full max-w-md p-6">
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-extrabold text-white tracking-tight mb-2">Zulora.</h1>
-                <p class="text-slate-400">The AI Operating System for Web</p>
+            <button onclick="window.router.go('landing')" class="absolute top-0 left-0 text-slate-400 hover:text-white flex items-center gap-2 mb-4">
+                <i class="ri-arrow-left-line"></i> Back to Home
+            </button>
+            <div class="text-center mb-8 mt-10">
+                <h1 class="text-4xl font-extrabold text-white tracking-tight mb-2">Welcome Back</h1>
+                <p class="text-slate-400">Sign in to save your generated website.</p>
             </div>
-
             <div class="glass-panel rounded-2xl p-8 shadow-2xl backdrop-blur-xl bg-slate-900/60 border border-slate-800">
-                
                 <div class="flex bg-slate-950/50 p-1 rounded-lg mb-6 border border-slate-800">
                     <button id="tab-login" onclick="window.auth.toggle('login')" class="flex-1 py-2 text-sm font-bold text-white bg-indigo-600 rounded shadow-lg transition-all">Log In</button>
                     <button id="tab-signup" onclick="window.auth.toggle('signup')" class="flex-1 py-2 text-sm font-bold text-slate-400 hover:text-white transition-all">Sign Up</button>
                 </div>
-
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1 ml-1">Email</label>
-                        <div class="relative">
-                            <i class="ri-mail-line absolute left-4 top-3.5 text-slate-500"></i>
-                            <input type="email" id="auth-email" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-4 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all" placeholder="you@example.com">
-                        </div>
+                        <input type="email" id="auth-email" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all" placeholder="you@example.com">
                     </div>
-                    
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1 ml-1">Password</label>
-                        <div class="relative">
-                            <i class="ri-lock-password-line absolute left-4 top-3.5 text-slate-500"></i>
-                            <input type="password" id="auth-password" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-4 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all" placeholder="••••••••">
-                        </div>
+                        <input type="password" id="auth-password" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all" placeholder="••••••••">
                     </div>
-
                     <div id="referral-field" class="hidden">
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1 ml-1 flex justify-between">
-                            Referral Code <span class="text-emerald-500 text-[10px] bg-emerald-500/10 px-2 rounded">+30 Credits</span>
-                        </label>
-                        <div class="relative">
-                            <i class="ri-coupon-line absolute left-4 top-3.5 text-slate-500"></i>
-                            <input type="text" id="auth-referral" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-4 text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all" placeholder="REF123456">
-                        </div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1 ml-1">Referral Code</label>
+                        <input type="text" id="auth-referral" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-white focus:border-emerald-500 outline-none transition-all">
                     </div>
                 </div>
-
-                <button id="auth-submit-btn" onclick="window.auth.submit()" class="w-full mt-8 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-500/25 transition-all transform active:scale-95">
-                    Access Dashboard
-                </button>
-
-                <p class="text-center text-xs text-slate-500 mt-6">
-                    By continuing, you agree to our Terms & Conditions.
-                </p>
+                <button id="auth-submit-btn" onclick="window.auth.submit()" class="w-full mt-8 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl transition-all">Continue</button>
             </div>
         </div>
     </main>
 
     <div id="app-shell" class="hidden flex h-screen overflow-hidden bg-slate-950">
-
         <aside class="hidden lg:flex w-[280px] bg-slate-900 border-r border-slate-800 flex-col">
             <div class="h-20 flex items-center px-6 border-b border-slate-800/50">
                 <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold mr-3">Z</div>
                 <span class="text-lg font-bold text-white tracking-wide">Zulora OS</span>
             </div>
-
             <div class="p-4">
                 <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4">
                     <div class="flex items-center gap-3 mb-3">
                         <div id="sidebar-avatar" class="w-10 h-10 rounded-full bg-gradient-to-tr from-pink-500 to-indigo-500 flex items-center justify-center font-bold text-white">U</div>
                         <div class="overflow-hidden">
-                            <h4 id="sidebar-name" class="text-sm font-bold text-white truncate">Loading...</h4>
-                            <p class="text-xs text-slate-400">Standard Plan</p>
+                            <h4 id="sidebar-name" class="text-sm font-bold text-white truncate">User</h4>
+                            <p class="text-xs text-slate-400">Free Plan</p>
                         </div>
                     </div>
                     <div class="flex justify-between items-center bg-slate-950/80 rounded px-3 py-2 border border-slate-800">
@@ -114,343 +229,104 @@
                     </div>
                 </div>
             </div>
-
-            <nav class="flex-1 px-3 space-y-1 overflow-y-auto custom-scrollbar py-2">
-                <div class="px-3 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-2">Main</div>
-                
-                <button onclick="window.router.go('dashboard')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 rounded-xl hover:bg-slate-800 hover:text-white transition-all active">
-                    <i class="ri-dashboard-3-line text-lg"></i> Dashboard
-                </button>
-                
-                <button onclick="window.router.go('create')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 rounded-xl hover:bg-slate-800 hover:text-white transition-all">
-                    <i class="ri-magic-line text-lg"></i> AI Builder
-                </button>
-                
-                <button onclick="window.router.go('projects')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 rounded-xl hover:bg-slate-800 hover:text-white transition-all">
-                    <i class="ri-stack-line text-lg"></i> My Projects
-                </button>
-
-                <div class="px-3 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-6">Growth</div>
-
-                <button onclick="window.router.go('templates')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 rounded-xl hover:bg-slate-800 hover:text-white transition-all">
-                    <i class="ri-layout-masonry-line text-lg"></i> Templates
-                </button>
-                
-                <button onclick="window.router.go('premium')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 rounded-xl hover:bg-slate-800 hover:text-white transition-all">
-                    <i class="ri-vip-crown-line text-lg text-yellow-500"></i> Premium
-                </button>
-                
-                <button onclick="window.router.go('referral')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 rounded-xl hover:bg-slate-800 hover:text-white transition-all">
-                    <i class="ri-share-line text-lg text-emerald-400"></i> Refer & Earn
-                </button>
+            <nav class="flex-1 px-3 space-y-1 overflow-y-auto py-2">
+                <button onclick="window.router.go('dashboard')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 rounded-xl hover:bg-slate-800 hover:text-white transition-all active"><i class="ri-dashboard-3-line text-lg"></i> Dashboard</button>
+                <button onclick="window.router.go('create')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 rounded-xl hover:bg-slate-800 hover:text-white transition-all"><i class="ri-magic-line text-lg"></i> AI Builder</button>
+                <button onclick="window.router.go('premium')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 rounded-xl hover:bg-slate-800 hover:text-white transition-all"><i class="ri-vip-crown-line text-lg text-yellow-500"></i> Premium</button>
             </nav>
-
-            <div class="p-4 border-t border-slate-800">
-                <button onclick="window.router.go('support')" class="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors">
-                    <i class="ri-customer-service-2-line"></i> Support
-                </button>
-                <button onclick="window.auth.logout()" class="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:text-red-300 transition-colors mt-1">
-                    <i class="ri-logout-box-line"></i> Log Out
-                </button>
+            <div class="p-4 border-t border-slate-800 space-y-1">
+                <button onclick="window.open('https://wa.me/916395211325', '_blank')" class="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-400 hover:text-green-400 transition-colors"><i class="ri-whatsapp-line"></i> WhatsApp</button>
+                <button onclick="window.open('https://instagram.com/zulora_official', '_blank')" class="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-400 hover:text-pink-400 transition-colors"><i class="ri-instagram-line"></i> Instagram</button>
+                <button onclick="window.open('mailto:zulora.help@gmail.com', '_blank')" class="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors"><i class="ri-mail-line"></i> Email Support</button>
+                <button onclick="window.auth.logout()" class="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:text-red-300 transition-colors"><i class="ri-logout-box-line"></i> Log Out</button>
             </div>
         </aside>
 
         <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-950 relative">
-            
             <header class="lg:hidden h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4">
-                <div class="font-bold text-white flex items-center gap-2">
-                    <div class="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center">Z</div> Zulora
-                </div>
+                <div class="font-bold text-white">Zulora OS</div>
                 <div class="flex items-center gap-3">
-                    <div class="bg-slate-800 px-3 py-1 rounded-full border border-slate-700 flex items-center gap-1">
-                        <i class="ri-flashlight-fill text-yellow-500 text-xs"></i>
-                        <span id="mobile-credits" class="text-xs font-bold text-white">0</span>
-                    </div>
-                    <button class="w-8 h-8 bg-slate-800 rounded-full text-white flex items-center justify-center"><i class="ri-menu-line"></i></button>
+                    <span id="mobile-credits" class="text-xs font-bold text-white bg-slate-800 px-3 py-1 rounded-full">0 Cr</span>
                 </div>
             </header>
-
-            <div class="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar p-4 lg:p-8 relative">
-
+            
+            <div class="flex-1 overflow-y-auto p-4 lg:p-8">
                 <section id="view-dashboard" class="view-section active max-w-7xl mx-auto">
-                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-                        <div>
-                            <h2 class="text-3xl font-bold text-white">Overview</h2>
-                            <p class="text-slate-400">Welcome back to your command center.</p>
-                        </div>
-                        <button onclick="window.router.go('create')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-indigo-500/20 flex items-center gap-2 transition-all">
-                            <i class="ri-add-line"></i> Create Project
-                        </button>
-                    </div>
-
+                    <h2 class="text-3xl font-bold text-white mb-6">Overview</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                            <div class="w-10 h-10 bg-indigo-500/10 rounded-lg flex items-center justify-center text-indigo-500 mb-4">
-                                <i class="ri-flashlight-fill text-xl"></i>
-                            </div>
-                            <p class="text-slate-400 text-sm font-medium">Available Credits</p>
-                            <h3 id="dash-credits-lg" class="text-3xl font-bold text-white mt-1">0</h3>
+                            <p class="text-slate-400 text-sm">Credits</p>
+                            <h3 id="dash-credits-lg" class="text-3xl font-bold text-white">0</h3>
                         </div>
                         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                            <div class="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-500 mb-4">
-                                <i class="ri-user-add-line text-xl"></i>
-                            </div>
-                            <p class="text-slate-400 text-sm font-medium">Referrals</p>
-                            <h3 id="dash-referrals-count" class="text-3xl font-bold text-white mt-1">0</h3>
+                            <p class="text-slate-400 text-sm">Sites</p>
+                            <h3 id="dash-sites-count" class="text-3xl font-bold text-white">0</h3>
                         </div>
-                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                            <div class="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center text-purple-500 mb-4">
-                                <i class="ri-layout-grid-line text-xl"></i>
-                            </div>
-                            <p class="text-slate-400 text-sm font-medium">Active Sites</p>
-                            <h3 id="dash-sites-count" class="text-3xl font-bold text-white mt-1">0</h3>
+                         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 cursor-pointer hover:border-indigo-500" onclick="window.router.go('premium')">
+                            <p class="text-slate-400 text-sm">Plan</p>
+                            <h3 class="text-3xl font-bold text-yellow-500">Free</h3>
                         </div>
                     </div>
+                    <div id="dashboard-projects-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    <div id="dashboard-empty-state" class="hidden py-12 text-center border border-dashed border-slate-800 rounded-2xl">
+                        <p class="text-slate-500 mb-4">No projects yet.</p>
+                        <button onclick="window.router.go('create')" class="text-indigo-400 font-bold">Start Building &rarr;</button>
+                    </div>
+                </section>
 
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-xl font-bold text-white">Recent Projects</h3>
-                            <button onclick="window.router.go('projects')" class="text-indigo-400 text-sm font-medium hover:underline">View All</button>
-                        </div>
-                        
-                        <div id="dashboard-projects-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            </div>
-
-                        <div id="dashboard-empty-state" class="hidden flex-col items-center justify-center py-12 bg-slate-900/50 border border-dashed border-slate-800 rounded-2xl">
-                            <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-4 text-slate-600">
-                                <i class="ri-folder-add-line text-2xl"></i>
-                            </div>
-                            <h4 class="text-white font-bold">No projects yet</h4>
-                            <p class="text-slate-500 text-sm mb-4">Launch your first AI website today.</p>
-                            <button onclick="window.router.go('create')" class="text-indigo-400 font-bold text-sm">Start Building &rarr;</button>
+                <section id="view-create" class="view-section hidden h-full flex flex-col items-center justify-center">
+                    <h2 class="text-3xl font-bold text-white mb-6">AI Website Builder</h2>
+                    <div class="w-full max-w-2xl bg-slate-900 p-2 rounded-2xl border border-slate-800">
+                        <textarea id="ai-prompt-input" rows="3" class="w-full bg-slate-950 text-white p-4 rounded-xl border-none outline-none resize-none" placeholder="Describe your website..."></textarea>
+                        <div class="flex justify-end p-2">
+                            <button id="btn-generate" onclick="window.ai.generate()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold">Generate (15 Cr)</button>
                         </div>
                     </div>
                 </section>
 
-                <section id="view-create" class="view-section hidden h-full flex flex-col items-center justify-center pb-20">
-                    <div class="max-w-3xl w-full text-center">
-                        <div class="inline-block px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-mono mb-6">
-                            POWERED BY CLAUDE 3.5 SONNET
-                        </div>
-                        <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6">What are we building?</h2>
-                        
-                        <div class="bg-slate-900 border border-slate-700/50 rounded-2xl p-2 shadow-2xl relative group">
-                            <textarea id="ai-prompt-input" rows="3" class="w-full bg-slate-950 text-white p-4 rounded-xl border-none outline-none resize-none placeholder-slate-600 text-lg" placeholder="Describe your website (e.g. A dark themed portfolio for a designer...)"></textarea>
-                            
-                            <div class="flex justify-between items-center px-2 pb-2 mt-2">
-                                <span class="text-xs text-slate-500 font-mono">COST: 15 CREDITS</span>
-                                <button id="btn-generate" onclick="window.ai.generate()" class="w-12 h-12 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl flex items-center justify-center transition-all shadow-lg shadow-indigo-500/20">
-                                    <i class="ri-arrow-up-line text-xl font-bold"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="mt-8 flex flex-wrap justify-center gap-3">
-                            <button onclick="window.ai.fillPrompt(this.innerText)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300 transition border border-slate-700">Landing Page for SaaS</button>
-                            <button onclick="window.ai.fillPrompt(this.innerText)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300 transition border border-slate-700">Coffee Shop Website</button>
-                            <button onclick="window.ai.fillPrompt(this.innerText)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300 transition border border-slate-700">Personal Resume</button>
-                        </div>
+                <section id="view-premium" class="view-section hidden max-w-4xl mx-auto text-center">
+                    <h2 class="text-3xl font-bold text-white mb-8">Upgrade</h2>
+                    <div class="bg-slate-900 border border-indigo-500/50 rounded-3xl p-8">
+                        <h3 class="text-2xl font-bold text-white">Enterprise</h3>
+                        <div class="text-4xl font-bold text-white my-4">₹199<span class="text-lg text-slate-500">/mo</span></div>
+                        <ul class="text-slate-300 space-y-2 mb-8 text-left max-w-xs mx-auto">
+                            <li>✅ 1000 Credits</li>
+                            <li>✅ Custom Subdomains</li>
+                            <li>✅ Priority Support</li>
+                        </ul>
+                        <button onclick="window.payment.openModal()" class="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl">Pay Now</button>
                     </div>
                 </section>
-
-                <section id="view-projects" class="view-section hidden max-w-7xl mx-auto">
-                    <h2 class="text-3xl font-bold text-white mb-8">All Projects</h2>
-                    <div id="all-projects-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                </section>
-
-                <section id="view-premium" class="view-section hidden max-w-4xl mx-auto">
-                    <div class="text-center mb-12">
-                        <h2 class="text-3xl font-bold text-white mb-2">Upgrade to Pro</h2>
-                        <p class="text-slate-400">Unlock unlimited potential.</p>
-                    </div>
-
-                    <div class="bg-slate-900 border border-indigo-500/50 rounded-3xl p-8 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-bl-xl uppercase">Best Value</div>
-                        <div class="flex flex-col md:flex-row items-center gap-8">
-                            <div class="flex-1">
-                                <h3 class="text-2xl font-bold text-white mb-2">Enterprise Plan</h3>
-                                <div class="text-4xl font-bold text-white mb-6">₹199<span class="text-lg text-slate-500 font-normal">/mo</span></div>
-                                <ul class="space-y-3">
-                                    <li class="flex items-center gap-3 text-slate-300"><i class="ri-check-fill text-indigo-500"></i> 1000 AI Credits</li>
-                                    <li class="flex items-center gap-3 text-slate-300"><i class="ri-check-fill text-indigo-500"></i> Custom Subdomains</li>
-                                    <li class="flex items-center gap-3 text-slate-300"><i class="ri-check-fill text-indigo-500"></i> Priority Support</li>
-                                </ul>
-                            </div>
-                            <div class="w-full md:w-auto">
-                                <button onclick="window.payment.openModal()" class="w-full md:w-64 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-xl shadow-indigo-600/20 transition-all">
-                                    Upgrade Now
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="view-referral" class="view-section hidden max-w-2xl mx-auto text-center h-full flex flex-col justify-center">
-                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-10 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-emerald-500/5 to-transparent pointer-events-none"></div>
-                        
-                        <div class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 text-emerald-500 text-4xl">
-                            <i class="ri-gift-2-line"></i>
-                        </div>
-                        
-                        <h2 class="text-3xl font-bold text-white mb-4">Refer & Earn</h2>
-                        <p class="text-slate-400 mb-8">Share your link. You get <strong class="text-white">10 credits</strong>. They get <strong class="text-white">30 credits</strong>.</p>
-
-                        <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl p-2 mb-8">
-                            <input type="text" id="referral-link-input" readonly value="Loading..." class="flex-1 bg-transparent border-none text-slate-300 px-4 text-sm font-mono focus:ring-0">
-                            <button onclick="window.referral.copy()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg font-bold text-sm transition-colors">Copy</button>
-                        </div>
-
-                        <div class="flex justify-center gap-4">
-                            <button onclick="window.referral.share('whatsapp')" class="flex items-center gap-2 px-6 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl font-bold">
-                                <i class="ri-whatsapp-fill"></i> WhatsApp
-                            </button>
-                            <button onclick="window.referral.share('twitter')" class="flex items-center gap-2 px-6 py-3 bg-[#1DA1F2] hover:bg-[#1a91da] text-white rounded-xl font-bold">
-                                <i class="ri-twitter-x-fill"></i> Twitter
-                            </button>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="view-templates" class="view-section hidden max-w-7xl mx-auto">
-                    <h2 class="text-3xl font-bold text-white mb-8">Templates</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 group cursor-pointer" onclick="window.ai.useTemplate('business')">
-                            <div class="h-48 bg-slate-800 relative">
-                                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=500" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                                <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                                    <span class="bg-white text-black px-4 py-2 rounded font-bold">Use Template</span>
-                                </div>
-                            </div>
-                            <div class="p-4">
-                                <h3 class="text-white font-bold">Corporate Business</h3>
-                            </div>
-                        </div>
-                        <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 group cursor-pointer" onclick="window.ai.useTemplate('portfolio')">
-                            <div class="h-48 bg-slate-800 relative">
-                                <img src="https://images.unsplash.com/photo-1558655146-d09347e0b7a9?w=500" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                                <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                                    <span class="bg-white text-black px-4 py-2 rounded font-bold">Use Template</span>
-                                </div>
-                            </div>
-                            <div class="p-4">
-                                <h3 class="text-white font-bold">Creative Portfolio</h3>
-                            </div>
-                        </div>
-                        <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 group cursor-pointer" onclick="window.ai.useTemplate('store')">
-                            <div class="h-48 bg-slate-800 relative">
-                                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                                <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                                    <span class="bg-white text-black px-4 py-2 rounded font-bold">Use Template</span>
-                                </div>
-                            </div>
-                            <div class="p-4">
-                                <h3 class="text-white font-bold">E-Commerce Store</h3>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="view-support" class="view-section hidden max-w-3xl mx-auto">
-                    <h2 class="text-3xl font-bold text-white mb-8">Support</h2>
-                    <div class="space-y-4">
-                        <a href="mailto:zulora.help@gmail.com" class="block bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-indigo-500 transition">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-indigo-400"><i class="ri-mail-line text-xl"></i></div>
-                                <div>
-                                    <h4 class="text-white font-bold">Email Support</h4>
-                                    <p class="text-slate-400">zulora.help@gmail.com</p>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="tel:+916395211325" class="block bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-green-500 transition">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-green-500"><i class="ri-whatsapp-line text-xl"></i></div>
-                                <div>
-                                    <h4 class="text-white font-bold">Phone / WhatsApp</h4>
-                                    <p class="text-slate-400">+91 6395211325</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </section>
-
             </div>
-
-            <nav class="lg:hidden h-16 bg-slate-900 border-t border-slate-800 flex justify-around items-center px-2 z-20">
-                <button onclick="window.router.go('dashboard')" class="flex flex-col items-center gap-1 p-2 text-indigo-400">
-                    <i class="ri-dashboard-3-line text-xl"></i>
-                    <span class="text-[10px]">Home</span>
-                </button>
-                <button onclick="window.router.go('projects')" class="flex flex-col items-center gap-1 p-2 text-slate-500 hover:text-white">
-                    <i class="ri-stack-line text-xl"></i>
-                    <span class="text-[10px]">Projects</span>
-                </button>
-                <button onclick="window.router.go('create')" class="relative -top-5 bg-indigo-600 w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-slate-950">
-                    <i class="ri-add-line text-2xl"></i>
-                </button>
-                <button onclick="window.router.go('premium')" class="flex flex-col items-center gap-1 p-2 text-slate-500 hover:text-white">
-                    <i class="ri-vip-crown-line text-xl"></i>
-                    <span class="text-[10px]">Pro</span>
-                </button>
-                <button onclick="window.router.go('referral')" class="flex flex-col items-center gap-1 p-2 text-slate-500 hover:text-white">
-                    <i class="ri-share-line text-xl"></i>
-                    <span class="text-[10px]">Earn</span>
-                </button>
+            
+            <nav class="lg:hidden h-16 bg-slate-900 border-t border-slate-800 flex justify-around items-center px-2">
+                <button onclick="window.router.go('dashboard')" class="text-indigo-400"><i class="ri-dashboard-3-line text-xl"></i></button>
+                <button onclick="window.router.go('create')" class="bg-indigo-600 w-12 h-12 rounded-full text-white -mt-6 border-4 border-slate-950 flex items-center justify-center"><i class="ri-add-line text-2xl"></i></button>
+                <button onclick="window.router.go('premium')" class="text-slate-500"><i class="ri-vip-crown-line text-xl"></i></button>
             </nav>
         </main>
     </div>
 
-    <div id="editor-modal" class="fixed inset-0 z-[5000] bg-slate-950 flex flex-col hidden opacity-0 transition-opacity duration-300">
-        <header class="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4">
-            <div class="flex items-center gap-4">
-                <button onclick="window.editor.close()" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white rounded hover:bg-slate-800"><i class="ri-close-line text-xl"></i></button>
-                <div class="hidden md:flex items-center gap-2 bg-slate-950 px-3 py-1 border border-slate-800 rounded-full">
-                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                    <span id="editor-subdomain" class="text-xs text-slate-400 font-mono">loading...</span>
-                </div>
-            </div>
-            
-            <div class="flex bg-slate-950 p-1 rounded-lg border border-slate-800">
-                <button id="view-desktop" onclick="window.editor.setView('desktop')" class="p-1.5 bg-slate-800 text-white rounded shadow-sm"><i class="ri-macbook-line"></i></button>
-                <button id="view-mobile" onclick="window.editor.setView('mobile')" class="p-1.5 text-slate-400 hover:text-white"><i class="ri-smartphone-line"></i></button>
-            </div>
-
-            <button onclick="window.editor.save()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-bold">Publish</button>
-        </header>
-
-        <div class="flex-1 bg-slate-800 flex items-center justify-center p-4 relative overflow-hidden">
-            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#6366f1 1px, transparent 1px); background-size: 20px 20px;"></div>
-            
-            <div id="editor-frame-container" class="w-full h-full bg-white shadow-2xl transition-all duration-500 relative group">
-                <iframe id="preview-frame" class="w-full h-full border-none bg-white"></iframe>
-                <div id="editor-loader" class="absolute inset-0 bg-white z-50 flex items-center justify-center">
-                    <div class="w-8 h-8 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin"></div>
-                </div>
-            </div>
+    <div id="payment-modal" class="fixed inset-0 z-[6000] bg-black/80 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-sm p-6 relative text-center">
+            <button onclick="window.payment.closeModal()" class="absolute top-4 right-4 text-white"><i class="ri-close-line"></i></button>
+            <h3 class="text-white font-bold text-xl mb-4">Pay via UPI</h3>
+            <div class="bg-white p-2 rounded-xl mb-4 mx-auto w-40 h-40"><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=shivenpanwar@fam&pn=Zulora&am=199&cu=INR" class="w-full"></div>
+            <code class="block bg-slate-950 p-2 rounded text-indigo-400 mb-4">shivenpanwar@fam</code>
+            <button onclick="window.open('upi://pay?pa=shivenpanwar@fam&pn=Zulora&am=199&cu=INR')" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl">Open UPI App</button>
         </div>
     </div>
 
-    <div id="payment-modal" class="fixed inset-0 z-[6000] bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-sm p-6 relative">
-            <button onclick="window.payment.closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="ri-close-line text-xl"></i></button>
-            
-            <div class="text-center">
-                <div class="w-14 h-14 bg-indigo-500/10 rounded-full flex items-center justify-center mx-auto mb-4 text-indigo-500 text-2xl"><i class="ri-secure-payment-line"></i></div>
-                <h3 class="text-white font-bold text-xl mb-1">Pay via UPI</h3>
-                <p class="text-slate-400 text-sm mb-6">Complete payment of ₹199</p>
-
-                <div class="bg-white p-4 rounded-xl mb-4 w-48 h-48 mx-auto">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=shivenpanwar@fam&pn=Zulora&am=199&cu=INR" class="w-full h-full">
-                </div>
-
-                <div class="bg-slate-950 border border-slate-800 p-3 rounded-lg flex justify-between items-center mb-4">
-                    <code class="text-xs text-slate-300">shivenpanwar@fam</code>
-                    <button onclick="window.utils.copy('shivenpanwar@fam')" class="text-indigo-400 text-xs font-bold">COPY</button>
-                </div>
-
-                <button onclick="window.open('upi://pay?pa=shivenpanwar@fam&pn=Zulora&am=199&cu=INR')" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl">Open UPI App</button>
-            </div>
+    <div id="editor-modal" class="fixed inset-0 z-[5000] bg-slate-950 hidden flex-col">
+        <header class="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4">
+            <button onclick="window.editor.close()" class="text-white"><i class="ri-close-line text-xl"></i></button>
+            <span class="text-slate-400 text-xs font-mono" id="editor-subdomain">site.zulora.in</span>
+            <button onclick="window.editor.save()" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm font-bold">Publish</button>
+        </header>
+        <div class="flex-1 bg-slate-800 p-4 flex items-center justify-center">
+             <div id="editor-frame-container" class="w-full h-full bg-white relative">
+                <iframe id="preview-frame" class="w-full h-full border-none"></iframe>
+             </div>
         </div>
     </div>
 
