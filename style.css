@@ -1,6 +1,6 @@
 /* ==========================================================================
-   ZULORA OS - TITANIUM KERNEL STYLESHEET (v15.0)
-   "The Neural Coding Environment" Theme
+   ZULORA OS - TITANIUM DESIGN SYSTEM (v16.0)
+   "The Neural Interface" Theme
    Status: Production Ready | Enterprise Grade
    Author: Zulora Engineering Team
    ========================================================================== */
@@ -9,51 +9,53 @@
    1. CORE VARIABLES & DESIGN TOKENS
    -------------------------------------------------------------------------- */
 :root {
-    /* --- BRAND PALETTE (Electric Blue Core) --- */
-    --brand-50:  #eff6ff;
-    --brand-100: #dbeafe;
-    --brand-200: #bfdbfe;
-    --brand-300: #93c5fd;
-    --brand-400: #60a5fa;
-    --brand-500: #3b82f6; /* CORE PRIMARY */
-    --brand-600: #2563eb;
-    --brand-700: #1d4ed8;
-    --brand-800: #1e40af;
-    --brand-900: #1e3a8a;
-    --brand-950: #172554;
+    /* --- BRAND PALETTE (The "Titanium" Fusion) --- */
+    --brand-50:  #eef2ff;
+    --brand-100: #e0e7ff;
+    --brand-200: #c7d2fe;
+    --brand-300: #a5b4fc;
+    --brand-400: #818cf8;
+    --brand-500: #6366f1; /* CORE INDIGO */
+    --brand-600: #4f46e5;
+    --brand-700: #4338ca;
+    --brand-800: #3730a3;
+    --brand-900: #312e81;
+    --brand-950: #1e1b4b;
 
-    /* --- AI IDENTITY COLORS (Model Specific) --- */
-    --ai-openai: #10a37f;  /* ChatGPT Green */
-    --ai-claude: #d97757;  /* Anthropic Orange */
-    --ai-gemini: #4285f4;  /* Google Blue */
-    --ai-llama:  #8b5cf6;  /* Meta Purple */
+    /* --- NEON ACCENTS (Cyberpunk touches) --- */
+    --neon-blue:   #00f3ff;
+    --neon-purple: #bc13fe;
+    --neon-green:  #0aff68;
+    --neon-pink:   #ff0055;
+    --neon-gold:   #ffd700;
+    --neon-orange: #f97316;
 
-    /* --- SURFACE COLORS (Absolute Void) --- */
-    --bg-void:    #030303; /* Deepest Black */
-    --bg-surface: #0a0a0a; /* Primary Panel */
-    --bg-panel:   #121212; /* Secondary Panel */
-    --bg-input:   #18181b; /* Inputs/Forms */
-    --bg-overlay: rgba(3, 3, 3, 0.85);
-
+    /* --- SURFACE COLORS (Deep Space Mode) --- */
+    --bg-void:    #020617; /* Absolute Black/Blue */
+    --bg-surface: #0f172a; /* Slate 900 */
+    --bg-panel:   #1e293b; /* Slate 800 */
+    --bg-input:   #111827; /* Dark Inputs */
+    --bg-overlay: rgba(2, 6, 23, 0.85);
+    
     /* --- BORDER SYSTEM --- */
     --border-subtle: rgba(255, 255, 255, 0.05);
     --border-light:  rgba(255, 255, 255, 0.1);
     --border-medium: rgba(255, 255, 255, 0.15);
-    --border-active: rgba(59, 130, 246, 0.5);
+    --border-active: rgba(99, 102, 241, 0.5);
 
     /* --- GLASSMORPHISM ENGINE --- */
-    --glass-heavy: rgba(10, 10, 10, 0.95);
-    --glass-medium: rgba(18, 18, 18, 0.7);
-    --glass-light: rgba(255, 255, 255, 0.02);
-    --glass-blur: 20px;
-    --glass-border: 1px solid var(--border-light);
+    --glass-heavy: rgba(15, 23, 42, 0.95);
+    --glass-medium: rgba(30, 41, 59, 0.75);
+    --glass-light: rgba(255, 255, 255, 0.03);
+    --glass-blur: 24px;
+    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
 
     /* --- TYPOGRAPHY COLORS --- */
-    --text-primary: #ffffff;
-    --text-secondary: #a1a1aa;
-    --text-tertiary: #71717a;
-    --text-disabled: #52525b;
-    --text-inverse: #000000;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-tertiary: #64748b;
+    --text-disabled: #475569;
+    --text-inverse: #0f172a;
 
     /* --- SEMANTIC STATES --- */
     --status-live:  #10b981;
@@ -67,13 +69,14 @@
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.2);
     --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.5);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
     
     /* --- GLOWING FX --- */
-    --glow-brand: 0 0 30px rgba(59, 130, 246, 0.3);
-    --glow-ai-gemini: 0 0 25px rgba(66, 133, 244, 0.3);
-    --glow-ai-claude: 0 0 25px rgba(217, 119, 87, 0.3);
-    --glow-success: 0 0 20px rgba(16, 185, 129, 0.2);
-    --glow-gold: 0 0 30px rgba(255, 215, 0, 0.2);
+    --glow-brand: 0 0 30px rgba(99, 102, 241, 0.4);
+    --glow-neon: 0 0 20px rgba(0, 243, 255, 0.3);
+    --glow-text: 0 0 15px rgba(255, 255, 255, 0.2);
+    --glow-gold: 0 0 25px rgba(255, 215, 0, 0.3);
+    --glow-green: 0 0 20px rgba(16, 185, 129, 0.4);
 
     /* --- ANIMATION PHYSICS --- */
     --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -81,12 +84,14 @@
     --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
     
-    /* --- Z-INDEX LAYERS --- */
+    /* --- LAYOUT Z-INDEX --- */
     --z-base: 0;
-    --z-nav: 100;
-    --z-sidebar: 90;
-    --z-modal-bg: 9998;
-    --z-modal: 9999;
+    --z-background-fx: -1;
+    --z-nav: 50;
+    --z-sidebar-overlay: 9000;
+    --z-sidebar: 9001;
+    --z-modal-backdrop: 9500;
+    --z-modal: 9600;
     --z-toast: 10000;
     --z-bootloader: 11000;
 }
@@ -110,36 +115,36 @@ html {
 }
 
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: var(--bg-void);
-    color: var(--text-secondary);
-    line-height: 1.5;
-    overflow-x: hidden;
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scroll */
     height: 100%;
     position: relative;
     /* Subtle Grain Texture for "Cinematic" Feel */
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
 /* --- Selection Styling --- */
 ::selection {
     background: var(--brand-500);
     color: white;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 /* --- Typography Defaults --- */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-weight: 800; /* Extra bold for headlines */
+    letter-spacing: -0.03em;
     color: var(--text-primary);
 }
 
 a {
     color: inherit;
     text-decoration: none;
-    transition: color 0.2s var(--ease-smooth);
+    transition: all 0.2s var(--ease-smooth);
     cursor: pointer;
 }
 
@@ -151,16 +156,16 @@ button {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Code Font for Inputs */
-input, textarea, select, code, pre {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+input, textarea, select {
+    font-family: 'JetBrains Mono', monospace; /* Code feel for inputs */
+    outline: none;
 }
 
 /* --------------------------------------------------------------------------
    3. ADVANCED UTILITIES & MIXINS
    -------------------------------------------------------------------------- */
 
-/* --- The "Invisible" Scrollbar --- */
+/* --- The "Invisible" Scrollbar (Sleek Look) --- */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
@@ -169,41 +174,51 @@ input, textarea, select, code, pre {
     scrollbar-width: none;
 }
 
-/* --- IDE Scrollbar (Desktop) --- */
+/* --- Custom Scrollbar (Desktop) --- */
 .custom-scrollbar::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: var(--bg-surface);
-    border-left: 1px solid var(--border-light);
+    background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--border-medium);
-    border: 3px solid var(--bg-surface); /* Padding effect */
+    background: var(--bg-card);
     border-radius: 99px;
+    border: 2px solid var(--bg-void); /* Creates padding effect */
+    background-clip: content-box;
     transition: background 0.3s;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--text-tertiary);
+    background-color: var(--brand-600);
 }
 
-/* --- Glassmorphism Utilities --- */
+/* --- Glassmorphism Panels --- */
 .glass-panel {
     background: var(--glass-light);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     border: var(--glass-border);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
-.glass-header {
-    background: rgba(3, 3, 3, 0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border-light);
+/* --- Text Gradients --- */
+.text-gradient-brand {
+    background: linear-gradient(135deg, var(--brand-400), #c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
-/* --- Focus Ring (Accessibility) --- */
+.text-gradient-gold {
+    background: linear-gradient(135deg, #ffd700, #fcd34d, #d97706);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+}
+
+/* --- Focus Ring Utility --- */
 *:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--bg-void), 0 0 0 4px var(--brand-500);
@@ -211,19 +226,49 @@ input, textarea, select, code, pre {
 }
 
 /* --------------------------------------------------------------------------
-   4. KEYFRAME ANIMATIONS
+   4. KEYFRAME ANIMATIONS (PHYSICS BASED)
    -------------------------------------------------------------------------- */
 
-/* A. Fade In Up */
+/* A. Fade In Up (Standard Entry) */
 @keyframes fadeInUp {
-    0% { opacity: 0; transform: translate3d(0, 20px, 0); }
+    0% { opacity: 0; transform: translate3d(0, 40px, 0); }
     100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
-.animate-fade-in {
-    animation: fadeInUp 0.6s var(--ease-snappy) forwards;
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s var(--ease-snappy) forwards;
 }
 
-/* B. Spin Slow */
+/* B. Fade In (Generic) */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* C. Background Blob Floating (Organic Movement) */
+@keyframes blobFloat {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+}
+.animate-blob {
+    animation: blobFloat 20s infinite ease-in-out;
+}
+
+/* D. Sidebar Slide In */
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+@keyframes slideOutRight {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+}
+
+/* E. Spin Slow (Loaders) */
 @keyframes spinSlow {
     to { transform: rotate(360deg); }
 }
@@ -231,305 +276,438 @@ input, textarea, select, code, pre {
     animation: spinSlow 3s linear infinite;
 }
 
-/* C. Pulse Glow (For AI Badges) */
-@keyframes pulseGlow {
-    0%, 100% { opacity: 1; box-shadow: 0 0 15px currentColor; }
-    50% { opacity: 0.6; box-shadow: 0 0 5px currentColor; }
-}
-.animate-pulse-glow {
-    animation: pulseGlow 3s infinite;
-}
-
-/* D. Shimmer (Loading Skeleton) */
+/* F. Shimmer Loading Effect */
 @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
 }
-.shimmer-bg {
-    background: linear-gradient(90deg, var(--bg-panel) 25%, var(--border-light) 50%, var(--bg-panel) 75%);
+.shimmer-effect {
+    background: linear-gradient(90deg, var(--bg-card) 25%, var(--brand-900) 50%, var(--bg-card) 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite linear;
 }
 
-/* E. Scanline (Cyberpunk Effect) */
-@keyframes scanline {
-    0% { transform: translateY(-100%); opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { transform: translateY(100vh); opacity: 0.5; }
+/* G. Toast Slide In */
+@keyframes toastSlideIn {
+    0% { opacity: 0; transform: translateX(100%) scale(0.9); }
+    70% { opacity: 1; transform: translateX(-5%); }
+    100% { opacity: 1; transform: translateX(0) scale(1); }
 }
-.scanline::before {
-    content: " ";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3) 51%);
-    background-size: 100% 4px;
-    pointer-events: none;
-    z-index: 10;
+.animate-toast-enter {
+    animation: toastSlideIn 0.5s var(--ease-elastic) forwards;
 }
 
-/* F. Slide In From Right (Toasts/Sidebar) */
-@keyframes slideInRight {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+/* H. Pulse Glow (For Live Badges) */
+@keyframes pulseGlow {
+    0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--neon-green); }
+    50% { opacity: 0.5; box-shadow: 0 0 0 var(--neon-green); }
 }
-.animate-slide-in {
-    animation: slideInRight 0.4s var(--ease-spring) forwards;
+.animate-pulse-glow {
+    animation: pulseGlow 2s infinite;
 }
 
 /* --------------------------------------------------------------------------
-   5. COMPONENT STYLES: NAVIGATION BAR
+   5. COMPONENT STYLES: NAVIGATION & SIDEBAR
    -------------------------------------------------------------------------- */
 
 /* Global Navbar */
 #navbar {
-    transition: all 0.3s var(--ease-smooth);
+    transition: all 0.4s var(--ease-smooth);
+    will-change: background-color, backdrop-filter;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Dynamic Island (Center Tabs) */
-#nav-context {
-    background: rgba(18, 18, 18, 0.8);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    transition: transform 0.3s;
+#navbar.scrolled {
+    background: rgba(2, 6, 23, 0.95);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    height: 64px; /* Shrink on scroll */
 }
 
-#nav-context:hover {
-    transform: translateX(-50%) translateY(2px);
+/* Brand Logo Hover */
+#navbar .group:hover .w-10 {
+    box-shadow: 0 0 20px var(--glow-brand);
 }
 
-/* Nav Tabs */
-.nav-tab {
+/* Nav Buttons (Desktop) */
+#navbar button.hover\:text-white {
+    position: relative;
+}
+
+#navbar button.hover\:text-white::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--brand-500);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+#navbar button.hover\:text-white:hover::after {
+    width: 100%;
+    box-shadow: 0 0 8px var(--brand-500);
+}
+
+/* Build Free Button (Navbar) */
+#nav-logged-out button.bg-white {
     position: relative;
     overflow: hidden;
+    transition: transform 0.2s;
 }
 
-.nav-tab.active {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-}
-
-/* User Avatar in Header */
-#header-avatar {
-    transition: all 0.3s var(--ease-elastic);
-    box-shadow: 0 0 0 0 var(--brand-500);
-}
-
-#auth-user button:hover #header-avatar {
-    box-shadow: 0 0 0 2px var(--brand-500);
+#nav-logged-out button.bg-white:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 15px rgba(255,255,255,0.4);
 }
 
 /* --------------------------------------------------------------------------
-   6. COMPONENT STYLES: SIDEBAR (DESKTOP)
+   6. COMPONENT STYLING: SIDEBAR DRAWER (THE "THREE DOTS" MENU)
    -------------------------------------------------------------------------- */
 
-#sidebar-left {
-    background: var(--bg-surface);
-    /* border-right handled by Tailwind */
+/* Sidebar Container */
+#sidebar-drawer {
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.8);
+    border-left: 1px solid var(--border-light);
+    will-change: transform;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Sidebar Buttons */
-#sidebar-left button {
-    transition: all 0.2s;
+/* Overlay Backdrop */
+#sidebar-overlay {
+    backdrop-filter: blur(8px); /* Heavy blur for focus */
+    transition: opacity 0.4s var(--ease-smooth);
+}
+
+/* Drawer Header */
+#sidebar-drawer .border-b {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(10px);
+}
+
+/* User Profile Card inside Drawer */
+#sidebar-drawer .bg-gradient-to-br {
+    border: 1px solid var(--border-medium);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#sidebar-drawer .bg-gradient-to-br:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    border-color: var(--brand-500);
+}
+
+/* Menu Items (The Links) */
+#sidebar-drawer .nav-item-drawer {
+    /* Base style handled by Tailwind classes in HTML, these are enhancements */
+}
+
+/* Hover Sweep Effect for Drawer Items */
+#sidebar-drawer button.group {
+    position: relative;
+    overflow: hidden;
     border: 1px solid transparent;
 }
 
-#sidebar-left button:hover {
-    background: var(--bg-panel);
-    border-color: var(--border-light);
+#sidebar-drawer button.group:hover {
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+    border-color: rgba(99, 102, 241, 0.2);
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+#sidebar-drawer button.group i {
+    transition: transform 0.3s var(--ease-elastic);
+}
+
+#sidebar-drawer button.group:hover i {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 5px currentColor);
+}
+
+/* --------------------------------------------------------------------------
+   7. COMPONENT STYLES: HERO SECTION (HOME)
+   -------------------------------------------------------------------------- */
+
+/* The Background Glow Blob */
+#view-home .absolute.bg-brand-600\/10 {
+    animation: pulseFast 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulseFast {
+    0% { opacity: 0.1; transform: translate(-50%, 0) scale(1); }
+    100% { opacity: 0.2; transform: translate(-50%, 0) scale(1.1); }
+}
+
+/* Hero Text Gradient */
+h1 .text-transparent {
+    background-size: 200% auto;
+    animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
+}
+
+/* Hero Input Box (The "Prompt") */
+#hero-prompt {
+    font-size: 1.125rem;
+    font-weight: 500;
     color: var(--text-primary);
+    caret-color: var(--brand-500);
+    transition: all 0.3s;
+}
+#hero-prompt::placeholder {
+    color: var(--text-tertiary);
+    transition: opacity 0.3s;
+}
+#hero-prompt:focus::placeholder {
+    opacity: 0.3;
+}
+#hero-prompt:focus {
+    background-color: rgba(30, 41, 59, 0.8);
+    box-shadow: inset 0 0 0 2px var(--brand-500);
 }
 
-/* Active State Simulation (via JS class or hover) */
-#sidebar-left button.active {
-    background: var(--brand-500);
-    color: white;
+/* Hero Generate Button */
+#view-home button.bg-brand-600 {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px var(--glow-brand);
 }
 
-/* System Status Indicators */
-.text-status-live {
-    color: var(--status-live);
-    text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
-}
-
-/* --------------------------------------------------------------------------
-   7. COMPONENT STYLES: SIDEBAR DRAWER (RIGHT)
-   -------------------------------------------------------------------------- */
-
-#sidebar-drawer {
-    box-shadow: -10px 0 50px rgba(0,0,0,0.8);
-    background: var(--bg-surface);
-}
-
-/* Profile Card in Drawer */
-#sidebar-drawer .bg-surface\/50 {
-    background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.1), transparent 70%), var(--bg-surface);
-}
-
-/* Drawer Avatar */
-#drawer-avatar {
-    background: linear-gradient(135deg, var(--brand-600), var(--brand-800));
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-
-/* Upgrade Button in Drawer */
-#sidebar-drawer button.bg-gradient-to-r {
-    box-shadow: 0 4px 15px rgba(234, 179, 8, 0.2);
-}
-
-/* --------------------------------------------------------------------------
-   8. COMPONENT STYLES: DASHBOARD (HOME)
-   -------------------------------------------------------------------------- */
-
-/* Stat Cards */
-#view-home .bg-surface {
-    background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-panel) 100%);
-    transition: transform 0.3s, border-color 0.3s;
-}
-
-#view-home .bg-surface:hover {
+#view-home button.bg-brand-600:hover {
+    box-shadow: 0 0 40px var(--glow-brand);
     transform: translateY(-2px);
-    border-color: var(--border-medium);
 }
 
-/* Quick Action Card (New Project) */
-#view-home .bg-gradient-to-br {
-    box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.5);
-    transition: all 0.3s var(--ease-elastic);
+#view-home button.bg-brand-600::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+    transform: scale(0);
+    transition: transform 0.5s ease-out;
 }
 
-#view-home .bg-gradient-to-br:hover {
-    transform: scale(1.02);
-    box-shadow: 0 15px 40px -10px rgba(37, 99, 235, 0.7);
+#view-home button.bg-brand-600:active::after {
+    transform: scale(1);
+    transition: 0s;
+}
+
+/* --------------------------------------------------------------------------
+   8. COMPONENT STYLES: DASHBOARD STATS
+   -------------------------------------------------------------------------- */
+
+/* Stat Card Container */
+.grid-cols-1 .bg-slate-900\/50 {
+    transition: all 0.4s var(--ease-spring);
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(10px);
+}
+
+.grid-cols-1 .bg-slate-900\/50:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: var(--border-active);
+    background: rgba(15, 23, 42, 0.7);
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+}
+
+/* Icon Glow inside Stat Card */
+.grid-cols-1 .bg-slate-900\/50:hover i {
+    text-shadow: 0 0 15px currentColor;
+}
+
+/* Number Counter Animation (Simulated via CSS for loaded state) */
+#dash-credits, #dash-sites, #dash-referrals {
+    transition: color 0.3s;
 }
 
 /* --------------------------------------------------------------------------
    9. COMPONENT STYLES: AI BUILDER (CREATE)
    -------------------------------------------------------------------------- */
 
-/* Model Selectors (Cards) */
+/* Engine Selection Cards */
 input[type="radio"]:checked + div {
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: inset 0 0 0 1px currentColor, 0 0 20px rgba(0,0,0,0.5);
-    transform: translateY(-2px);
+    background: rgba(99, 102, 241, 0.05);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.1), inset 0 0 0 1px var(--brand-500);
+    transform: scale(1.02);
 }
 
 input[type="radio"] + div {
-    transition: all 0.2s var(--ease-smooth);
+    transition: all 0.3s var(--ease-smooth);
 }
 
-/* Specific Model Colors when checked */
-input[value="openai"]:checked + div { border-color: var(--ai-openai); color: var(--ai-openai); }
-input[value="claude"]:checked + div { border-color: var(--ai-claude); color: var(--ai-claude); }
-input[value="gemini"]:checked + div { border-color: var(--ai-gemini); color: var(--ai-gemini); }
-input[value="llama"]:checked + div { border-color: var(--ai-llama); color: var(--ai-llama); }
+input[type="radio"] + div:hover {
+    border-color: var(--text-tertiary);
+    background: rgba(255,255,255,0.02);
+}
 
-/* The Prompt Textarea (IDE Feel) */
-#ai-prompt {
-    background-color: #0e0e0e; /* Slightly lighter than void */
-    background-image: linear-gradient(#111 1px, transparent 1px), linear-gradient(90deg, #111 1px, transparent 1px);
-    background-size: 20px 20px;
-    caret-color: var(--brand-500);
+/* Prompt Textarea */
+#ai-prompt-input {
+    background-image: linear-gradient(#0f172a, #0f172a), linear-gradient(to right, #334155, #0f172a);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    transition: all 0.3s var(--ease-smooth);
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
     line-height: 1.6;
-    transition: box-shadow 0.3s;
 }
 
-#ai-prompt:focus {
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+#ai-prompt-input:focus {
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 0 2px var(--brand-500);
+    border-color: transparent;
 }
 
-/* Generate Button */
+/* Initialize Build Button */
 #btn-generate {
-    box-shadow: 0 0 15px rgba(255,255,255,0.1);
-    transition: all 0.2s;
+    background: linear-gradient(135deg, var(--brand-600), var(--brand-700));
 }
 
 #btn-generate:hover {
-    box-shadow: 0 0 25px rgba(255,255,255,0.2);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-600));
+    box-shadow: 0 0 25px var(--glow-brand);
 }
 
 /* --------------------------------------------------------------------------
-   10. COMPONENT STYLES: PREMIUM & PAYMENT
+   10. COMPONENT STYLES: PREMIUM & PAYMENT (GOLD THEME)
    -------------------------------------------------------------------------- */
 
-/* Premium Card Container */
-#view-premium .w-full.max-w-4xl {
-    background: radial-gradient(circle at top right, rgba(234, 179, 8, 0.05), transparent 60%), var(--bg-surface);
-    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+/* The Premium Card */
+#view-premium .bg-gradient-to-b {
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
+    border: 1px solid rgba(255, 215, 0, 0.15); /* Subtle Gold Border */
+    box-shadow: 0 0 60px rgba(255, 215, 0, 0.05);
 }
 
-/* Titanium Text */
-.text-yellow-500 {
-    text-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+/* Titanium Badge */
+#view-premium .text-brand-400 {
+    color: var(--neon-gold);
+    border-color: rgba(255, 215, 0, 0.3);
+    background: rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
 }
 
 /* Payment Box */
-#view-premium .bg-void {
-    border: 1px solid rgba(255, 215, 0, 0.1);
-    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+#view-premium .bg-slate-900 {
+    border: 1px solid var(--border-light);
+    transition: transform 0.3s;
 }
 
-/* Pay Button */
-#view-premium button.bg-brand-600 {
-    background: linear-gradient(135deg, var(--brand-600), var(--brand-800));
-    border: 1px solid rgba(255,255,255,0.1);
+#view-premium .bg-slate-900:hover {
+    border-color: var(--neon-gold);
+    transform: translateY(-2px);
 }
 
-#view-premium button.bg-brand-600:hover {
-    box-shadow: 0 0 20px var(--glow-brand);
+/* UPI Copy Button */
+#view-premium button.text-white.bg-slate-800:hover {
+    background: var(--neon-gold);
+    color: black;
+    box-shadow: 0 0 10px var(--neon-gold);
 }
 
 /* --------------------------------------------------------------------------
-   11. COMPONENT STYLES: MODALS (AUTH & EDITOR)
+   11. COMPONENT STYLES: AUTHENTICATION MODAL (GOOGLE)
    -------------------------------------------------------------------------- */
 
-/* Auth Modal */
-#auth-modal .bg-surface {
-    background: rgba(10, 10, 10, 0.95);
-    backdrop-filter: blur(24px);
-    border: 1px solid var(--border-light);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-}
-
-/* Google Button */
-#btn-google {
-    border: 1px solid var(--border-light);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-#btn-google:hover {
-    border-color: rgba(255,255,255,0.3);
-    box-shadow: 0 0 15px rgba(255,255,255,0.1);
-}
-
-/* Full Screen Editor */
-#editor-modal {
+/* Modal Container */
+#auth-modal {
+    perspective: 1000px;
     z-index: 9999;
 }
 
-#editor-frame-wrap {
-    border-radius: 8px;
-    border: 1px solid var(--border-light);
+#auth-modal .bg-slate-900 {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--border-medium);
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.8);
+    transition: all 0.3s var(--ease-elastic);
 }
 
-/* Floating Toolbar in Editor */
-#editor-frame-wrap .absolute.bottom-4 {
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.1);
+/* Google Button Styling */
+#google-signin-btn {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+#google-signin-btn:hover {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    border-color: white;
+}
+
+#google-signin-btn:active {
+    transform: scale(0.98);
 }
 
 /* --------------------------------------------------------------------------
-   12. LOADING INDICATORS (BOOTLOADER)
+   12. EDITOR INTERFACE (THE WORKSTATION)
+   -------------------------------------------------------------------------- */
+
+/* Header */
+#editor-modal header {
+    background: rgba(2, 6, 23, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+/* The Iframe Container */
+#editor-frame-container {
+    transition: width 0.6s var(--ease-elastic), height 0.6s var(--ease-elastic), border-radius 0.6s, border-width 0.6s;
+    transform-origin: center top;
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.9);
+    background: #ffffff; /* Frame bg is always white for website contrast */
+}
+
+/* Mobile View Simulation (iPhone 14 Pro Look) */
+#editor-frame-container.mobile-view {
+    width: 393px !important; /* iPhone Width */
+    height: 852px !important; /* iPhone Height */
+    max-height: 90vh;
+    border-radius: 50px;
+    border: 12px solid #2d2d2d;
+    position: relative;
+    box-shadow: 0 0 0 2px #444, 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* The Dynamic Island / Notch */
+#editor-frame-container.mobile-view::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 35px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 50;
+    pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   13. PROJECT CARDS (DASHBOARD)
+   -------------------------------------------------------------------------- */
+.project-card-enter {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Iframe Thumbnail Interaction */
+.group:hover iframe {
+    transform: scale(1.05);
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   14. LOADING INDICATORS (BOOTLOADER)
    -------------------------------------------------------------------------- */
 
 /* Master Boot Bar */
 #boot-bar {
-    box-shadow: 0 0 15px var(--brand-500);
+    box-shadow: 0 0 20px var(--brand-500);
     position: relative;
     overflow: hidden;
 }
@@ -561,49 +739,40 @@ input[value="llama"]:checked + div { border-color: var(--ai-llama); color: var(-
 }
 
 /* --------------------------------------------------------------------------
-   13. TOAST NOTIFICATIONS
-   -------------------------------------------------------------------------- */
-#toast-dock {
-    perspective: 1000px;
-}
-
-/* --------------------------------------------------------------------------
-   14. RESPONSIVE MEDIA QUERIES
+   15. RESPONSIVE MEDIA QUERIES
    -------------------------------------------------------------------------- */
 
 /* Mobile (Up to 768px) */
 @media (max-width: 768px) {
-    /* Hide Left Sidebar */
-    #sidebar-left { display: none; }
+    /* Typography Adjustments */
+    h1 { font-size: 2.5rem !important; }
+    h2 { font-size: 2rem !important; }
     
-    /* Adjust Header */
-    #navbar { padding-left: 1rem; padding-right: 1rem; }
+    /* Disable heavy blurs for battery life */
+    .animate-pulse-fast { animation: none; opacity: 0.1; }
     
-    /* Adjust Typography */
-    h1 { font-size: 2rem !important; }
-    h2 { font-size: 1.5rem !important; }
-    
-    /* Stack Grids */
-    .grid { grid-template-columns: 1fr !important; }
-    
-    /* Model Selector Scroll */
-    #view-create .grid {
-        display: flex;
-        overflow-x: auto;
-        padding-bottom: 1rem;
-        scroll-snap-type: x mandatory;
+    /* Sidebar Full Width on Mobile */
+    #sidebar-drawer {
+        width: 85%;
+        max-width: 320px;
     }
-    #view-create .grid label {
-        min-width: 140px;
-        scroll-snap-align: start;
+
+    /* Grid Stacking */
+    .grid { grid-template-columns: 1fr; }
+    
+    /* Premium Card Padding */
+    #view-premium .bg-gradient-to-b {
+        padding: 1.5rem;
     }
 }
 
 /* Tablet (768px - 1024px) */
 @media (min-width: 768px) and (max-width: 1024px) {
-    #sidebar-left { width: 80px; } /* Slim sidebar */
-    #sidebar-left span { display: none; } /* Icons only */
-    #sidebar-left .px-3 { text-align: center; }
+    .max-w-7xl { padding-left: 2rem; padding-right: 2rem; }
+    
+    #view-create {
+        padding-bottom: 120px; /* Space for bottom nav if used */
+    }
 }
 
 /* Desktop (1024px+) */
@@ -613,14 +782,16 @@ input[value="llama"]:checked + div { border-color: var(--ai-llama); color: var(-
         transform: scale(1.05);
     }
     
-    /* Custom Scrollbar only for mouse */
-    * { scrollbar-width: thin; }
+    /* Custom Scrollbar only for mouse users */
+    * {
+        scrollbar-width: thin;
+    }
 }
 
-/* Ultra-Wide (1440px+) */
+/* Large Screens (1440px+) */
 @media (min-width: 1440px) {
     body { font-size: 1.05rem; }
-    .max-w-7xl { max-width: 100rem; }
+    .max-w-7xl { max-width: 90rem; }
 }
 
 /* --------------------------------------------------------------------------
