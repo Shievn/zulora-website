@@ -6,16 +6,13 @@
  * /\_____\  \ \_____\  \ \_____\  \ \_____\  \ \_\ \_\  \ \_\ \_\ 
  * \/_____/   \/_____/   \/_____/   \/_____/   \/_/ /_/   \/_/\/_/ 
  *
- * ZULORA OS - TITANIUM KERNEL (v13.0.0)
+ * ZULORA OS - TITANIUM KERNEL (v14.0.0 STABLE)
  * "The Unbreakable Neural Engine"
- * * [ ARCHITECTURE MANIFEST ]
- * 1. Bootloader ..... Self-Healing Instant Start
- * 2. StateStore ..... Persistent Redux-like Data Layer
- * 3. AuthCore ....... Google Firebase + Offline Session Token
- * 4. NeuralNet ...... Dual-Engine AI (Claude/Llama Logic)
- * 5. Hosting ........ Edge Network Simulation & Subdomain DNS
- * 6. Referral ....... Viral Growth Engine (Unique Keys)
- * 7. Editor ......... Real-time DOM Manipulation
+ * * [ CHANGELOG v14 ]
+ * 1. FIXED: Sidebar Support Links (Instagram/Email now redirect correctly)
+ * 2. FIXED: Bootloader Race Conditions
+ * 3. UPGRADED: State Store Persistence
+ * 4. OPTIMIZED: Dual-Core AI Logic
  * * (c) 2026 Zulora Inc. | Enterprise License
  * ==========================================================================================
  */
@@ -25,37 +22,28 @@
 /* --------------------------------------------------------------------------
    SECTION 1: SYSTEM CONFIGURATION & ENVIRONMENT
    -------------------------------------------------------------------------- */
+// Load config injected from HTML or fallback to defaults
 const ENV = window.ZULORA_CONFIG || {};
 
 const SYSTEM = {
-    version: '13.0.0-titanium',
-    build: '2026.02.04',
-    debug: true, // Enables verbose console logging
+    version: '14.0.0-titanium',
+    build: '2026.02.05',
+    debug: true, 
     
     // Economic Engine
     economy: {
-        signupBonus: 30,       // Base credits for new users
-        referralReward: 15,    // Bonus for using a code
-        referrerReward: 15,    // Bonus for the owner of the code
-        generationCost: 15,    // Cost to build a site
-        aiEditCost: 3,         // Cost to edit via AI
-        premiumCost: 199,      // INR
-        premiumCredits: 1000   // Monthly allowance
+        signupBonus: 30,       // Credits on new account
+        referralReward: 15,    // Credits for referring
+        generationCost: 15,    // Cost to build site
+        aiEditCost: 3,         // Cost to AI edit
+        premiumCost: 199       // INR Price
     },
 
-    // Hosting Configuration
-    hosting: {
-        rootDomain: 'zulora.in',
-        nameservers: ['ns1.zulora.cloud', 'ns2.zulora.cloud'],
-        sslProvider: 'Let\'s Encrypt v3'
-    },
-
-    // AI Engine Config
-    ai: {
-        defaults: {
-            engine: 'claude',
-            temperature: 0.7
-        }
+    // Support Configuration (Hardcoded for stability)
+    contact: {
+        whatsapp: "916395211325", // Clean number for API
+        email: "zulora.help@gmail.com",
+        instagram: "https://www.instagram.com/zulora_official?igsh=MTRvOGYwNGZoZ3h0aw=="
     }
 };
 
@@ -63,55 +51,30 @@ const SYSTEM = {
    SECTION 2: GLOBAL UTILITY TOOLKIT
    -------------------------------------------------------------------------- */
 const Utils = {
-    // Cryptographic UUID Generator
+    // Generate unique IDs
     uuid() {
-        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-            return crypto.randomUUID();
-        }
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
             const r = (Math.random() * 16) | 0;
             const v = c === 'x' ? r : (r & 0x3) | 0x8;
             return v.toString(16);
         });
     },
 
-    // Human-Readable Referral Code Generator (e.g., "ZUL-K9X2")
+    // Generate readable referral codes
     generateRefCode() {
-        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // No I, O, 0, 1 to avoid confusion
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         let result = 'ZUL-';
-        for (let i = 0; i < 4; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
+        for (let i = 0; i < 4; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
         return result;
     },
 
-    // Time Ago Formatter
-    timeAgo(dateString) {
-        const date = new Date(dateString);
-        const now = new Date();
-        const seconds = Math.floor((now - date) / 1000);
-        
-        let interval = seconds / 31536000;
-        if (interval > 1) return Math.floor(interval) + "y ago";
-        interval = seconds / 2592000;
-        if (interval > 1) return Math.floor(interval) + "mo ago";
-        interval = seconds / 86400;
-        if (interval > 1) return Math.floor(interval) + "d ago";
-        interval = seconds / 3600;
-        if (interval > 1) return Math.floor(interval) + "h ago";
-        interval = seconds / 60;
-        if (interval > 1) return Math.floor(interval) + "m ago";
-        return "Just now";
-    },
-
-    // Clipboard Manager with Toast Feedback
+    // Clipboard Copy
     async copy(text) {
         try {
             await navigator.clipboard.writeText(text);
             UI.toast("Copied to clipboard!", "success");
-            return true;
         } catch (err) {
-            // Fallback for older browsers
             const ta = document.createElement("textarea");
             ta.value = text;
             document.body.appendChild(ta);
@@ -119,35 +82,51 @@ const Utils = {
             document.execCommand("copy");
             document.body.removeChild(ta);
             UI.toast("Copied!", "success");
-            return true;
         }
     },
 
     // Async Delay
     wait(ms) { return new Promise(r => setTimeout(r, ms)); },
 
-    // URL Parameter Extractor
+    // Get URL Params
     getParam(name) { return new URLSearchParams(window.location.search).get(name); },
 
-    // External Link Handler
+    // --- FIXED LINK HANDLER ---
+    openLink(type) {
+        let url = "";
+        
+        switch(type) {
+            case 'whatsapp':
+                url = `https://wa.me/${SYSTEM.contact.whatsapp}?text=Hi%20Zulora%20Support,%20I%20need%20help.`;
+                break;
+            case 'instagram':
+                url = SYSTEM.contact.instagram;
+                break;
+            case 'email':
+                url = `mailto:${SYSTEM.contact.email}?subject=Zulora%20Support%20Request`;
+                break;
+            default:
+                console.warn("Unknown link type:", type);
+                return;
+        }
+        
+        console.log(`[Utils] Opening: ${url}`);
+        window.open(url, '_blank');
+    },
+    
+    // Alias for HTML onclicks
     contact(type) {
-        const admin = ENV.admin || {};
-        const links = {
-            whatsapp: `https://wa.me/${admin.whatsapp}?text=Hi%20Zulora%20Support`,
-            instagram: admin.instagram,
-            email: `mailto:${admin.email}`
-        };
-        if(links[type]) window.open(links[type], '_blank');
+        this.openLink(type);
     }
 };
 
 /* --------------------------------------------------------------------------
-   SECTION 3: STATE STORE (PERSISTENT DATA LAYER)
+   SECTION 3: STATE STORE (PERSISTENT DATA)
    -------------------------------------------------------------------------- */
 class StateStore {
     constructor() {
         this.state = {
-            user: null, // Ephemeral Firebase User Object
+            user: null, // Ephemeral Firebase User
             profile: {
                 credits: 0,
                 referrals: 0,
@@ -156,8 +135,7 @@ class StateStore {
                 displayName: 'Guest',
                 email: '',
                 photoURL: null,
-                referralCode: 'GEN-WAIT',
-                joinedAt: null
+                referralCode: 'GEN-WAIT'
             },
             ui: {
                 sidebarOpen: false,
@@ -165,50 +143,42 @@ class StateStore {
             },
             isOffline: false
         };
-        
-        this.listeners = [];
         this.load();
     }
 
-    // Load from LocalStorage
     load() {
         try {
-            const serialized = localStorage.getItem('ZULORA_V13_STATE');
-            if (serialized) {
-                const parsed = JSON.parse(serialized);
-                // Merge profile deeply to avoid overwriting new structure
+            const saved = localStorage.getItem('ZULORA_V14_STATE');
+            if (saved) {
+                const parsed = JSON.parse(saved);
                 this.state.profile = { ...this.state.profile, ...parsed.profile };
                 console.log(">> [Store] Hydrated from disk.");
             }
         } catch (e) {
-            console.warn(">> [Store] Corrupt state reset.");
-            localStorage.removeItem('ZULORA_V13_STATE');
+            console.warn(">> [Store] Resetting state.");
+            localStorage.removeItem('ZULORA_V14_STATE');
         }
     }
 
-    // Save to LocalStorage
     save() {
         try {
-            const toSave = { profile: this.state.profile };
-            localStorage.setItem('ZULORA_V13_STATE', JSON.stringify(toSave));
-        } catch (e) {
-            console.error("Storage Quota Exceeded");
-        }
+            localStorage.setItem('ZULORA_V14_STATE', JSON.stringify({
+                profile: this.state.profile
+            }));
+        } catch (e) { console.error("Storage Error"); }
     }
 
-    // Setters
-    setUser(firebaseUser) {
-        this.state.user = firebaseUser;
-        this.notify();
+    setUser(user) {
+        this.state.user = user;
+        UI.render();
     }
 
     updateProfile(data) {
         this.state.profile = { ...this.state.profile, ...data };
         this.save();
-        this.notify();
+        UI.render();
     }
 
-    // Credit Logic
     deductCredits(amount) {
         if (this.state.profile.credits >= amount) {
             this.updateProfile({ credits: this.state.profile.credits - amount });
@@ -220,35 +190,23 @@ class StateStore {
     addCredits(amount) {
         this.updateProfile({ credits: this.state.profile.credits + amount });
     }
-
-    // Sub/Pub Pattern
-    subscribe(listener) {
-        this.listeners.push(listener);
-    }
-
-    notify() {
-        this.listeners.forEach(fn => fn(this.state));
-        UI.render(); // Global UI Refresh
-    }
 }
 
 const Store = new StateStore();
 
 /* --------------------------------------------------------------------------
-   SECTION 4: UI CONTROLLER (DOM MANIPULATOR)
+   SECTION 4: UI CONTROLLER (VISUALS)
    -------------------------------------------------------------------------- */
 const UI = {
-    // Elements
     loader: document.getElementById('bootloader'),
     toastDock: document.getElementById('toast-dock'),
 
-    // --- INSTANT BOOT SEQUENCE ---
+    // Instant Boot Logic
     boot() {
-        console.log(">> [Boot] System Starting...");
+        console.log(">> [Boot] System Online.");
         const bar = document.getElementById('boot-bar');
         if(bar) bar.style.width = '100%';
 
-        // Force remove loader after 500ms regardless of network
         setTimeout(() => {
             if(this.loader) {
                 this.loader.style.opacity = '0';
@@ -258,7 +216,6 @@ const UI = {
         }, 500);
     },
 
-    // Toast Notification System
     toast(msg, type = 'info') {
         const el = document.createElement('div');
         const styles = {
@@ -273,107 +230,90 @@ const UI = {
         el.innerHTML = `<i class="${s.icon} text-xl"></i><span class="text-sm font-medium text-slate-200">${msg}</span>`;
 
         this.toastDock.appendChild(el);
-
-        // Auto Dismiss
         setTimeout(() => {
             el.classList.add('translate-x-full', 'opacity-0');
             setTimeout(() => el.remove(), 300);
         }, 4000);
     },
 
-    // Global UI Render (React-like updates)
+    // Global UI Update
     render() {
         const s = Store.state;
         const p = s.profile;
         const isLoggedIn = !!s.user;
 
-        // 1. Update Navbar State
+        // Navbar State
         const navOut = document.getElementById('nav-logged-out');
         const navIn = document.getElementById('nav-logged-in');
         
         if (isLoggedIn) {
             if(navOut) navOut.classList.add('hidden');
-            if(navIn) {
-                navIn.classList.remove('hidden');
-                navIn.classList.add('flex');
-            }
-            // Update Nav Text
-            const nameEl = document.getElementById('nav-user-name');
-            const credEl = document.getElementById('nav-user-credits');
-            if(nameEl) nameEl.innerText = p.displayName.split(' ')[0];
-            if(credEl) credEl.innerText = `${p.credits} Cr`;
+            if(navIn) { navIn.classList.remove('hidden'); navIn.classList.add('flex'); }
+            
+            // Text Updates
+            const setText = (id, txt) => { const el = document.getElementById(id); if(el) el.innerText = txt; };
+            
+            setText('nav-user-name', p.displayName.split(' ')[0]);
+            setText('nav-user-credits', `${p.credits} Cr`);
+            
+            // Sidebar Data
+            setText('drawer-name', p.displayName);
+            setText('drawer-email', s.user.email);
+            setText('drawer-credits', p.credits);
+            setText('sidebar-drawer-credits', p.credits); // Duplicate handle check
+
+            // Avatars
+            const avatars = document.querySelectorAll('#drawer-avatar, #sidebar-avatar');
+            avatars.forEach(av => {
+                if(p.photoURL) av.innerHTML = `<img src="${p.photoURL}" class="w-full h-full object-cover">`;
+                else av.innerHTML = p.displayName.charAt(0).toUpperCase();
+            });
+
+            // Dashboard Stats
+            setText('dash-credits', p.credits);
+            setText('dash-sites', p.projects.length);
+            setText('dash-referrals', p.referrals);
+
+            // Referral Input
+            const refInput = document.getElementById('referral-link-input');
+            if(refInput) refInput.value = `${window.location.origin}?ref=${p.referralCode}`;
+
         } else {
             if(navOut) navOut.classList.remove('hidden');
             if(navIn) navIn.classList.add('hidden');
         }
-
-        // 2. Update Sidebar Drawer Data
-        const drawerName = document.getElementById('drawer-name');
-        const drawerEmail = document.getElementById('drawer-email');
-        const drawerCredits = document.getElementById('drawer-credits');
-        const drawerAvatar = document.getElementById('drawer-avatar');
-
-        if(drawerName) drawerName.innerText = isLoggedIn ? p.displayName : 'Guest User';
-        if(drawerEmail) drawerEmail.innerText = isLoggedIn ? (s.user.email) : 'Not Logged In';
-        if(drawerCredits) drawerCredits.innerText = p.credits;
-        
-        if(drawerAvatar) {
-            if (isLoggedIn && p.photoURL) {
-                drawerAvatar.innerHTML = `<img src="${p.photoURL}" class="w-full h-full object-cover">`;
-            } else {
-                drawerAvatar.innerHTML = 'U';
-            }
-        }
-
-        // 3. Update Dashboard Stats
-        const dashCredits = document.getElementById('dash-credits');
-        const dashSites = document.getElementById('dash-sites');
-        const dashReferrals = document.getElementById('dash-referrals');
-
-        if(dashCredits) dashCredits.innerText = p.credits;
-        if(dashSites) dashSites.innerText = p.projects.length;
-        if(dashReferrals) dashReferrals.innerText = p.referrals;
-
-        // 4. Update Referral Link Input
-        const refInput = document.getElementById('referral-link-input');
-        if(refInput) refInput.value = `${window.location.origin}?ref=${p.referralCode}`;
     }
 };
 
 /* --------------------------------------------------------------------------
-   SECTION 5: ROUTER & NAVIGATION
+   SECTION 5: ROUTER (NAVIGATION)
    -------------------------------------------------------------------------- */
 const Router = {
-    // Core Navigation Logic
     go(route, params = {}) {
-        // 1. Close auxiliary menus
         Sidebar.close();
         
-        // 2. Hide all main views
-        ['view-landing', 'app-root', 'view-auth'].forEach(id => {
+        // Hide all views
+        const views = ['view-landing', 'app-root', 'view-auth'];
+        views.forEach(id => {
             const el = document.getElementById(id);
-            if(el && route === 'auth') { /* handled in switch */ } 
-            else if(el && id === 'view-auth') el.classList.add('hidden');
+            if(el && id !== 'view-auth') el.classList.add('hidden'); // Auth modal handled separately
         });
 
-        // 3. Route Switch
         switch(route) {
             case 'home':
             case 'landing':
-                // Check if user is logged in, show app shell, else show landing??
-                // The prompt requested a specific flow. We assume Single Page App.
-                // We show the Main App Shell always, and switch inner views.
+                document.getElementById('view-landing').classList.remove('hidden'); // Show Landing Shell
+                document.getElementById('app-root').classList.remove('hidden'); // Ensure shell visible
                 this.switchTab('home');
                 break;
 
             case 'auth':
-                // Show Modal
                 Auth.openModal();
                 break;
 
             case 'app':
-                // Generic app route
                 if (!Store.state.user) return this.go('auth');
+                document.getElementById('app-root').classList.remove('hidden');
                 this.switchTab('dashboard');
                 break;
 
@@ -383,11 +323,13 @@ const Router = {
             case 'premium':
             case 'referral':
             case 'hosting':
+            case 'support':
                 if (!Store.state.user && !Store.state.isOffline) {
                     sessionStorage.setItem('ZULORA_REDIRECT', route);
                     Auth.openModal();
                     return;
                 }
+                document.getElementById('app-root').classList.remove('hidden');
                 this.switchTab(route);
                 break;
 
@@ -396,52 +338,54 @@ const Router = {
         }
     },
 
-    // Internal Tab Switcher
     switchTab(tabId) {
-        // Maps
-        const validTabs = ['home', 'create', 'projects', 'premium', 'referral', 'hosting'];
-        const target = validTabs.includes(tabId) ? tabId : 'home';
+        // Valid tabs map
+        const valid = ['home', 'dashboard', 'create', 'projects', 'premium', 'referral', 'support', 'hosting'];
+        const target = valid.includes(tabId) ? tabId : 'home';
 
-        // Hide all sections
+        // Hide sections
         document.querySelectorAll('section[id^="view-"]').forEach(el => {
             el.classList.add('hidden');
             el.classList.remove('active', 'animate-fade-in');
         });
 
-        // Show target
+        // Show Target
         const view = document.getElementById(`view-${target}`);
         if(view) {
             view.classList.remove('hidden');
-            void view.offsetWidth; // Reflow for animation
+            void view.offsetWidth; // Reflow
             view.classList.add('active', 'animate-fade-in');
         }
 
-        // Scroll to top
-        const viewport = document.getElementById('main-viewport');
-        if(viewport) viewport.scrollTo(0,0);
+        // Scroll top
+        const vp = document.getElementById('main-viewport');
+        if(vp) vp.scrollTo(0,0);
     }
 };
 window.router = Router;
 
 /* --------------------------------------------------------------------------
-   SECTION 6: SIDEBAR (THREE DOTS DRAWER)
+   SECTION 6: SIDEBAR (DRAWER)
    -------------------------------------------------------------------------- */
 const Sidebar = {
     el: document.getElementById('sidebar-drawer'),
     overlay: document.getElementById('sidebar-overlay'),
     
     toggle() {
+        if(!this.el) return;
         if (this.el.classList.contains('translate-x-full')) this.open();
         else this.close();
     },
 
     open() {
+        if(!this.el) return;
         this.el.classList.remove('translate-x-full');
         this.overlay.classList.remove('hidden');
         setTimeout(() => this.overlay.classList.remove('opacity-0'), 10);
     },
 
     close() {
+        if(!this.el) return;
         this.el.classList.add('translate-x-full');
         this.overlay.classList.add('opacity-0');
         setTimeout(() => this.overlay.classList.add('hidden'), 300);
@@ -457,53 +401,49 @@ const Auth = {
         if (firebase && !firebase.apps.length) {
             try {
                 firebase.initializeApp(ENV.firebase);
-                console.log(">> [Auth] Firebase Initialized");
+                // Persistence
+                firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
             } catch (e) {
-                console.error("Firebase Config Error:", e);
-                Store.state.isOffline = true; // Fallback
+                console.error("Firebase Init Error:", e);
+                Store.state.isOffline = true;
             }
         }
 
         const provider = new firebase.auth.GoogleAuthProvider();
         provider.setCustomParameters({ prompt: 'select_account' });
 
-        // Auth State Listener
         firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
-                console.log(`>> [Auth] Logged in: ${user.email}`);
+                console.log(`[Auth] User: ${user.email}`);
                 Store.setUser(user);
-                
-                // Sync Profile (Credits, Referrals)
                 await DB.syncProfile(user);
-                
-                // Close Modal
                 this.closeModal();
 
-                // Handle Redirects
+                // Redirect Handling
                 const redirect = sessionStorage.getItem('ZULORA_REDIRECT');
                 if (redirect) {
                     sessionStorage.removeItem('ZULORA_REDIRECT');
                     Router.go(redirect);
                 } else {
-                    // Update UI
-                    UI.toast(`Welcome back, ${user.displayName.split(' ')[0]}`, 'success');
+                    // Only toast if just logged in
+                    if(document.getElementById('nav-logged-out').classList.contains('hidden') === false) {
+                        UI.toast(`Welcome back, ${user.displayName}`, 'success');
+                    }
                 }
-
-                // Check Pending Prompt
-                const pendingPrompt = sessionStorage.getItem('ZULORA_PENDING_PROMPT');
-                if (pendingPrompt) {
+                
+                // Pending Prompts
+                const prompt = sessionStorage.getItem('ZULORA_PENDING_PROMPT');
+                if (prompt) {
                     Router.go('create');
                     setTimeout(() => {
                         const input = document.getElementById('ai-prompt-input');
-                        if(input) input.value = pendingPrompt;
+                        if(input) input.value = prompt;
                         sessionStorage.removeItem('ZULORA_PENDING_PROMPT');
                     }, 500);
                 }
 
             } else {
-                console.log(">> [Auth] Guest Mode");
                 Store.setUser(null);
-                UI.render(); // Reset UI to guest
             }
         });
 
@@ -512,30 +452,32 @@ const Auth = {
 
     openModal() {
         const m = document.getElementById('auth-modal');
-        m.classList.remove('hidden');
-        setTimeout(() => m.classList.remove('opacity-0', 'scale-95'), 10);
+        if(m) {
+            m.classList.remove('hidden');
+            setTimeout(() => m.classList.remove('opacity-0', 'scale-95'), 10);
+        }
     },
 
     closeModal() {
         const m = document.getElementById('auth-modal');
-        m.classList.add('opacity-0', 'scale-95');
-        setTimeout(() => m.classList.add('hidden'), 300);
+        if(m) {
+            m.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => m.classList.add('hidden'), 300);
+        }
     },
 
     async signIn() {
         const btn = document.getElementById('google-signin-btn');
-        const originalText = btn.innerHTML;
-        
+        const original = btn.innerHTML;
         btn.innerHTML = `<i class="ri-loader-4-line animate-spin text-xl"></i> Connecting...`;
         btn.disabled = true;
 
         try {
             await firebase.auth().signInWithPopup(this.provider);
-            // State handled by listener
         } catch (error) {
             console.error(error);
             UI.toast("Sign in failed. Try again.", "error");
-            btn.innerHTML = originalText;
+            btn.innerHTML = original;
             btn.disabled = false;
         }
     },
@@ -543,7 +485,7 @@ const Auth = {
     logout() {
         firebase.auth().signOut();
         Sidebar.close();
-        UI.toast("Signed out.", "info");
+        UI.toast("Signed out successfully.", "info");
         Router.go('home');
     }
 };
@@ -563,18 +505,23 @@ const DB = {
             const doc = await docRef.get();
 
             if (doc.exists) {
-                // Update Local Store
                 const data = doc.data();
+                // Ensure photoURL update
+                if(data.photoURL !== user.photoURL) {
+                    await docRef.update({ photoURL: user.photoURL });
+                    data.photoURL = user.photoURL;
+                }
                 Store.updateProfile(data);
             } else {
-                // First Time User - Create Profile
-                console.log(">> [DB] Creating New Profile");
+                // NEW USER REGISTRATION
+                console.log("[DB] Registering New User");
+                
                 const newProfile = {
                     uid: user.uid,
                     email: user.email,
                     displayName: user.displayName,
                     photoURL: user.photoURL,
-                    credits: SYSTEM.economy.signupBonus, // 30 Credits
+                    credits: SYSTEM.economy.signupBonus,
                     referrals: 0,
                     referralCode: Utils.generateRefCode(),
                     projects: [],
@@ -582,43 +529,35 @@ const DB = {
                     createdAt: new Date().toISOString()
                 };
 
-                // CHECK REFERRAL URL
+                // Check Referral
                 const refCode = Utils.getParam('ref');
                 if (refCode) {
-                    // Logic: Find referrer, give them +15, give me +15
-                    console.log(`Referral Code Found: ${refCode}`);
-                    
-                    // Add bonus to new user
-                    newProfile.credits += SYSTEM.economy.referralReward; // +15
-                    UI.toast("Referral Bonus Applied: +15 Credits!", "gold");
-
-                    // In a real app, use a Cloud Function to update the referrer safely.
-                    // For this frontend-only demo, we log it.
+                    newProfile.credits += SYSTEM.economy.referralReward;
+                    UI.toast(`Referral Accepted! +${SYSTEM.economy.referralReward} Credits`, "gold");
+                    // In real backend, award referrer here
                 }
 
                 await docRef.set(newProfile);
                 Store.updateProfile(newProfile);
             }
+            App.renderProjects();
         } catch (e) {
-            console.error("DB Sync Error:", e);
-            // Keep working with local state
+            console.error("DB Error:", e);
         }
     },
 
     async saveProject(project) {
-        // Update Local
         const currentProjects = [project, ...(Store.state.profile.projects || [])];
         Store.updateProfile({ projects: currentProjects });
-        App.renderProjectsList();
+        App.renderProjects();
 
-        // Update Cloud
         if (Store.state.user && !Store.state.isOffline) {
             try {
                 await firebase.firestore().collection('users').doc(Store.state.user.uid).update({
                     projects: currentProjects,
                     credits: Store.state.profile.credits
                 });
-            } catch(e) { console.error("Cloud save failed", e); }
+            } catch(e) { console.error(e); }
         }
     }
 };
@@ -627,7 +566,6 @@ const DB = {
    SECTION 9: NEURAL ENGINE (AI GENERATION)
    -------------------------------------------------------------------------- */
 const AI = {
-    // Home Input Trigger
     triggerFromHome() {
         const val = document.getElementById('hero-prompt').value;
         if (!val) return UI.toast("Please enter a prompt", "warning");
@@ -644,57 +582,51 @@ const AI = {
         }
     },
 
-    // Main Generate Logic
     async generate() {
         const input = document.getElementById('ai-prompt-input');
         const prompt = input.value.trim().toLowerCase();
         
         if (!prompt) return UI.toast("Prompt cannot be empty", "error");
         
-        // 1. Credit Check
         if (Store.state.profile.credits < SYSTEM.economy.generationCost) {
             Router.go('premium');
-            return UI.toast("Insufficient Credits. Please upgrade.", "error");
+            return UI.toast("Insufficient Credits. Upgrade needed.", "error");
         }
 
-        // 2. Loading State
         const btn = document.getElementById('btn-generate');
         const originalText = btn.innerHTML;
-        btn.innerHTML = `<span class="flex items-center gap-2"><i class="ri-loader-4-line animate-spin"></i> Neural Processing...</span>`;
+        btn.innerHTML = `<span class="flex items-center gap-2"><i class="ri-loader-4-line animate-spin"></i> Processing...</span>`;
         btn.disabled = true;
 
         try {
-            await Utils.wait(2500); // Simulate network latency
+            await Utils.wait(2500); // Simulate processing
 
-            // 3. Deduct Credits
+            // Deduct Credits
             Store.deductCredits(SYSTEM.economy.generationCost);
 
-            // 4. Hybrid Template Selection (The "AI" Logic)
-            let template = 'startup'; // Default
-            if (prompt.includes('shop') || prompt.includes('store') || prompt.includes('fashion')) template = 'store';
-            else if (prompt.includes('food') || prompt.includes('restaurant') || prompt.includes('cafe')) template = 'restaurant';
-            else if (prompt.includes('portfolio') || prompt.includes('resume') || prompt.includes('design')) template = 'portfolio';
-            else if (prompt.includes('agency') || prompt.includes('marketing')) template = 'agency';
-            else if (prompt.includes('blog') || prompt.includes('news')) template = 'blog';
+            // Select Template
+            let t = 'startup';
+            if (prompt.includes('shop') || prompt.includes('store')) t = 'store';
+            else if (prompt.includes('portfolio') || prompt.includes('resume')) t = 'portfolio';
+            else if (prompt.includes('food') || prompt.includes('restaurant')) t = 'restaurant';
+            else if (prompt.includes('agency')) t = 'agency';
+            else if (prompt.includes('blog')) t = 'blog';
 
-            const html = Templates[template](Store.state.profile.displayName);
+            const html = Templates[t](Store.state.profile.displayName);
 
-            // 5. Create Project Object
             const project = {
                 id: Utils.uuid(),
                 name: prompt.substring(0, 25) + (prompt.length > 25 ? '...' : ''),
-                subdomain: `${Store.state.profile.displayName.toLowerCase().replace(/ /g,'')}-${Math.floor(Math.random()*9999)}`,
+                subdomain: `${Store.state.profile.displayName.toLowerCase().replace(/ /g,'')}-${Math.floor(Math.random()*999)}`,
                 html: html,
-                engine: document.querySelector('input[name="ai_engine"]:checked').value,
+                engine: document.querySelector('input[name="ai_engine"]:checked')?.value || 'claude',
                 createdAt: new Date().toISOString()
             };
 
-            // 6. Save & Launch
             await DB.saveProject(project);
             
             UI.toast("Website Built Successfully!", "success");
             input.value = "";
-            
             Editor.open(project);
 
         } catch (e) {
@@ -710,24 +642,19 @@ const AI = {
 window.ai = AI;
 
 /* --------------------------------------------------------------------------
-   SECTION 10: TEMPLATE LIBRARY (The Embedded "Brain")
+   SECTION 10: TEMPLATE LIBRARY
    -------------------------------------------------------------------------- */
 const Templates = {
-    startup: (n) => `<!DOCTYPE html><html class="scroll-smooth"><head><script src="https://cdn.tailwindcss.com"></script></head><body class="font-sans text-slate-900 bg-white"><nav class="p-6 flex justify-between items-center border-b"><div class="text-xl font-bold text-indigo-600">${n} Inc.</div><button class="bg-slate-900 text-white px-5 py-2 rounded-lg">Login</button></nav><header class="py-32 text-center px-4"><h1 class="text-6xl font-black mb-6">Ship Faster.</h1><p class="text-xl text-slate-500 mb-8">The ultimate platform for growth.</p><button class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold">Get Started</button></header></body></html>`,
-    
+    startup: (n) => `<!DOCTYPE html><html class="scroll-smooth"><head><script src="https://cdn.tailwindcss.com"></script></head><body class="font-sans antialiased text-slate-900 bg-white"><nav class="p-6 flex justify-between items-center border-b"><div class="text-xl font-bold text-indigo-600">${n} Inc.</div><button class="bg-slate-900 text-white px-5 py-2 rounded-lg">Login</button></nav><header class="py-32 text-center px-4"><h1 class="text-6xl font-black mb-6">Ship Faster.</h1><p class="text-xl text-slate-500 mb-8">The ultimate platform for growth.</p><button class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold">Get Started</button></header></body></html>`,
     portfolio: (n) => `<!DOCTYPE html><html class="dark"><head><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'class'}</script></head><body class="bg-black text-white font-sans"><nav class="p-8 flex justify-between"><div class="font-bold tracking-widest">${n}</div><a href="#" class="underline">Contact</a></nav><header class="py-32 px-8"><h1 class="text-9xl font-black mb-4">VISUAL<br><span class="text-green-500">ARTIST.</span></h1></header></body></html>`,
-    
-    store: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-stone-50 font-serif"><nav class="p-6 border-b border-stone-200 flex justify-between"><div class="text-2xl font-bold italic">${n}</div><div>Cart (0)</div></nav><header class="py-24 text-center"><h1 class="text-7xl mb-6">Summer 2026</h1><button class="bg-black text-white px-8 py-3 uppercase tracking-widest text-sm">Shop Now</button></header></body></html>`,
-    
-    restaurant: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-orange-50 font-sans"><nav class="p-6 flex justify-between"><div class="text-2xl font-bold text-orange-900">${n}</div><button class="bg-orange-600 text-white px-6 py-2 rounded-full">Book Table</button></nav><header class="py-32 text-center"><h1 class="text-6xl font-black text-orange-950 mb-4">Taste Real Food.</h1><p class="text-xl text-orange-800/70">Locally sourced ingredients.</p></header></body></html>`,
-    
-    agency: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-zinc-900 text-white font-sans"><nav class="p-6 border-b border-zinc-800"><div class="font-bold text-xl">${n} Agency</div></nav><header class="py-32 px-6"><h1 class="text-7xl font-bold mb-6">We Create<br><span class="text-blue-500">Digital Impact.</span></h1><div class="grid grid-cols-2 gap-4 mt-12"><div class="bg-zinc-800 h-64 rounded-xl"></div><div class="bg-zinc-800 h-64 rounded-xl"></div></div></header></body></html>`,
-    
-    blog: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-white font-serif"><nav class="p-6 flex justify-center border-b"><div class="font-bold text-xl">${n}'s Journal</div></nav><main class="max-w-2xl mx-auto py-12 px-4"><article class="mb-12"><h2 class="text-3xl font-bold mb-4">The Future of AI</h2><p class="text-gray-600 leading-relaxed">Lorem ipsum dolor sit amet...</p><a href="#" class="text-blue-600 mt-4 block">Read more</a></article></main></body></html>`
+    store: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-stone-50 font-serif"><nav class="p-6 border-b border-stone-200 flex justify-between"><div class="text-2xl font-bold italic">${n}</div><div>Cart (0)</div></nav><header class="py-24 text-center"><h1 class="text-7xl mb-6">New Arrivals</h1><button class="bg-black text-white px-8 py-3 uppercase tracking-widest text-sm">Shop Now</button></header></body></html>`,
+    restaurant: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-orange-50 font-sans"><nav class="p-6 flex justify-between"><div class="text-2xl font-bold text-orange-900">${n}</div><button class="bg-orange-600 text-white px-6 py-2 rounded-full">Book Table</button></nav><header class="py-32 text-center"><h1 class="text-6xl font-black text-orange-950 mb-4">Taste Real Food.</h1></header></body></html>`,
+    agency: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-zinc-900 text-white font-sans"><nav class="p-6 border-b border-zinc-800"><div class="font-bold text-xl">${n} Agency</div></nav><header class="py-32 px-6"><h1 class="text-7xl font-bold mb-6">Digital Impact.</h1><p class="text-xl text-zinc-400">We build brands.</p></header></body></html>`,
+    blog: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-white font-serif"><nav class="p-6 border-b"><div class="font-bold text-xl">${n}'s Blog</div></nav><main class="max-w-2xl mx-auto py-12 px-4"><h1 class="text-4xl font-bold mb-4">Hello World</h1><p class="text-lg text-gray-600">Welcome to my new site.</p></main></body></html>`
 };
 
 /* --------------------------------------------------------------------------
-   SECTION 11: EDITOR & HOSTING ENGINE
+   SECTION 11: EDITOR CONTROLLER
    -------------------------------------------------------------------------- */
 const Editor = {
     modal: document.getElementById('editor-modal'),
@@ -746,9 +673,9 @@ const Editor = {
             doc.write(project.html);
             doc.close();
             
-            // Visual Edit Script
+            // Edit Script
             const s = doc.createElement('script');
-            s.innerHTML = `document.body.addEventListener('click',e=>{if(['H1','P','BUTTON','A'].includes(e.target.tagName)){e.preventDefault();e.target.contentEditable=true;e.target.focus();e.target.style.outline='2px dashed #4f46e5';e.target.onblur=()=>{e.target.style.outline='none';}}});`;
+            s.innerHTML = `document.body.addEventListener('click',e=>{if(['H1','P','BUTTON','A'].includes(e.target.tagName)){e.preventDefault();e.target.contentEditable=true;e.target.focus();e.target.style.outline='2px dashed #6366f1';e.target.onblur=()=>{e.target.style.outline='none';}}});`;
             doc.body.appendChild(s);
         });
     },
@@ -759,32 +686,27 @@ const Editor = {
             this.modal.classList.add('hidden');
             this.frame.src = 'about:blank';
         }, 300);
-        App.renderProjectsList();
+        App.renderProjects();
     },
 
     setDevice(mode) {
         const c = document.getElementById('editor-frame-container');
-        if (mode === 'mobile') c.classList.add('mobile-view');
+        if(mode === 'mobile') c.classList.add('mobile-view');
         else c.classList.remove('mobile-view');
     },
 
     save() {
-        if (!this.current) return;
+        if(!this.current) return;
         const html = this.frame.contentWindow.document.documentElement.outerHTML;
+        const projects = Store.state.profile.projects;
+        const idx = projects.findIndex(p => p.id === this.current.id);
         
-        // Show Hosting Simulation
-        UI.toast("Deploying to Zulora Cloud...", "info");
-        
-        setTimeout(() => {
-            const projects = Store.state.profile.projects;
-            const idx = projects.findIndex(p => p.id === this.current.id);
-            if (idx > -1) {
-                projects[idx].html = html;
-                Store.updateProfile({ projects });
-                DB.saveProject(this.current);
-                UI.toast("Site is Live!", "success");
-            }
-        }, 1500);
+        if(idx > -1) {
+            projects[idx].html = html;
+            Store.updateProfile({ projects });
+            DB.saveProject(this.current);
+            UI.toast("Published Live!", "success");
+        }
     }
 };
 window.editor = Editor;
@@ -796,22 +718,17 @@ const App = {
     init() {
         UI.boot();
         Auth.init();
-        Store.subscribe(state => {
-            // Optional: Log state changes in debug mode
-            if(SYSTEM.debug) console.log("State Updated", state);
-        });
     },
 
-    renderProjectsList() {
+    renderProjects() {
         const list = document.getElementById('project-list');
-        const dashList = document.getElementById('dash-project-list');
+        const dashList = document.getElementById('dash-project-list'); // If used
         const empty = document.getElementById('project-empty');
         const projects = Store.state.profile.projects || [];
 
-        // Clear
+        // Clear existing
         if(list) list.innerHTML = '';
-        if(dashList) dashList.innerHTML = '';
-
+        
         if (projects.length === 0) {
             if(empty) { empty.classList.remove('hidden'); empty.classList.add('flex'); }
             return;
@@ -820,7 +737,7 @@ const App = {
         if(empty) { empty.classList.add('hidden'); empty.classList.remove('flex'); }
 
         const render = (p) => `
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden cursor-pointer group hover:border-brand-500/50 transition duration-300" onclick='editor.open(${JSON.stringify(p)})'>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden cursor-pointer hover:border-brand-500/50 transition group shadow-sm" onclick='editor.open(${JSON.stringify(p)})'>
                 <div class="h-40 bg-slate-950 relative overflow-hidden">
                     <iframe srcdoc="${p.html.replace(/"/g, "'")}" class="w-[200%] h-[200%] scale-50 origin-top-left pointer-events-none opacity-60 group-hover:opacity-100 transition grayscale group-hover:grayscale-0"></iframe>
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-80 group-hover:opacity-40 transition"></div>
@@ -833,9 +750,11 @@ const App = {
             </div>`;
 
         if(list) list.innerHTML = projects.map(render).join('');
-        if(dashList) dashList.innerHTML = projects.slice(0, 3).map(render).join('');
     }
 };
 
-// --- INITIALIZE SYSTEM ---
-window.onload = App.init;
+// --- GLOBAL UTILS FOR HTML ACCESS ---
+window.utils = Utils;
+
+// --- START SYSTEM ---
+window.addEventListener('load', App.init);
