@@ -1,181 +1,105 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#6C63FF">
     
-    <title>Zulora AI | The OS for Business & Website Generation</title>
-    <meta name="description" content="Build professional websites in seconds using Zulora AI. Powered by Gemini 1.5 Pro. Features include CRM, POS, and custom subdomains.">
-    <meta name="keywords" content="website builder, ai builder, odoo alternative, business os, zulora, free website">
-    <meta name="author" content="Zulora Inc.">
-    <meta name="theme-color" content="#6366f1">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <title>Zulora | Build Your Dream Website</title>
+    <meta name="description" content="Create stunning websites with AI in seconds. Join Zulora today.">
 
     <link rel="stylesheet" href="style.css">
+    
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
-        #global-loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffffff; z-index: 9999; display: flex;
-            align-items: center; justify-content: center;
-        }
-        .spinner-brand {
-            width: 50px; height: 50px; border: 4px solid #f3f3f3;
-            border-top: 4px solid #6366f1; border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
 </head>
 <body>
 
-    <div id="global-loader">
-        <div class="spinner-brand"></div>
-    </div>
+    <div id="app-root">
 
-    <div id="toast-container" class="toast-container">
+        <div id="global-loader" class="loader-overlay active">
+            <div class="loader-content">
+                <div class="spinner">
+                    <div class="dot1"></div>
+                    <div class="dot2"></div>
+                </div>
+                <h3 id="loader-text">Initializing Zulora...</h3>
+            </div>
         </div>
 
-    <div id="view-landing" class="app-view active-view">
-        
-        <nav class="navbar glass-effect" id="main-nav">
-            <div class="container-xl nav-wrapper">
-                <a href="#" class="brand-logo" aria-label="Zulora Home">
-                    <div class="logo-icon-box">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <span class="brand-text">Zulora<span class="accent-dot">.in</span></span>
-                </a>
+        <div id="toast-container"></div>
 
-                <div class="nav-menu hidden-mobile">
-                    <a href="#features" class="nav-link">Features</a>
-                    <a href="#templates" class="nav-link">Templates</a>
-                    <a href="#pricing" class="nav-link">Pricing</a>
-                </div>
-
-                <div class="nav-actions">
-                    <button class="btn btn-ghost" onclick="triggerGoogleLogin()">Log In</button>
-                    <button class="btn btn-primary btn-glow" onclick="triggerGoogleLogin()">
-                        <span>Start Building</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-        </nav>
-
-        <header class="hero-section">
-            <div class="container hero-container">
-                <div class="hero-content">
-                    <div class="badge-new animate__animated animate__fadeInDown">
-                        <span class="badge-icon"><i class="fas fa-bolt"></i></span>
-                        <span class="badge-text">Powered by Gemini 1.5 AI</span>
-                    </div>
-                    
-                    <h1 class="hero-title animate__animated animate__fadeInUp">
-                        Build your dream website <br>
-                        <span class="text-gradient">with a single prompt.</span>
-                    </h1>
-                    
-                    <p class="hero-desc animate__animated animate__fadeInUp animate__delay-1s">
-                        Zulora is the all-in-one OS for business. Create websites, manage CRM, and track sales. 
-                        <strong>Get 10 Free Credits on Sign Up.</strong>
-                    </p>
-
-                    <div class="hero-cta-group animate__animated animate__fadeInUp animate__delay-2s">
-                        <div class="input-prompt-wrapper">
-                            <i class="fas fa-magic magic-icon"></i>
-                            <input type="text" class="hero-input" placeholder="Describe your business (e.g. A pizza shop in Mumbai)..." readonly onclick="triggerGoogleLogin()">
-                            <button class="btn-generate" onclick="triggerGoogleLogin()">Generate</button>
+        <section id="view-auth" class="view-section">
+            <div class="auth-container">
+                <div class="auth-content">
+                    <div class="auth-header">
+                        <div class="logo-area">
+                            <span class="logo-icon"><i class="ri-code-s-slash-line"></i></span>
+                            <h1>Zulora<span class="dot">.</span>in</h1>
                         </div>
+                        <h2>Where ideas become reality.</h2>
+                        <p>Build fully functional apps and websites through simple conversations.</p>
                     </div>
 
-                    <div class="trust-indicators animate__animated animate__fadeIn animate__delay-3s">
-                        <div class="avatars-stack">
-                            <img src="https://i.pravatar.cc/100?img=1" alt="User">
-                            <img src="https://i.pravatar.cc/100?img=2" alt="User">
-                            <img src="https://i.pravatar.cc/100?img=3" alt="User">
-                            <img src="https://i.pravatar.cc/100?img=4" alt="User">
+                    <div class="auth-form-wrapper">
+                        <div class="auth-tabs">
+                            <button class="auth-tab active" onclick="toggleAuthMode('login')">Log In</button>
+                            <button class="auth-tab" onclick="toggleAuthMode('signup')">Sign Up</button>
                         </div>
-                        <p>Trusted by <strong>15,000+</strong> creators worldwide.</p>
+
+                        <form id="auth-form" onsubmit="event.preventDefault();">
+                            <div class="input-group">
+                                <i class="ri-mail-line"></i>
+                                <input type="email" id="email" placeholder="Email address" required autocomplete="email">
+                            </div>
+                            <div class="input-group">
+                                <i class="ri-lock-2-line"></i>
+                                <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
+                            </div>
+                            
+                            <div class="input-group hidden" id="signup-referral-group">
+                                <i class="ri-ticket-line"></i>
+                                <input type="text" id="referral-input" placeholder="Referral Code (Optional)">
+                            </div>
+
+                            <button type="submit" id="auth-btn" class="btn-primary btn-block">
+                                <span>Continue</span> <i class="ri-arrow-right-line"></i>
+                            </button>
+                        </form>
+
+                        <div class="divider"><span>OR</span></div>
+
+                        <button id="google-auth-btn" class="btn-google">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                            Continue with Google
+                        </button>
+
+                        <p class="auth-footer-text">
+                            By continuing, you agree to Zulora's Terms & Conditions. <br>
+                            New users get <strong>30 Free Credits</strong> instantly.
+                        </p>
                     </div>
                 </div>
 
-                <div class="hero-visual animate__animated animate__fadeInRight">
-                    <div class="dashboard-mockup-card">
-                        <div class="mockup-header">
+                <div class="auth-visual">
+                    <div class="visual-glass-card">
+                        <div class="glass-header">
                             <div class="dots"><span></span><span></span><span></span></div>
-                            <div class="mockup-url">zulora.in/builder</div>
                         </div>
-                        <div class="mockup-body">
-                            <div class="mockup-sidebar"></div>
-                            <div class="mockup-content">
-                                <div class="skeleton-hero"></div>
-                                <div class="skeleton-grid">
-                                    <div class="sk-box"></div><div class="sk-box"></div><div class="sk-box"></div>
-                                </div>
-                            </div>
-                            <div class="float-card fc-1"><i class="fas fa-chart-line"></i> +120% Sales</div>
-                            <div class="float-card fc-2"><i class="fas fa-check-circle"></i> AI Optimized</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <section id="features" class="section-features">
-            <div class="container">
-                <div class="section-header text-center">
-                    <h2 class="section-title">Everything you need to grow</h2>
-                    <p class="section-subtitle">We replaced 10+ expensive tools with one integrated platform.</p>
-                </div>
-                
-                <div class="features-grid-bento">
-                    <div class="bento-card large-card">
-                        <div class="card-content">
-                            <div class="icon-circle bg-purple"><i class="fas fa-robot"></i></div>
-                            <h3>AI Website Builder</h3>
-                            <p>Describe it, and our Gemini API writes the code, selects images, and publishes it instantly.</p>
-                        </div>
-                        <div class="card-visual visual-code">
-                            <code>&lt;div class="hero"&gt;...&lt;/div&gt;</code>
-                        </div>
-                    </div>
-
-                    <div class="bento-card">
-                        <div class="icon-circle bg-blue"><i class="fas fa-globe"></i></div>
-                        <h3>Custom Subdomains</h3>
-                        <p>Get <code>yourname.zulora.in</code> instantly or connect a custom domain.</p>
-                    </div>
-
-                    <div class="bento-card">
-                        <div class="icon-circle bg-green"><i class="fas fa-shopping-bag"></i></div>
-                        <h3>eCommerce Ready</h3>
-                        <p>Sell products with integrated payment gateways and inventory.</p>
-                    </div>
-
-                    <div class="bento-card wide-card">
-                        <div class="card-row">
-                            <div class="text-part">
-                                <div class="icon-circle bg-orange"><i class="fas fa-users"></i></div>
-                                <h3>Referral System</h3>
-                                <p>Invite friends and earn credits. Create an income stream.</p>
-                            </div>
-                            <div class="visual-part">
-                                <div class="ref-badge">10 Credits / Invite</div>
+                        <div class="glass-body">
+                            <h4>Build a clone of Netflix...</h4>
+                            <div class="ai-response-fake">
+                                <span class="ai-typing">Generating code...</span>
                             </div>
                         </div>
                     </div>
@@ -183,344 +107,251 @@
             </div>
         </section>
 
-        <footer class="main-footer">
-            <div class="container">
-                <div class="footer-row">
-                    <div class="footer-brand">
-                        <h4>Zulora.in</h4>
-                        <p>Empowering creators with AI.</p>
-                    </div>
-                    <div class="footer-links">
-                        <a href="#">Privacy</a>
-                        <a href="#">Terms</a>
-                        <a href="mailto:zulora.help@gmail.com">Contact Support</a>
-                    </div>
-                    <div class="footer-social">
-                        <a href="https://instagram.com/zulora_official"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-                <div class="footer-bottom">
-                    <p>&copy; 2026 Zulora Inc. All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <div id="view-dashboard" class="app-view hidden-view">
-        <div class="dashboard-layout">
+        <div id="main-layout" class="hidden">
             
-            <aside class="dash-sidebar">
-                <div class="sidebar-top">
-                    <div class="app-logo">
-                        <i class="fas fa-layer-group"></i> <span>Zulora</span>
+            <nav class="mobile-nav">
+                <button class="nav-item active" data-target="view-dashboard">
+                    <i class="ri-home-4-line"></i>
+                    <span>Home</span>
+                </button>
+                <button class="nav-item" data-target="view-create">
+                    <div class="create-btn-mobile">
+                        <i class="ri-add-line"></i>
                     </div>
+                    <span>Create</span>
+                </button>
+                <button class="nav-item" data-target="view-premium">
+                    <i class="ri-vip-crown-line"></i>
+                    <span>Premium</span>
+                </button>
+                <button class="nav-item" data-target="view-profile">
+                    <i class="ri-user-3-line"></i>
+                    <span>Profile</span>
+                </button>
+            </nav>
+
+            <aside class="desktop-sidebar">
+                <div class="sidebar-logo">
+                    <h2>Zulora</h2>
                 </div>
                 
-                <div class="user-snippet">
-                    <div class="avatar-ring">
-                        <img id="dash-user-avatar" src="" alt="Profile">
-                    </div>
-                    <div class="user-meta">
-                        <h4 id="dash-user-name">Loading...</h4>
-                        <div class="credit-pill" onclick="openPremiumModal()">
-                            <i class="fas fa-coins text-yellow"></i> 
-                            <span id="dash-user-credits">0</span> Cr
-                        </div>
+                <div class="user-mini-profile">
+                    <div class="avatar" id="sidebar-avatar">U</div>
+                    <div class="user-info">
+                        <h4 id="sidebar-username">User</h4>
+                        <span class="credits-badge"><i class="ri-flashlight-fill"></i> <span id="sidebar-credits">0</span> Credits</span>
                     </div>
                 </div>
 
-                <nav class="side-nav-menu">
-                    <div class="nav-label">MAIN</div>
-                    <a href="#" class="nav-item active" onclick="switchDashTab('websites')">
-                        <i class="fas fa-globe"></i> My Websites
-                    </a>
-                    <a href="#" class="nav-item" onclick="switchDashTab('analytics')">
-                        <i class="fas fa-chart-bar"></i> Analytics
-                    </a>
-                    
-                    <div class="nav-label">GROWTH</div>
-                    <a href="#" class="nav-item" onclick="openReferralModal()">
-                        <i class="fas fa-gift"></i> Refer & Earn
-                    </a>
-                    <a href="#" class="nav-item highlight-item" onclick="openPremiumModal()">
-                        <i class="fas fa-crown"></i> Get Premium
-                    </a>
+                <ul class="sidebar-menu">
+                    <li class="active" data-target="view-dashboard"><i class="ri-dashboard-line"></i> Dashboard</li>
+                    <li data-target="view-create"><i class="ri-magic-line"></i> AI Builder</li>
+                    <li data-target="view-projects"><i class="ri-folder-3-line"></i> My Projects</li>
+                    <li data-target="view-premium"><i class="ri-vip-crown-fill"></i> Upgrade Plan</li>
+                    <li data-target="view-referral"><i class="ri-share-line"></i> Refer & Earn</li>
+                    <li data-target="view-contact"><i class="ri-customer-service-2-line"></i> Help & Support</li>
+                </ul>
 
-                    <div class="nav-label">SYSTEM</div>
-                    <a href="#" class="nav-item" onclick="logoutUser()">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
-                </nav>
-
-                <div class="sidebar-bottom">
-                    <a href="mailto:zulora.help@gmail.com" class="support-link">
-                        <i class="fas fa-headset"></i> Help Center
-                    </a>
-                </div>
+                <button id="logout-btn" class="btn-logout"><i class="ri-logout-box-line"></i> Logout</button>
             </aside>
 
-            <main class="dash-main">
-                <header class="dash-header">
-                    <div class="header-left">
-                        <h2 id="page-title">My Websites</h2>
-                        <p id="page-subtitle">Manage and edit your deployments.</p>
-                    </div>
-                    <div class="header-right">
-                        <button class="btn btn-primary btn-icon-left" onclick="openBuilderWizard()">
-                            <i class="fas fa-plus"></i> New Project
+            <main class="app-content">
+                
+                <header class="app-header">
+                    <h3 id="page-title">Dashboard</h3>
+                    <div class="header-actions">
+                        <button class="action-icon" onclick="openReferralModal()">
+                            <i class="ri-gift-line"></i>
+                            <span class="badge">FREE</span>
                         </button>
+                        <a href="https://www.instagram.com/zulora_official?igsh=MTRvOGYwNGZoZ3h0aw==" target="_blank" class="action-icon insta-link">
+                            <i class="ri-instagram-line"></i>
+                        </a>
                     </div>
                 </header>
 
-                <div id="content-websites" class="content-tab active">
-                    <div class="projects-grid-container" id="projects-container">
-                        <div class="empty-state-card">
-                            <div class="empty-illustration">
-                                <i class="fas fa-rocket"></i>
+                <section id="view-dashboard" class="inner-view active">
+                    <div class="stats-container">
+                        <div class="stat-card gradient-1">
+                            <div class="stat-icon"><i class="ri-flashlight-fill"></i></div>
+                            <div>
+                                <h3>Available Credits</h3>
+                                <h2 id="dashboard-credits">0</h2>
                             </div>
-                            <h3>No websites created yet</h3>
-                            <p>Use your 10 free credits to generate your first AI website.</p>
-                            <button class="btn btn-outline" onclick="openBuilderWizard()">Launch Builder</button>
                         </div>
-                    </div>
-                </div>
-
-                <div id="content-analytics" class="content-tab hidden">
-                    <div class="analytics-dashboard">
-                        <div class="stat-card">
-                            <h3>Total Views</h3>
-                            <div class="number">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Leads Generated</h3>
-                            <div class="number">0</div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <div id="wizard-overlay" class="modal-overlay">
-        <div class="wizard-container slide-up-animation">
-            
-            <div class="wizard-header">
-                <div class="wiz-title">
-                    <i class="fas fa-magic"></i> AI Website Wizard
-                </div>
-                <button class="close-wiz-btn" onclick="closeBuilderWizard()">&times;</button>
-            </div>
-
-            <div class="wizard-body">
-                
-                <div class="wiz-step active" id="wiz-step-1">
-                    <h3>Name your project</h3>
-                    <p class="wiz-desc">This will be your unique address on Zulora.</p>
-                    
-                    <div class="subdomain-group">
-                        <input type="text" id="wiz-subdomain" placeholder="project-name" autocomplete="off">
-                        <span class="suffix">.zulora.in</span>
-                    </div>
-                    <small id="subdomain-error" class="error-text"></small>
-
-                    <div class="wiz-footer">
-                        <button class="btn btn-primary btn-block" onclick="wizardNext(2)">Next Step <i class="fas fa-arrow-right"></i></button>
-                    </div>
-                </div>
-
-                <div class="wiz-step" id="wiz-step-2">
-                    <h3>Choose your method</h3>
-                    <div class="method-grid">
-                        <div class="method-card" onclick="selectMethod('AI')">
-                            <div class="method-icon ai"><i class="fas fa-robot"></i></div>
-                            <div class="method-info">
-                                <h4>Generate with AI</h4>
-                                <p>Prompt to Website. Cost: <strong>15 Credits</strong></p>
+                        <div class="stat-card gradient-2">
+                            <div class="stat-icon"><i class="ri-group-line"></i></div>
+                            <div>
+                                <h3>Total Referrals</h3>
+                                <h2 id="dashboard-referrals">0</h2>
                             </div>
-                            <div class="select-radio"><div class="dot"></div></div>
-                        </div>
-
-                        <div class="method-card" onclick="selectMethod('Template')">
-                            <div class="method-icon tpl"><i class="fas fa-th"></i></div>
-                            <div class="method-info">
-                                <h4>Use Template</h4>
-                                <p>Classic Layouts. Cost: <strong>Free</strong></p>
-                            </div>
-                            <div class="select-radio"><div class="dot"></div></div>
                         </div>
                     </div>
-                </div>
 
-                <div class="wiz-step" id="wiz-step-3a">
-                    <h3>Describe your vision</h3>
-                    <p class="wiz-desc">Be specific. Mention colors, sections, and tone.</p>
-                    <textarea id="ai-prompt-text" class="prompt-area" placeholder="E.g., A minimalist portfolio for a wildlife photographer with a dark green theme, a gallery section, and a contact form..."></textarea>
-                    
-                    <div class="wiz-footer">
-                        <div class="balance-check">Balance: <span id="wiz-balance">0</span> Cr</div>
-                        <button class="btn btn-primary btn-block" onclick="startGeneration()">
-                            <i class="fas fa-bolt"></i> Generate Website
+                    <div class="section-head">
+                        <h3>Your Websites</h3>
+                        <button class="btn-text" onclick="switchView('view-create')">Create New <i class="ri-arrow-right-line"></i></button>
+                    </div>
+
+                    <div id="project-list" class="project-grid">
+                        <div class="empty-state">
+                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/empty-state-2130362-1800926.png" alt="No projects">
+                            <p>You haven't created any websites yet.</p>
+                            <button class="btn-primary" onclick="switchView('view-create')">Start Building</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-create" class="inner-view">
+                    <div class="ai-interface">
+                        <div class="ai-header-text">
+                            <h2>What do you want to build?</h2>
+                            <p>Describe your business, blog, or portfolio.</p>
+                        </div>
+
+                        <div class="ai-chat-box">
+                            <div class="chat-message ai">
+                                <div class="avatar-bot"><i class="ri-robot-line"></i></div>
+                                <div class="msg-bubble">Hello! I'm Gemini 1.5. Describe your dream website, and I'll generate the code, select images, and publish it instantly.</div>
+                            </div>
+                        </div>
+
+                        <div class="prompt-area">
+                            <div class="suggestion-chips">
+                                <span onclick="fillPrompt('A portfolio for a photographer')">📸 Portfolio</span>
+                                <span onclick="fillPrompt('A coffee shop landing page')">☕ Coffee Shop</span>
+                                <span onclick="fillPrompt('An ecommerce store for shoes')">👟 Shoe Store</span>
+                            </div>
+                            <div class="input-wrapper">
+                                <textarea id="ai-prompt-input" placeholder="e.g. Build me a clone of Netflix..."></textarea>
+                                <button id="generate-btn" class="btn-send">
+                                    <i class="ri-send-plane-fill"></i>
+                                </button>
+                            </div>
+                            <p class="cost-info">Generations cost <strong>15 Credits</strong>.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-premium" class="inner-view">
+                    <div class="pricing-card">
+                        <div class="popular-tag">MOST POPULAR</div>
+                        <h2>Zulora Premium</h2>
+                        <div class="price">
+                            <span class="currency">₹</span>
+                            <span class="amount">199</span>
+                            <span class="period">/month</span>
+                        </div>
+                        
+                        <ul class="benefits-list">
+                            <li><i class="ri-check-line"></i> <strong>1000 Monthly Credits</strong></li>
+                            <li><i class="ri-check-line"></i> Create Unlimited Websites</li>
+                            <li><i class="ri-check-line"></i> Custom Subdomains</li>
+                            <li><i class="ri-check-line"></i> Priority Support</li>
+                            <li><i class="ri-check-line"></i> Remove "Made with Zulora" Badge</li>
+                        </ul>
+
+                        <div class="payment-details">
+                            <p>Pay via UPI</p>
+                            <div class="upi-box">
+                                <code>shivenpanwar@fam</code>
+                                <button class="btn-copy" onclick="copyToClipboard('shivenpanwar@fam')"><i class="ri-file-copy-line"></i></button>
+                            </div>
+                            <small>After payment, send screenshot to Support.</small>
+                        </div>
+
+                        <button class="btn-primary btn-block btn-lg" onclick="window.open('upi://pay?pa=shivenpanwar@fam&pn=ZuloraPremium&am=199.00&cu=INR', '_blank')">
+                            Pay Now <i class="ri-secure-payment-line"></i>
                         </button>
                     </div>
-                </div>
+                </section>
 
-                <div class="wiz-step" id="wiz-step-3b">
-                    <h3>Select a Template</h3>
-                    <div class="tpl-grid-container">
-                        <div class="tpl-option" onclick="finalizeTemplate('Agency')">
-                            <div class="tpl-preview p1"></div>
-                            <span>Creative Agency</span>
+                <section id="view-contact" class="inner-view">
+                    <div class="contact-card">
+                        <h2>Help & Support</h2>
+                        <p>We are here to help you build your dream.</p>
+                        
+                        <div class="contact-item">
+                            <i class="ri-mail-send-line"></i>
+                            <div>
+                                <label>Email Support</label>
+                                <a href="mailto:zulora.help@gmail.com">zulora.help@gmail.com</a>
+                            </div>
                         </div>
-                        <div class="tpl-option" onclick="finalizeTemplate('SaaS')">
-                            <div class="tpl-preview p2"></div>
-                            <span>SaaS Startup</span>
+
+                        <div class="contact-item">
+                            <i class="ri-whatsapp-line"></i>
+                            <div>
+                                <label>Phone / WhatsApp</label>
+                                <a href="tel:+916395211325">+91 6395211325</a>
+                            </div>
                         </div>
-                        <div class="tpl-option" onclick="finalizeTemplate('Restaurant')">
-                            <div class="tpl-preview p3"></div>
-                            <span>Restaurant</span>
+
+                        <div class="contact-item">
+                            <i class="ri-instagram-line"></i>
+                            <div>
+                                <label>Instagram</label>
+                                <a href="https://www.instagram.com/zulora_official?igsh=MTRvOGYwNGZoZ3h0aw==" target="_blank">@zulora_official</a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div class="wiz-step centered" id="wiz-step-loading">
-                    <div class="ai-loader">
-                        <div class="orbit"></div>
-                        <div class="orbit"></div>
-                        <div class="orbit"></div>
-                        <i class="fas fa-brain center-icon"></i>
+                <section id="view-referral" class="inner-view">
+                    <div class="referral-hero">
+                        <img src="https://cdni.iconscout.com/illustration/premium/thumb/refer-a-friend-2358364-1970223.png" alt="Refer">
+                        <h2>Invite Friends, Get Credits</h2>
+                        <p>Share your unique link. When they sign up, you get <strong>+10 Credits</strong> and they get <strong>+30 Credits</strong>.</p>
+                        
+                        <div class="referral-box">
+                            <input type="text" id="my-referral-code" readonly value="LOADING..." >
+                            <button onclick="copyReferralCode()">Copy</button>
+                        </div>
+
+                        <div class="share-buttons">
+                            <button class="share-btn whatsapp" onclick="shareWhatsapp()"><i class="ri-whatsapp-fill"></i> Share</button>
+                            <button class="share-btn telegram" onclick="shareTelegram()"><i class="ri-telegram-fill"></i> Share</button>
+                        </div>
                     </div>
-                    <h3 id="loading-status">Consulting Gemini AI...</h3>
-                    <p>Writing HTML, CSS, and copy.</p>
+                </section>
+
+            </main>
+        </div> <div id="editor-modal" class="editor-overlay hidden">
+            <div class="editor-toolbar">
+                <button class="btn-icon" onclick="closeEditor()"><i class="ri-close-line"></i></button>
+                <div class="device-toggles">
+                    <button class="active" onclick="setEditorView('desktop')"><i class="ri-computer-line"></i></button>
+                    <button onclick="setEditorView('mobile')"><i class="ri-smartphone-line"></i></button>
                 </div>
+                <button class="btn-primary btn-sm" onclick="saveAndPublish()">Publish <i class="ri-upload-cloud-line"></i></button>
             </div>
-        </div>
-    </div>
-
-    <div id="view-editor" class="app-view hidden-view">
-        <div class="editor-layout">
-            <div class="editor-topbar">
-                <div class="top-left">
-                    <button class="btn-icon" onclick="exitEditor()"><i class="fas fa-chevron-left"></i></button>
-                    <div class="site-meta">
-                        <span class="meta-label">Editing:</span>
-                        <strong id="editor-domain-display">mysite.zulora.in</strong>
-                    </div>
-                </div>
-                
-                <div class="top-center">
-                    <div class="view-toggles">
-                        <button class="toggle-btn active" onclick="setCanvasWidth('100%')"><i class="fas fa-desktop"></i></button>
-                        <button class="toggle-btn" onclick="setCanvasWidth('768px')"><i class="fas fa-tablet-alt"></i></button>
-                        <button class="toggle-btn" onclick="setCanvasWidth('375px')"><i class="fas fa-mobile-alt"></i></button>
-                    </div>
-                </div>
-
-                <div class="top-right">
-                    <label for="img-upload-input" class="btn btn-outline btn-sm">
-                        <i class="fas fa-image"></i> Add Image
-                    </label>
-                    <input type="file" id="img-upload-input" hidden accept="image/*" onchange="handleImageUpload(event)">
-                    
-                    <button class="btn btn-primary btn-sm" onclick="saveAndPublish()">
-                        <i class="fas fa-cloud-upload-alt"></i> Publish Live
-                    </button>
-                </div>
-            </div>
-
-            <div class="editor-workspace">
-                <div class="canvas-container">
-                    <div id="website-canvas" class="website-frame"></div>
-                </div>
-            </div>
-
-            <div class="floating-toolbar">
-                <button class="tool-btn" title="Edit Text" onclick="enableTextEdit()"><i class="fas fa-font"></i></button>
-                <button class="tool-btn" title="Change Colors" onclick="toggleColorPanel()"><i class="fas fa-palette"></i></button>
-                <button class="tool-btn" title="AI Rewrite" onclick="aiRewrite()"><i class="fas fa-magic"></i></button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-premium" class="modal-overlay">
-        <div class="modal-box premium-box">
-            <button class="close-modal" onclick="closeModal('modal-premium')">&times;</button>
             
-            <div class="premium-header">
-                <div class="crown-anim"><i class="fas fa-crown"></i></div>
-                <h2>Unlock Unlimited Power</h2>
-                <p>Scale your business with the Pro Plan.</p>
+            <div class="editor-container">
+                <div class="editor-tools">
+                    <div class="tool" onclick="triggerImageUpload()">
+                        <i class="ri-image-add-line"></i>
+                        <span>Image</span>
+                    </div>
+                    <div class="tool" onclick="document.execCommand('bold')">
+                        <i class="ri-bold"></i>
+                        <span>Text</span>
+                    </div>
+                    <div class="tool" onclick="changeThemeColor()">
+                        <i class="ri-palette-line"></i>
+                        <span>Color</span>
+                    </div>
+                </div>
+
+                <div id="editor-canvas-wrapper" class="desktop-view">
+                    <div id="website-preview-frame" contenteditable="true">
+                        </div>
+                </div>
             </div>
 
-            <div class="pricing-card">
-                <div class="price-row">
-                    <span class="currency">₹</span>
-                    <span class="amount">199</span>
-                    <span class="period">/month</span>
-                </div>
-                
-                <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> <strong>Unlimited</strong> AI Generations</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>1000</strong> Credits Instantly</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Custom Domain</strong> (.com) Support</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Priority</strong> Whatsapp Support</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Remove</strong> Zulora Branding</li>
-                </ul>
-            </div>
-
-            <div class="payment-area">
-                <p class="pay-label">Pay via UPI to Activate:</p>
-                <div class="upi-display" onclick="copyUPI()">
-                    <span id="upi-text">shivenpanwar@fam</span>
-                    <i class="fas fa-copy"></i>
-                </div>
-                <button class="btn btn-success btn-block" id="verify-pay-btn" onclick="verifyPayment()">
-                    I have made the payment
-                </button>
-                <p class="secure-note"><i class="fas fa-lock"></i> 100% Secure Payment</p>
-            </div>
+            <input type="file" id="image-upload-input" accept="image/*" style="display: none;" onchange="handleImageUpload(this)">
         </div>
-    </div>
 
-    <div id="modal-referral" class="modal-overlay">
-        <div class="modal-box referral-box">
-            <button class="close-modal" onclick="closeModal('modal-referral')">&times;</button>
-            
-            <div class="ref-visual">
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Gift" width="80">
-            </div>
-
-            <h2>Invite Friends, Get Credits</h2>
-            <p>Share your unique link. When they join, you both get <strong>10 Free Credits</strong>.</p>
-
-            <div class="ref-stats-row">
-                <div class="r-stat">
-                    <div class="val" id="total-referrals">0</div>
-                    <div class="lbl">Friends</div>
-                </div>
-                <div class="r-stat">
-                    <div class="val" id="earned-credits">0</div>
-                    <div class="lbl">Credits Earned</div>
-                </div>
-            </div>
-
-            <div class="ref-link-wrapper">
-                <label>Your Referral Link</label>
-                <div class="input-copy-group">
-                    <input type="text" id="my-ref-link" readonly value="Loading...">
-                    <button onclick="copyRefLink()">Copy</button>
-                </div>
-            </div>
-
-            <div class="share-buttons">
-                <button class="share-btn whatsapp" onclick="shareWhatsapp()"><i class="fab fa-whatsapp"></i> Share</button>
-                <button class="share-btn twitter"><i class="fab fa-twitter"></i> Tweet</button>
-            </div>
-        </div>
-    </div>
-
-    <script type="module" src="script.js"></script>
+    </div> <script src="script.js"></script>
 
 </body>
 </html>
