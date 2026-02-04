@@ -1,177 +1,157 @@
 /**
  * ==========================================================================================
- * ZULORA OS - TITANIUM KERNEL (v11.5.0 Google Edition)
+ * ZULORA OS - TITANIUM KERNEL (v12.0.0)
  * "The Unbreakable Neural Engine"
  * * [ SYSTEM ARCHITECTURE ]
- * 1. Bootloader ..... Instant-Load Technology & Self-Healing
- * 2. Auth ........... Google Firebase Authentication (Popup Flow)
- * 3. Store .......... Redux-style Global State Management
- * 4. Database ....... Cloud Firestore with Offline Persistence
- * 5. NeuralNet ...... Dual-Core AI Engine (Claude & Llama Logic)
- * 6. Editor ......... Real-time DOM Manipulation & Hosting Simulation
- * * * (c) 2026 Zulora Inc. | Enterprise License
+ * 1. Bootloader ..... Instant-Load Technology (Zero Wait Time)
+ * 2. Store .......... Redux-style State Management (Persistent)
+ * 3. Auth ........... Google Firebase + Session Persistence
+ * 4. Router ......... SPA Navigation (No Reloads)
+ * 5. NeuralNet ...... Hybrid Template Engine (Offline Capable)
+ * 6. UI ............. Toasts, Sidebar, Modals, DOM Manipulator
+ * * (c) 2026 Zulora Inc. | Enterprise License
  * ==========================================================================================
  */
 
 "use strict";
 
 /* --------------------------------------------------------------------------
-   SECTION 0: IMMEDIATE PRE-FLIGHT CHECK & CONFIG LOAD
+   SECTION 1: SYSTEM CONFIGURATION
    -------------------------------------------------------------------------- */
-// Grab config injected from HTML head
-const GLOBAL_CONFIG = window.ZULORA_CONFIG || {};
+// Load config injected from HTML
+const ENV_CONFIG = window.ZULORA_CONFIG || {};
 
-const SYSTEM_CONFIG = {
-    version: '11.5.0-google',
-    debugMode: true, // Enables verbose logging and auto-fixes
+const SYSTEM = {
+    version: '12.0.0-titanium',
+    debug: true,
     
-    // AI Engine Configuration
-    ai: {
-        defaultEngine: 'claude',
-        keys: GLOBAL_CONFIG.aiKeys || {}
-    },
-
-    // Economic Model (Credits System)
+    // Credit Economy
     economy: {
-        signupBonus: 30,    // Given on first Google login
-        referralBonus: 10,  // Given to referrer
-        generationCost: 15, // Cost per website build
-        updateCost: 3       // Cost per AI edit
+        signupBonus: 30,      // Given on first login
+        referralReward: 15,   // Updated as per request (15 Credits)
+        generationCost: 15,   // Cost to build a site
+        aiEditCost: 3,        // Cost to edit via AI
+        premiumCost: 199,     // INR
+        premiumCredits: 1000  // Monthly credits for Pro
     },
 
-    // Firebase Config (Loaded from HTML)
-    firebase: GLOBAL_CONFIG.firebase || {}
+    // Support Links
+    support: ENV_CONFIG.admin || {}
 };
 
-// --- FIREBASE IMMEDIATE INITIALIZATION ---
-// Initialize instantly to prevent "No Firebase App" errors.
-try {
-    if (firebase && !firebase.apps.length) {
-        firebase.initializeApp(SYSTEM_CONFIG.firebase);
-        // Enable offline persistence for robust experience
-        firebase.firestore().enablePersistence().catch(err => console.warn("Offline mode disabled:", err.code));
-        console.log("✅ [System] Firebase connection established.");
-    }
-} catch (e) {
-    console.error("❌ [CRITICAL] Firebase Init Failed:", e);
-    // The bootloader will handle the fallback to offline mode.
-}
-
 /* --------------------------------------------------------------------------
-   SECTION 1: GLOBAL UTILITIES (The Toolbelt)
+   SECTION 2: GLOBAL UTILITIES
    -------------------------------------------------------------------------- */
 const Utils = {
-    // High-performance UUID Generator
+    // Generate UUID
     uuid() {
         if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
             const r = (Math.random() * 16) | 0;
             const v = c === 'x' ? r : (r & 0x3) | 0x8;
             return v.toString(16);
         });
     },
 
-    // Human-readable Referral Code
+    // Generate Referral Code
     generateRefCode() {
-        const timestamp = Date.now().toString(36).toUpperCase().slice(-4);
-        const random = Math.random().toString(36).toUpperCase().slice(2, 6);
-        return `Z-${timestamp}${random}`;
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = 'ZUL-';
+        for (let i = 0; i < 5; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+        return result;
     },
 
-    // Advanced Clipboard Copy
+    // Clipboard
     async copy(text) {
         try {
             await navigator.clipboard.writeText(text);
             UI.toast("Copied to clipboard!", "success");
-            return true;
         } catch (err) {
-            // Fallback method
+            // Fallback
             const ta = document.createElement("textarea");
             ta.value = text;
             document.body.appendChild(ta);
             ta.select();
-            document.execCommand('copy');
+            document.execCommand("copy");
             document.body.removeChild(ta);
             UI.toast("Copied!", "success");
         }
     },
 
-    // Simulated Network Delay
-    wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); },
+    // Delay
+    wait(ms) { return new Promise(r => setTimeout(resolve, ms)); },
 
-    // URL Parameter Extractor
+    // Get URL Param
     getParam(name) { return new URLSearchParams(window.location.search).get(name); },
 
-    // Date Formatter
-    formatDate(iso) { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }); }
+    // Open External Link
+    openLink(type) {
+        const links = {
+            whatsapp: `https://wa.me/${SYSTEM.support.whatsapp}`,
+            instagram: SYSTEM.support.instagram,
+            email: `mailto:${SYSTEM.support.email}`
+        };
+        if(links[type]) window.open(links[type], '_blank');
+    }
 };
 
 /* --------------------------------------------------------------------------
-   SECTION 2: STATE MANAGEMENT STORE (Redux Pattern)
+   SECTION 3: STATE STORE (REDUX PATTERN)
    -------------------------------------------------------------------------- */
 class StateStore {
     constructor() {
         this.state = {
-            user: null, // Firebase User Object
-            profile: {  // Firestore Profile Data
+            user: null, // Firebase User
+            profile: {
                 credits: 0,
                 referrals: 0,
                 projects: [],
                 isPremium: false,
-                displayName: 'Creator',
-                photoURL: null
+                displayName: 'Guest',
+                photoURL: null,
+                referralCode: 'LOADING'
             },
-            ui: {
-                currentView: 'landing',
-                isSidebarOpen: false
-            },
-            isOfflineMode: false
+            isOffline: false
         };
         this.loadPersistence();
     }
 
-    // Load saved state from localStorage for instant feel
     loadPersistence() {
         try {
-            const saved = localStorage.getItem('ZULORA_V11_STATE');
+            const saved = localStorage.getItem('ZULORA_V12_STATE');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 this.state.profile = { ...this.state.profile, ...parsed.profile };
-                // We don't persist the firebase user object directly, auth listener handles that
-                console.log(">> [Store] State Rehydrated from local storage");
+                console.log(">> [Store] Hydrated from LocalStorage");
             }
-        } catch (e) { console.warn("State reset required due to corruption"); }
+        } catch (e) { console.warn("State reset"); }
     }
 
     save() {
         try {
-            localStorage.setItem('ZULORA_V11_STATE', JSON.stringify({
+            localStorage.setItem('ZULORA_V12_STATE', JSON.stringify({
                 profile: this.state.profile
             }));
-        } catch(e) { console.warn("Could not save state (quota exceeded)"); }
+        } catch (e) {}
     }
 
     // Actions
     setUser(user) { 
         this.state.user = user; 
-        // Don't save user auth token here, let Firebase handle it
-    }
-    
-    updateProfile(data) { 
-        this.state.profile = { ...this.state.profile, ...data }; 
-        this.save();
-        document.dispatchEvent(new CustomEvent('zulora:update'));
+        // We trigger UI updates when user changes
+        UI.updateAuthUI();
     }
 
-    setOffline(status) {
-        this.state.isOfflineMode = status;
-        if(status) UI.toast("Network offline. Working locally.", "warning");
+    updateProfile(data) {
+        this.state.profile = { ...this.state.profile, ...data };
+        this.save();
+        UI.updateStats(); // Refresh credits, name, etc.
     }
 
     deductCredits(amount) {
         if (this.state.profile.credits >= amount) {
             this.updateProfile({ credits: this.state.profile.credits - amount });
-            // Sync to DB happens asynchronously in DB service
+            // Sync DB logic handled in DB Service
             return true;
         }
         return false;
@@ -180,475 +160,473 @@ class StateStore {
 const Store = new StateStore();
 
 /* --------------------------------------------------------------------------
-   SECTION 3: UI CONTROLLER (Visual Feedback & DOM Manipulation)
+   SECTION 4: UI CONTROLLER (VISUALS)
    -------------------------------------------------------------------------- */
 class UIController {
     constructor() {
         this.loader = document.getElementById('bootloader');
-        this.bar = document.getElementById('boot-bar');
         this.toastDock = document.getElementById('toast-dock');
     }
 
-    // --- INSTANT BOOT SEQUENCE ---
-    // Visually clears the loader quickly, while Auth connects in background.
-    startBootSequence() {
-        console.log(">> Boot Sequence Initiated");
-        if(this.bar) this.bar.style.width = "100%";
+    // --- INSTANT BOOT (Fixes "Too much time loading") ---
+    boot() {
+        console.log(">> [UI] Booting System...");
+        // Animate bar
+        const bar = document.getElementById('boot-bar');
+        if(bar) bar.style.width = '100%';
 
-        // Force fade out after a tight timeframe
+        // Hide loader quickly (500ms max)
         setTimeout(() => {
-            if(this.loader && this.loader.style.display !== 'none') {
+            if(this.loader) {
                 this.loader.style.opacity = '0';
                 this.loader.style.pointerEvents = 'none';
                 setTimeout(() => this.loader.style.display = 'none', 500);
             }
-        }, 800);
+        }, 500);
     }
 
-    // Advanced Toast Notification System
+    // Toast Notifications
     toast(msg, type = 'info') {
-        const div = document.createElement('div');
-        const config = {
-            success: { icon: 'ri-checkbox-circle-fill', bg: 'bg-slate-900/95 border-green-500/30 text-green-400' },
-            error:   { icon: 'ri-error-warning-fill',   bg: 'bg-slate-900/95 border-red-500/30 text-red-400' },
-            warning: { icon: 'ri-alert-fill',           bg: 'bg-slate-900/95 border-yellow-500/30 text-yellow-400' },
-            info:    { icon: 'ri-information-fill',     bg: 'bg-slate-900/95 border-brand-500/30 text-brand-400' }
+        const el = document.createElement('div');
+        const configs = {
+            success: { icon: 'ri-checkbox-circle-fill', color: 'text-green-400', border: 'border-green-500/30' },
+            error:   { icon: 'ri-error-warning-fill',   color: 'text-red-400',   border: 'border-red-500/30' },
+            info:    { icon: 'ri-information-fill',     color: 'text-brand-400', border: 'border-brand-500/30' },
+            gold:    { icon: 'ri-vip-crown-fill',       color: 'text-yellow-400', border: 'border-yellow-500/30' }
         };
-        const theme = config[type];
+        const cfg = configs[type] || configs.info;
 
-        div.className = `flex items-center gap-3 px-4 py-3 rounded-xl border backdrop-blur-md shadow-2xl transform translate-x-full opacity-0 transition-all duration-500 ${theme.bg} min-w-[300px] z-[10000]`;
-        div.innerHTML = `<i class="${theme.icon} text-xl"></i><span class="text-sm font-medium text-slate-200">${msg}</span>`;
+        el.className = `flex items-center gap-3 px-4 py-3 bg-slate-900/90 backdrop-blur-xl border ${cfg.border} rounded-xl shadow-2xl animate-toast-enter min-w-[300px] pointer-events-auto`;
+        el.innerHTML = `
+            <i class="${cfg.icon} ${cfg.color} text-xl"></i>
+            <span class="text-sm font-medium text-slate-200">${msg}</span>
+        `;
 
-        this.toastDock.appendChild(div);
-        
-        // Animation Frame guarantees smooth entry
-        requestAnimationFrame(() => div.classList.remove('translate-x-full', 'opacity-0'));
-        
-        // Auto-dismiss
+        this.toastDock.appendChild(el);
         setTimeout(() => {
-            div.classList.add('translate-x-full', 'opacity-0');
-            setTimeout(() => div.remove(), 500);
+            el.style.opacity = '0';
+            el.style.transform = 'translateX(100%)';
+            setTimeout(() => el.remove(), 300);
         }, 4000);
     }
 
-    // Updates all data-driven elements on the page
-    updateStats() {
-        const p = Store.state.profile;
-        const set = (id, v) => { const el = document.getElementById(id); if(el) el.innerText = v; };
+    // Update Nav Bar based on Auth State
+    updateAuthUI() {
+        const loggedOutNav = document.getElementById('nav-auth-logged-out');
+        const loggedInNav = document.getElementById('nav-auth-logged-in');
         
-        set('sidebar-name', p.displayName);
-        set('sidebar-credits', p.credits);
-        set('mobile-credits', p.credits);
-        set('dash-credits', p.credits);
-        set('dash-sites', p.projects?.length || 0);
-        set('dash-referrals', p.referrals);
-        
-        // Update Avatar Image if available from Google
-        const avatarEl = document.getElementById('sidebar-avatar');
-        if(avatarEl && p.photoURL) {
-            avatarEl.innerHTML = `<img src="${p.photoURL}" class="w-full h-full rounded-full object-cover">`;
-        } else if (avatarEl) {
-             avatarEl.innerHTML = p.displayName.charAt(0).toUpperCase();
+        if (Store.state.user) {
+            if(loggedOutNav) loggedOutNav.classList.add('hidden');
+            if(loggedInNav) loggedInNav.classList.remove('hidden');
+            this.updateStats(); // Fill data
+        } else {
+            if(loggedOutNav) loggedOutNav.classList.remove('hidden');
+            if(loggedInNav) loggedInNav.classList.add('hidden');
         }
-
-        const refInput = document.getElementById('referral-link-input');
-        if(refInput) refInput.value = `${window.location.origin}?ref=${p.referralCode || 'Generate'}`;
     }
 
-    // Dynamically renders the Google Auth UI inside the existing modal
-    renderGoogleAuthUI() {
-        const modalBody = document.querySelector('#view-auth .bg-slate-900\\/80');
-        if (!modalBody) return;
+    // Update Text Data across the app
+    updateStats() {
+        const p = Store.state.profile;
+        const setText = (id, txt) => {
+            const el = document.getElementById(id);
+            if(el) el.innerText = txt;
+        };
 
-        // Replace the inner content of the modal body with the Google Auth structure
-        modalBody.innerHTML = `
-            <button onclick="window.router.go('landing')" class="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors">
-                <i class="ri-close-circle-line text-2xl"></i>
-            </button>
+        // Navbar
+        setText('nav-user-name', p.displayName);
+        setText('nav-user-credits', `${p.credits} Credits`);
 
-            <div class="text-center mb-8 pt-4">
-                <div class="w-16 h-16 bg-gradient-to-tr from-brand-600 to-purple-600 rounded-2xl mx-auto flex items-center justify-center text-white text-3xl font-bold mb-6 shadow-lg shadow-brand-500/20">Z</div>
-                <h2 class="text-3xl font-bold text-white mb-3">Welcome to OS v11</h2>
-                <p class="text-slate-400 text-base">Sign in securely to access your neural dashboard.</p>
-            </div>
+        // Sidebar Drawer
+        setText('sidebar-drawer-name', p.displayName);
+        setText('sidebar-drawer-email', Store.state.user?.email || '');
+        setText('sidebar-drawer-credits', p.credits);
+        
+        // Sidebar Avatar
+        const avatarEls = document.querySelectorAll('#sidebar-avatar');
+        avatarEls.forEach(el => {
+            if(p.photoURL) {
+                el.innerHTML = `<img src="${p.photoURL}" class="w-full h-full object-cover">`;
+            } else {
+                el.innerHTML = p.displayName.charAt(0).toUpperCase();
+            }
+        });
 
-            <div class="space-y-6 mt-8">
-                <button id="google-auth-btn" onclick="window.auth.signInWithGoogle()" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-bold py-4 px-6 rounded-xl shadow-xl transition-all transform active:scale-95 flex items-center justify-center gap-4 relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-r from-slate-100 to-white opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-6 h-6 relative z-10" alt="Google Logo">
-                    <span class="text-lg relative z-10">Continue with Google</span>
-                </button>
-                
-                <div class="relative flex py-4 items-center">
-                    <div class="flex-grow border-t border-slate-800"></div>
-                    <span class="flex-shrink mx-4 text-slate-500 text-xs uppercase tracking-widest">Trusted & Secure</span>
-                    <div class="flex-grow border-t border-slate-800"></div>
-                </div>
-                 <p class="text-center text-xs text-slate-500">By continuing, you agree to our Terms of Service and Privacy Policy.</p>
-            </div>
-        `;
+        // Dashboard Stats
+        setText('dash-credits', p.credits);
+        setText('dash-credits-lg', p.credits);
+        setText('dash-sites', p.projects?.length || 0);
+        setText('dash-referrals', p.referrals);
+
+        // Referral Input
+        const refInput = document.getElementById('referral-link-input');
+        if(refInput) refInput.value = `${window.location.origin}?ref=${p.referralCode}`;
     }
 }
 const UI = new UIController();
 
 /* --------------------------------------------------------------------------
-   SECTION 4: ROUTER (Navigation Manager)
+   SECTION 5: ROUTER (NAVIGATION)
    -------------------------------------------------------------------------- */
-const Router = {
-    // Main Navigation Switcher
+class Router {
+    constructor() {
+        this.landing = document.getElementById('view-landing');
+        this.appShell = document.getElementById('app-shell');
+    }
+
     go(route, params = {}) {
-        // Hide all major views
-        ['view-landing', 'view-auth', 'app-shell'].forEach(id => {
-            document.getElementById(id).classList.add('hidden');
-        });
+        // Close sidebar if open
+        Sidebar.close();
 
-        switch(route) {
-            case 'landing':
-                document.getElementById('view-landing').classList.remove('hidden');
-                document.body.style.overflow = 'auto';
-                break;
-            case 'auth':
-                // Render the Google UI dynamically before showing
-                UI.renderGoogleAuthUI();
-                document.getElementById('view-auth').classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-                break;
-            case 'app':
-                if (!Store.state.user && !Store.state.isOfflineMode) return this.go('auth');
-                document.getElementById('app-shell').classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-                this.switchTab(params.view || 'dashboard');
-                break;
-            default:
-                this.go('landing');
+        // 1. Landing Page
+        if (route === 'home' || route === 'landing') {
+            this.landing.classList.remove('hidden');
+            this.appShell.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            // If logged in, we might want to stay on landing until they click dashboard
         }
-    },
+        // 2. App Views (Dashboard, Create, etc.)
+        else {
+            // Auth Check
+            if (!Store.state.user && !Store.state.isOffline) {
+                // Save intended route
+                sessionStorage.setItem('ZULORA_REDIRECT', route);
+                Auth.openModal();
+                return;
+            }
 
-    // Internal App Tab Switcher
+            this.landing.classList.add('hidden');
+            this.appShell.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            // Switch Internal Tab
+            this.switchTab(route);
+        }
+    }
+
     switchTab(tabId) {
-        // Hide current active section
-        document.querySelectorAll('.view-section.active').forEach(el => {
+        // Maps 'create', 'dashboard', 'premium' to view IDs
+        const validTabs = ['dashboard', 'create', 'projects', 'premium', 'referral', 'support', 'hosting'];
+        const target = validTabs.includes(tabId) ? tabId : 'dashboard';
+
+        document.querySelectorAll('.view-section').forEach(el => {
             el.classList.add('hidden');
             el.classList.remove('active', 'animate-fade-in-up');
         });
-        
-        // Show target section with animation
-        const target = document.getElementById(`view-${tabId}`);
-        if(target) {
-            target.classList.remove('hidden');
-            void target.offsetWidth; // Trigger reflow for animation restart
-            target.classList.add('active', 'animate-fade-in-up');
+
+        const view = document.getElementById(`view-${target}`);
+        if(view) {
+            view.classList.remove('hidden');
+            void view.offsetWidth; // Reflow
+            view.classList.add('active', 'animate-fade-in-up');
         }
 
-        // Update Navigation active states
-        document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(btn => {
+        // Update Sidebar Active State
+        document.querySelectorAll('.nav-item').forEach(btn => {
             btn.classList.remove('active');
-            // Heuristic: check if the onclick handler targets this view
-            if(btn.getAttribute('onclick')?.includes(tabId)) btn.classList.add('active');
+            if(btn.getAttribute('onclick')?.includes(target)) btn.classList.add('active');
         });
     }
-};
-// Expose Router globally
-window.router = Router;
+}
+const router = new Router();
+window.router = router;
 
 /* --------------------------------------------------------------------------
-   SECTION 5: AUTHENTICATION (Google Firebase Implementation)
+   SECTION 6: SIDEBAR CONTROLLER (THREE DOTS MENU)
    -------------------------------------------------------------------------- */
-const Auth = {
-    provider: null, // Google Auth Provider definition
+const Sidebar = {
+    el: document.getElementById('app-sidebar'),
+    overlay: document.getElementById('sidebar-overlay'),
+    isOpen: false,
 
-    init() {
-        // Check for URL referral code and save it temporarily
-        const urlRef = Utils.getParam('ref');
-        if (urlRef) localStorage.setItem('ZULORA_TEMP_REF', urlRef);
-
-        try {
-            // Define Google Provider settings
-            this.provider = new firebase.auth.GoogleAuthProvider();
-            this.provider.setCustomParameters({ prompt: 'select_account' });
-
-            // MAIN AUTH LISTENER: Handles application state based on login status
-            firebase.auth().onAuthStateChanged(async (user) => {
-                if (user) {
-                    console.log(`>> [Auth] Verified: ${user.email}`);
-                    Store.setUser(user);
-                    
-                    // Sync profile data from Firestore
-                    await DB.syncProfile(user);
-                    UI.updateStats();
-
-                    // Determine redirect target
-                    if (window.location.hash === '#auth' || document.getElementById('view-auth').classList.contains('hidden') === false) {
-                         Router.go('app');
-                         UI.toast(`Welcome back, ${user.displayName.split(' ')[0]}`, 'success');
-                    }
-                     // If on landing, stay there unless they click "Dashboard"
-                } else {
-                    console.log(">> [Auth] Signed out");
-                    Store.setUser(null);
-                    if(!document.getElementById('app-shell').classList.contains('hidden')){
-                        Router.go('landing');
-                    }
-                }
-            });
-        } catch (e) {
-            console.error(">> [Auth] Firebase Error. Switching to Offline Mode.", e);
-            Store.setOffline(true);
-             // If we have cached user data, let them in offline
-            if(Store.state.profile.email) Router.go('app');
-        }
+    toggle() {
+        this.isOpen ? this.close() : this.open();
     },
 
-    // THE NEW GOOGLE SIGN-IN FUNCTION
-    async signInWithGoogle() {
-        const btn = document.getElementById('google-auth-btn');
-        const originalContent = btn.innerHTML;
+    open() {
+        if(!this.el) return;
+        this.el.classList.remove('translate-x-full');
+        this.overlay.classList.remove('hidden');
+        // Small delay for fade in
+        setTimeout(() => this.overlay.classList.remove('opacity-0'), 10);
+        this.isOpen = true;
+    },
+
+    close() {
+        if(!this.el) return;
+        this.el.classList.add('translate-x-full');
+        this.overlay.classList.add('opacity-0');
+        setTimeout(() => this.overlay.classList.add('hidden'), 300);
+        this.isOpen = false;
+    }
+};
+window.sidebar = Sidebar;
+window.utils = Utils;
+
+/* --------------------------------------------------------------------------
+   SECTION 7: AUTHENTICATION (GOOGLE + FIREBASE)
+   -------------------------------------------------------------------------- */
+const Auth = {
+    provider: null,
+
+    init() {
+        // 1. Init Firebase
+        if (firebase && !firebase.apps.length) {
+            firebase.initializeApp(ENV_CONFIG.firebase);
+        }
         
-        // Show loading state
-        btn.innerHTML = `<i class="ri-loader-4-line animate-spin text-xl"></i><span class="text-lg">Connecting to Google...</span>`;
+        // 2. Setup Google Provider
+        this.provider = new firebase.auth.GoogleAuthProvider();
+        this.provider.setCustomParameters({ prompt: 'select_account' });
+
+        // 3. Listen for Auth State Changes
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                console.log("[Auth] User:", user.email);
+                Store.setUser(user);
+                await DB.syncProfile(user);
+                
+                // Close Modal if open
+                this.closeModal();
+
+                // Check Redirection
+                const redirect = sessionStorage.getItem('ZULORA_REDIRECT');
+                if (redirect) {
+                    sessionStorage.removeItem('ZULORA_REDIRECT');
+                    router.go(redirect);
+                }
+                // Check Pending Prompt
+                const prompt = sessionStorage.getItem('ZULORA_PENDING_PROMPT');
+                if (prompt) {
+                    router.go('create');
+                    setTimeout(() => {
+                        const input = document.getElementById('ai-prompt-input');
+                        if(input) input.value = prompt;
+                        sessionStorage.removeItem('ZULORA_PENDING_PROMPT');
+                    }, 500);
+                }
+
+                UI.toast(`Signed in as ${user.displayName}`, 'success');
+            } else {
+                Store.setUser(null);
+                UI.updateAuthUI();
+                // If on restricted page, go home
+                if (!document.getElementById('app-shell').classList.contains('hidden')) {
+                    router.go('home');
+                }
+            }
+        });
+    },
+
+    // Modal Controls
+    openModal() {
+        const m = document.getElementById('auth-modal');
+        m.classList.remove('hidden');
+        // Render Google Button Dynamic Logic here if needed
+    },
+    
+    closeModal() {
+        const m = document.getElementById('auth-modal');
+        m.classList.add('hidden');
+    },
+
+    // Trigger Google Sign In
+    async signIn() {
+        const btn = document.getElementById('google-signin-btn');
+        const original = btn.innerHTML;
+        btn.innerHTML = `<i class="ri-loader-4-line animate-spin text-xl"></i> Connecting...`;
         btn.disabled = true;
-        btn.classList.add('opacity-75', 'cursor-not-allowed');
 
         try {
-            // Use popup for a smoother desktop experience
             await firebase.auth().signInWithPopup(this.provider);
-            // Successful sign-in is handled by onAuthStateChanged listener above.
+            // onAuthStateChanged handles the rest
         } catch (error) {
-            console.error("Google Sign-In Error:", error);
-            let msg = "Sign-in failed. Please try again.";
-            if (error.code === 'auth/popup-closed-by-user') msg = "Sign-in cancelled.";
-            if (error.code === 'auth/network-request-failed') msg = "Network error. Check connection.";
-            
-            UI.toast(msg, 'error');
-            
-            // Reset button state
-            btn.innerHTML = originalContent;
+            console.error("Auth Error:", error);
+            UI.toast("Sign in failed. Try again.", "error");
+            btn.innerHTML = original;
             btn.disabled = false;
-            btn.classList.remove('opacity-75', 'cursor-not-allowed');
         }
     },
 
     logout() {
-        if (!Store.state.isOfflineMode) firebase.auth().signOut();
-        Store.setUser(null);
-        Router.go('landing');
-        UI.toast("Successfully signed out", "info");
+        firebase.auth().signOut();
+        Sidebar.close();
+        UI.toast("Logged out successfully.", "info");
     }
 };
 window.auth = Auth;
 
 /* --------------------------------------------------------------------------
-   SECTION 6: DATABASE (Firestore Sync & Project Management)
+   SECTION 8: DATABASE (FIRESTORE SYNC)
    -------------------------------------------------------------------------- */
 const DB = {
-    // Synchronizes Firestore data with local state
     async syncProfile(user) {
-        if (Store.state.isOfflineMode) return;
-
         const db = firebase.firestore();
         const ref = db.collection('users').doc(user.uid);
         
         try {
             const doc = await ref.get();
-
             if (doc.exists) {
-                // Existing User: Update local state
-                const data = doc.data();
-                // Ensure photoURL is updated if changed on Google side
-                if(user.photoURL !== data.photoURL) {
-                     await ref.update({ photoURL: user.photoURL });
-                     data.photoURL = user.photoURL;
-                }
-                Store.updateProfile(data);
+                // Existing User: Merge
+                Store.updateProfile(doc.data());
             } else {
-                // New User: Create Profile
-                console.log(">> [DB] Creating new user profile");
+                // New User: Create
                 const newProfile = {
                     uid: user.uid,
                     email: user.email,
                     displayName: user.displayName,
                     photoURL: user.photoURL,
-                    credits: SYSTEM_CONFIG.economy.signupBonus,
-                    referralCode: Utils.generateRefCode(),
+                    credits: SYSTEM.economy.signupBonus,
                     referrals: 0,
+                    referralCode: Utils.generateRefCode(),
                     projects: [],
                     isPremium: false,
                     createdAt: new Date().toISOString()
                 };
 
-                // Apply Referral Bonus if applicable
-                const refCode = localStorage.getItem('ZULORA_TEMP_REF');
+                // Check Referral
+                const refCode = Utils.getParam('ref');
                 if (refCode) {
-                    // Logic to find referrer and award them would go here (requires cloud functions for security)
-                    // For now, we just acknowledge the referral locally
-                    console.log(`Applied referral: ${refCode}`);
-                    localStorage.removeItem('ZULORA_TEMP_REF');
-                    UI.toast("Referral bonus applied!", "success");
+                    // In real app, call cloud function to award referrer
+                    console.log("Ref Code Used:", refCode);
+                    UI.toast(`Referral Bonus! +${SYSTEM.economy.referralReward} Credits`, "gold");
+                    newProfile.credits += SYSTEM.economy.referralReward; 
                 }
-                
+
                 await ref.set(newProfile);
                 Store.updateProfile(newProfile);
             }
-            App.renderProjects(); // Update UI with data
-
+            App.renderProjects();
         } catch (e) {
-            console.error("DB Sync Error:", e);
-            UI.toast("Failed to sync data. Using local cache.", "warning");
+            console.error("DB Sync Failed:", e);
+            Store.state.isOffline = true;
         }
     },
 
-    // Saves a new project to Firestore
     async saveProject(project) {
-        // 1. Update local state immediately (Optimistic UI)
-        const currentProjects = Store.state.profile.projects || [];
-        const newProjects = [project, ...currentProjects];
-        Store.updateProfile({ projects: newProjects });
+        // Update Local
+        const projects = [project, ...(Store.state.profile.projects || [])];
+        Store.updateProfile({ projects });
         App.renderProjects();
 
-        // 2. Sync to Cloud in background
-        if (!Store.state.isOfflineMode && Store.state.user) {
+        // Update Cloud
+        if (Store.state.user) {
             try {
                 await firebase.firestore().collection('users').doc(Store.state.user.uid).update({
-                    projects: newProjects,
+                    projects: projects,
                     credits: Store.state.profile.credits
                 });
-            } catch(e) { console.error("Cloud save failed:", e); }
+            } catch (e) { console.error("Cloud save error"); }
         }
     }
 };
 
 /* --------------------------------------------------------------------------
-   SECTION 7: NEURAL ENGINE (AI Generation Logic)
+   SECTION 9: NEURAL ENGINE (AI GENERATOR)
    -------------------------------------------------------------------------- */
 const AI = {
-    // Called from the landing page input field
+    
+    // Landing Page Trigger
     landingTrigger() {
         const val = document.getElementById('hero-prompt').value;
-        if(!val) return UI.toast("Please describe your website first.", "warning");
-        
-        // Save prompt and send to login
+        if(!val) return UI.toast("Please enter a prompt!", "warning");
         sessionStorage.setItem('ZULORA_PENDING_PROMPT', val);
-        Router.go('auth');
-        UI.toast("Sign in with Google to generate.", "info");
+        window.auth.openModal();
     },
 
-    // Main generation function called from the dashboard
+    // Main Generate Function
     async generate() {
         const input = document.getElementById('ai-prompt-input');
         const prompt = input.value.trim().toLowerCase();
         
-        if (!prompt) return UI.toast("Prompt cannot be empty", "error");
+        if (!prompt) return UI.toast("Prompt is empty.", "error");
         
-        // Validate Credits
-        if (Store.state.profile.credits < SYSTEM_CONFIG.economy.generationCost) {
-            Router.go('premium');
-            return UI.toast("Insufficient Credits. Upgrade required.", "error");
+        // Credit Check
+        if (Store.state.profile.credits < SYSTEM.economy.generationCost) {
+            router.go('premium');
+            return UI.toast("Insufficient Credits. Upgrade needed.", "error");
         }
 
-        // UI Loading State
+        // Loading
         const btn = document.getElementById('btn-generate');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = `<span class="flex items-center gap-2"><i class="ri-cpu-line animate-spin text-xl"></i> Initializing Neural Build...</span>`;
+        const original = btn.innerHTML;
+        btn.innerHTML = `<i class="ri-cpu-line animate-spin"></i> Generating...`;
         btn.disabled = true;
-        btn.classList.add('opacity-75', 'cursor-not-allowed');
 
         try {
-            // Simulate AI processing latency
-            await Utils.wait(2500);
+            await Utils.wait(2000); // Simulate AI thinking
 
-            // Deduct credits locally
-            Store.deductCredits(SYSTEM_CONFIG.economy.generationCost);
-            UI.updateStats();
+            // Deduct Credits
+            Store.deductCredits(SYSTEM.economy.generationCost);
+            
+            // --- HYBRID TEMPLATE SELECTION ---
+            let template = 'startup';
+            if (prompt.includes('shop') || prompt.includes('store')) template = 'store';
+            else if (prompt.includes('portfolio')) template = 'portfolio';
+            else if (prompt.includes('food')) template = 'restaurant';
 
-            // --- HYBRID ENGINE LOGIC ---
-            // This simulates the AI selecting the best template based on keywords.
-            // In a real backend version, this would call the Anthropic/Groq APIs.
-            let templateType = 'startup'; // Default fallback
-            if (prompt.includes('shop') || prompt.includes('store') || prompt.includes('commerce') || prompt.includes('sell')) templateType = 'store';
-            else if (prompt.includes('portfolio') || prompt.includes('resume') || prompt.includes('cv') || prompt.includes('personal')) templateType = 'portfolio';
-            else if (prompt.includes('food') || prompt.includes('restaurant') || prompt.includes('cafe') || prompt.includes('menu')) templateType = 'restaurant';
+            const html = Templates[template](Store.state.profile.displayName);
 
-            // Generate the actual HTML
-            const generatedHtml = Templates[templateType](Store.state.profile.displayName);
-
-            // Create the project data structure
-            const newProject = {
+            const project = {
                 id: Utils.uuid(),
-                name: prompt.substring(0, 25) + (prompt.length > 25 ? '...' : ''),
-                subdomain: Store.state.profile.displayName.toLowerCase().replace(/[^a-z0-9]/g, '') + '-' + Math.floor(Math.random()*9999),
-                html: generatedHtml,
-                engine: document.querySelector('input[name="ai-engine"]:checked').value,
+                name: prompt.substring(0, 20) + '...',
+                subdomain: `${Store.state.profile.displayName.toLowerCase().replace(/ /g,'')}-${Math.floor(Math.random()*999)}`,
+                html: html,
                 createdAt: new Date().toISOString()
             };
 
-            // Save to DB and update UI
-            await DB.saveProject(newProject);
-
-            UI.toast("Website Generated Successfully!", "success");
-            input.value = ""; // Clear input
-
-            // Launch the editor
-            Editor.open(newProject);
+            await DB.saveProject(project);
+            
+            UI.toast("Website Built Successfully!", "success");
+            input.value = "";
+            Editor.open(project);
 
         } catch (e) {
-            console.error("Generation Failed:", e);
-            UI.toast("Neural Net Error. Credits refunded.", "error");
-            // Refund credits on failure
-            Store.addCredits(SYSTEM_CONFIG.economy.generationCost); 
-            UI.updateStats();
+            console.error(e);
+            UI.toast("Generation Error. Credits Refunded.", "error");
+            Store.updateProfile({ credits: Store.state.profile.credits + SYSTEM.economy.generationCost });
         } finally {
-            // Restore button state
-            btn.innerHTML = originalText;
+            btn.innerHTML = original;
             btn.disabled = false;
-            btn.classList.remove('opacity-75', 'cursor-not-allowed');
         }
     },
 
-    // Helper for "Quick Template" buttons
     useTemplate(type) {
-        const prompts = {
-            'startup': "A modern B2B SaaS startup landing page with feature grid and pricing.",
-            'portfolio': "A dark-themed creative portfolio for a digital artist with gallery.",
-            'store': "A minimalist fashion e-commerce store homepage with featured products.",
-            'restaurant': "A cozy local restaurant website with menu section and contact info."
+        const map = {
+            'startup': "A B2B SaaS landing page with pricing.",
+            'portfolio': "A creative dark portfolio.",
+            'store': "A modern fashion e-commerce store.",
+            'restaurant': "A restaurant landing page with menu."
         };
-        Router.go('create');
-        const input = document.getElementById('ai-prompt-input');
-        input.value = prompts[type];
-        input.focus();
-        input.scrollIntoView({ behavior: 'smooth' });
+        router.go('create');
+        document.getElementById('ai-prompt-input').value = map[type];
     }
 };
 window.ai = AI;
 
 /* --------------------------------------------------------------------------
-   SECTION 8: TEMPLATE LIBRARY (The Offline Brain)
+   SECTION 10: TEMPLATES (OFFLINE BRAIN)
    -------------------------------------------------------------------------- */
 const Templates = {
-    startup: (name) => `<!DOCTYPE html><html class="scroll-smooth"><head><script src="https://cdn.tailwindcss.com"></script><link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet"></head><body class="font-sans antialiased text-slate-900 bg-white"><nav class="fixed w-full bg-white/90 backdrop-blur-md z-50 border-b border-slate-100"><div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center"><div class="font-black text-2xl text-indigo-600 tracking-tight">${name}.io</div><div class="hidden md:flex gap-8 text-sm font-medium text-slate-600"><a href="#features">Features</a><a href="#pricing">Pricing</a></div><button class="bg-slate-900 text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-slate-800 transition">Get Started</button></div></nav><section class="pt-32 pb-20 text-center px-4 bg-gradient-to-b from-indigo-50/50"><h1 class="text-5xl md:text-7xl font-black mb-8 tracking-tight">Ship faster.<br><span class="text-indigo-600">Scale harder.</span></h1><p class="text-xl text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed">The all-in-one platform for modern engineering teams.</p><div class="flex justify-center gap-4"><button class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-bold shadow-xl shadow-indigo-500/20 hover:-translate-y-1 transition">Start Free Trial</button><button class="px-8 py-4 rounded-xl font-bold border border-slate-200 hover:bg-white transition">View Demo</button></div></section><section id="features" class="py-24 max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12"><div class="p-8 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition"><i class="ri-rocket-line text-4xl text-indigo-500 mb-6"></i><h3 class="text-xl font-bold mb-3">Blazing Fast</h3><p class="text-slate-500">Built on edge infrastructure for lowest latency globally.</p></div><div class="p-8 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition"><i class="ri-shield-check-line text-4xl text-indigo-500 mb-6"></i><h3 class="text-xl font-bold mb-3">Enterprise Secure</h3><p class="text-slate-500">SOC2 compliant data handling and encryption.</p></div><div class="p-8 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition"><i class="ri-cpu-line text-4xl text-indigo-500 mb-6"></i><h3 class="text-xl font-bold mb-3">AI Powered</h3><p class="text-slate-500">Automate workflows with built-in intelligence.</p></div></section></body></html>`,
-    
-    portfolio: (name) => `<!DOCTYPE html><html class="dark"><head><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'class'}</script></head><body class="bg-zinc-950 text-zinc-200 font-sans selection:bg-emerald-500 selection:text-white"><nav class="p-8 flex justify-between items-center max-w-7xl mx-auto"><div class="font-bold text-xl tracking-widest uppercase">${name}</div><a href="mailto:contact@example.com" class="text-sm hover:text-emerald-400 transition underline-offset-4 hover:underline">Available for work</a></nav><header class="py-32 px-8 max-w-7xl mx-auto"><h1 class="text-7xl md:text-9xl font-black mb-6 leading-none tracking-tighter">VISUAL<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">DESIGNER.</span></h1><p class="text-2xl text-zinc-500 max-w-2xl mt-12">Crafting digital experiences that blend form and function at the intersection of art and technology.</p></header><section class="px-8 py-20 max-w-7xl mx-auto"><h2 class="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-12">Selected Works</h2><div class="grid md:grid-cols-2 gap-8"><div class="group cursor-pointer"><div class="aspect-[4/3] bg-zinc-900 rounded-lg mb-4 overflow-hidden relative"><img src="https://source.unsplash.com/random/800x600?abstract" class="object-cover w-full h-full opacity-60 group-hover:opacity-100 group-hover:scale-105 transition duration-700"></div><h3 class="text-2xl font-bold group-hover:text-emerald-400 transition">Project Alpha</h3><p class="text-zinc-500">Branding / UI/UX</p></div><div class="group cursor-pointer md:mt-24"><div class="aspect-[4/3] bg-zinc-900 rounded-lg mb-4 overflow-hidden relative"><img src="https://source.unsplash.com/random/800x600?3d" class="object-cover w-full h-full opacity-60 group-hover:opacity-100 group-hover:scale-105 transition duration-700"></div><h3 class="text-2xl font-bold group-hover:text-emerald-400 transition">Neon Genesis</h3><p class="text-zinc-500">3D Motion Design</p></div></div></section></body></html>`,
-    
-    store: (name) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-stone-50 text-stone-900 font-serif selection:bg-stone-900 selection:text-white"><div class="bg-stone-900 text-white text-center py-2 text-xs uppercase tracking-widest font-sans">Complimentary Global Shipping</div><nav class="sticky top-0 bg-white/90 backdrop-blur-md z-40 border-b border-stone-100"><div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center"><div class="text-2xl font-bold italic">${name}</div><div class="flex gap-8 text-sm uppercase tracking-widest font-sans"><a href="#">Shop</a><a href="#">About</a><a href="#">Journal</a></div><div class="font-sans text-sm">Cart (0)</div></div></nav><header class="relative h-[85vh] flex items-center justify-center"><img src="https://source.unsplash.com/random/1600x900?fashion" class="absolute inset-0 w-full h-full object-cover grayscale"><div class="absolute inset-0 bg-stone-900/30"></div><div class="relative z-10 text-center text-white"><h1 class="text-6xl md:text-8xl mb-8 italic">The New Collection</h1><button class="bg-white text-stone-900 px-10 py-4 uppercase text-sm tracking-[0.2em] font-bold hover:bg-stone-100 transition font-sans">Explore Now</button></div></header></body></html>`,
-    
-    restaurant: (name) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-orange-50 font-sans text-orange-950"><nav class="p-6 flex justify-between items-center max-w-6xl mx-auto"><div class="text-3xl font-black tracking-tight text-orange-800">${name}</div><div class="flex gap-8 font-medium"><a href="#">Menu</a><a href="#">Story</a><a href="#">Visit</a></div><button class="bg-orange-700 text-white px-6 py-3 rounded-full font-bold hover:bg-orange-800 transition shadow-lg shadow-orange-700/20">Order Online</button></nav><header class="py-32 text-center px-4 max-w-4xl mx-auto"><h1 class="text-6xl md:text-7xl font-black mb-6 leading-tight">Locally Sourced.<br>Crafted with Love.</h1><p class="text-xl text-orange-800/70 mb-12 leading-relaxed">Experience authentic flavors in a warm, inviting atmosphere located in the heart of the city.</p><img src="https://source.unsplash.com/random/1200x600?food" class="rounded-3xl shadow-2xl shadow-orange-900/20"></header></body></html>`
+    startup: (n) => `<!DOCTYPE html><html class="scroll-smooth"><head><script src="https://cdn.tailwindcss.com"></script></head><body class="font-sans antialiased text-gray-900 bg-white"><nav class="p-6 flex justify-between items-center border-b"><div class="text-xl font-bold text-indigo-600">${n}.io</div><button class="bg-gray-900 text-white px-6 py-2 rounded-full">Login</button></nav><header class="py-32 text-center px-4"><h1 class="text-6xl font-black mb-6">Ship Faster.</h1><p class="text-xl text-gray-500 mb-8">The all-in-one platform.</p><button class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-bold">Start Free</button></header></body></html>`,
+    portfolio: (n) => `<!DOCTYPE html><html class="dark"><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-black text-white font-sans"><nav class="p-8 flex justify-between"><div class="font-bold tracking-widest">${n}</div><a href="#" class="underline">Contact</a></nav><header class="py-32 px-8"><h1 class="text-9xl font-black mb-4">VISUAL<br><span class="text-green-500">ARTIST.</span></h1></header></body></html>`,
+    store: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-stone-50 font-serif"><nav class="p-6 border-b border-stone-200 flex justify-between"><div class="text-2xl font-bold italic">${n}</div><div>Cart (0)</div></nav><header class="py-24 text-center"><h1 class="text-7xl mb-6">New Arrivals</h1><button class="bg-black text-white px-8 py-3 uppercase tracking-widest text-sm">Shop Now</button></header></body></html>`,
+    restaurant: (n) => `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"></script></head><body class="bg-orange-50 font-sans"><nav class="p-6 flex justify-between"><div class="text-2xl font-bold text-orange-900">${n}</div><button class="bg-orange-600 text-white px-6 py-2 rounded-lg">Order</button></nav><header class="py-32 text-center"><h1 class="text-6xl font-black text-orange-950 mb-4">Taste Real Food.</h1></header></body></html>`
 };
 
 /* --------------------------------------------------------------------------
-   SECTION 9: EDITOR CONTROLLER (Hosting & Preview)
+   SECTION 11: EDITOR CONTROLLER
    -------------------------------------------------------------------------- */
 const Editor = {
     modal: document.getElementById('editor-modal'),
     frame: document.getElementById('preview-frame'),
-    currentProject: null,
+    current: null,
 
     open(project) {
-        this.currentProject = project;
+        this.current = project;
         this.modal.classList.remove('hidden');
-        // Set fake subdomain
         document.getElementById('editor-subdomain').innerText = `https://${project.subdomain}.zulora.in`;
         
-        // Smooth reveal
         requestAnimationFrame(() => {
             this.modal.classList.remove('opacity-0');
             const doc = this.frame.contentWindow.document;
@@ -656,9 +634,9 @@ const Editor = {
             doc.write(project.html);
             doc.close();
             
-            // Inject visual editing script into iframe
+            // Inject Edit Script
             const s = doc.createElement('script');
-            s.innerHTML = `document.body.addEventListener('click',e=>{if(['H1','H2','H3','P','BUTTON','A','SPAN'].includes(e.target.tagName)){e.preventDefault();e.target.contentEditable=true;e.target.focus();e.target.style.outline='2px dashed #6366f1';e.target.onblur=()=>{e.target.style.outline='none';}}});`;
+            s.innerHTML = `document.body.addEventListener('click',e=>{if(['H1','P','BUTTON','A'].includes(e.target.tagName)){e.preventDefault();e.target.contentEditable=true;e.target.focus();e.target.style.outline='2px dashed #6366f1';e.target.onblur=()=>{e.target.style.outline='none';}}});`;
             doc.body.appendChild(s);
         });
     },
@@ -667,129 +645,49 @@ const Editor = {
         this.modal.classList.add('opacity-0');
         setTimeout(() => {
             this.modal.classList.add('hidden');
-            this.frame.src = 'about:blank'; // Clear memory
+            this.frame.src = 'about:blank';
         }, 300);
-        // Refresh dashboard thumbnails
         App.renderProjects();
     },
 
     setDevice(mode) {
-        const container = document.getElementById('editor-frame-container');
-        if (mode === 'mobile') container.classList.add('mobile-view');
-        else container.classList.remove('mobile-view');
+        const c = document.getElementById('editor-frame-container');
+        if(mode === 'mobile') c.classList.add('mobile-view');
+        else c.classList.remove('mobile-view');
     },
 
     async aiEdit() {
-        // Feature simulation
-        if (!Store.deductCredits(SYSTEM_CONFIG.economy.updateCost)) {
-            return UI.toast(`Need ${SYSTEM_CONFIG.economy.updateCost} credits for AI Edit`, "error");
+        if(Store.deductCredits(SYSTEM.economy.aiEditCost)) {
+            UI.toast("AI optimizing layout... (Simulated)", "info");
+            UI.updateStats();
+        } else {
+            UI.toast("Not enough credits.", "error");
         }
-        UI.updateStats();
-        UI.toast("AI analyzing layout... (Simulation Mode)", "info");
-        // In a full version, this would send current HTML to LLM for modification
     },
 
     save() {
-        if (!this.currentProject) return;
-        // Get modified HTML from iframe
-        const newHtml = this.frame.contentWindow.document.documentElement.outerHTML;
-        
-        // Update local state
+        if(!this.current) return;
+        const html = this.frame.contentWindow.document.documentElement.outerHTML;
         const projects = Store.state.profile.projects;
-        const idx = projects.findIndex(p => p.id === this.currentProject.id);
+        const idx = projects.findIndex(p => p.id === this.current.id);
         
-        if (idx !== -1) {
-            projects[idx].html = newHtml;
+        if(idx > -1) {
+            projects[idx].html = html;
             Store.updateProfile({ projects });
-            
-            // Sync to Cloud if online
-            if (!Store.state.isOfflineMode && Store.state.user) {
-                DB.saveProject(this.currentProject).catch(e => console.warn("Cloud save pending..."));
-            }
-            
-            UI.toast("Changes deployed live!", "success");
-            this.showDeployLoader();
+            DB.saveProject(this.current); // Sync to cloud
+            UI.toast("Published successfully!", "success");
         }
-    },
-
-    showDeployLoader() {
-        const loader = document.getElementById('deploy-modal');
-        loader.classList.remove('hidden', 'opacity-0');
-        loader.style.display = 'flex';
-        setTimeout(() => {
-            loader.classList.add('opacity-0');
-            setTimeout(() => {
-                loader.style.display = 'none';
-                loader.classList.add('hidden');
-            }, 500);
-        }, 2000);
     }
 };
 window.editor = Editor;
 
 /* --------------------------------------------------------------------------
-   SECTION 10: REFERRAL & PAYMENT SYSTEMS
-   -------------------------------------------------------------------------- */
-window.referral = {
-    copy: () => Utils.copy(document.getElementById('referral-link-input').value),
-    share: (platform) => {
-        const link = document.getElementById('referral-link-input').value;
-        const text = "Build AI websites instantly! Get 30 Free Credits:";
-        const urls = {
-            whatsapp: `https://wa.me/?text=${encodeURIComponent(text + " " + link)}`,
-            twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`
-        };
-        if(urls[platform]) window.open(urls[platform], '_blank');
-    }
-};
-
-window.payment = {
-    open: () => {
-        const m = document.getElementById('payment-modal');
-        m.classList.remove('hidden');
-        setTimeout(() => m.classList.remove('opacity-0', 'scale-95'), 10);
-    },
-    close: () => {
-        const m = document.getElementById('payment-modal');
-        m.classList.add('opacity-0', 'scale-95');
-        setTimeout(() => m.classList.add('hidden'), 300);
-    }
-};
-
-/* --------------------------------------------------------------------------
-   SECTION 11: APP INITIALIZATION & RENDERERS
+   SECTION 12: APP RENDERERS
    -------------------------------------------------------------------------- */
 const App = {
     init() {
-        // 1. Start Boot Animation instantly
-        UI.startBootSequence();
-
-        // 2. Initialize Auth (runs in background)
+        UI.boot();
         Auth.init();
-        
-        // 3. Check for pending tasks
-        this.checkPendingTasks();
-
-        // 4. Global Event Listeners
-        document.addEventListener('zulora:update', () => {
-            UI.updateStats();
-            this.renderProjects();
-        });
-    },
-
-    checkPendingTasks() {
-        const pendingPrompt = sessionStorage.getItem('ZULORA_PENDING_PROMPT');
-        if (pendingPrompt && Store.state.user) {
-            Router.go('create');
-            setTimeout(() => {
-                const input = document.getElementById('ai-prompt-input');
-                if(input) {
-                    input.value = pendingPrompt;
-                    input.focus();
-                }
-                sessionStorage.removeItem('ZULORA_PENDING_PROMPT');
-            }, 500);
-        }
     },
 
     renderProjects() {
@@ -801,52 +699,28 @@ const App = {
         if (projects.length === 0) {
             if(empty) { empty.classList.remove('hidden'); empty.classList.add('flex'); }
             if(list) list.innerHTML = '';
-            if(allList) allList.innerHTML = '<div class="text-slate-500 text-center col-span-full py-12">No projects found. Start building!</div>';
+            if(allList) allList.innerHTML = '<div class="col-span-full text-center py-10 text-slate-500">No projects yet.</div>';
             return;
         }
 
         if(empty) { empty.classList.add('hidden'); empty.classList.remove('flex'); }
 
-        const renderCard = (p) => `
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden cursor-pointer group hover:border-brand-500/50 transition-all duration-300 shadow-sm hover:shadow-md" onclick='editor.open(${JSON.stringify(p)})'>
+        const render = (p) => `
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden cursor-pointer hover:border-brand-500/50 transition group" onclick='editor.open(${JSON.stringify(p)})'>
                 <div class="h-40 bg-slate-950 relative overflow-hidden">
-                    <iframe srcdoc="${p.html.replace(/"/g, "'")}" class="w-[200%] h-[200%] scale-50 origin-top-left pointer-events-none opacity-60 group-hover:opacity-100 transition duration-500 grayscale group-hover:grayscale-0"></iframe>
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent opacity-80 group-hover:opacity-30 transition"></div>
-                    
-                    <div class="absolute top-3 right-3">
-                        ${p.engine === 'llama' 
-                            ? '<span class="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur"><i class="ri-speed-line"></i> Llama 3</span>' 
-                            : '<span class="bg-orange-500/20 text-orange-300 border border-orange-500/30 text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur"><i class="ri-brain-line"></i> Claude</span>'}
-                    </div>
-
-                    <div class="absolute bottom-3 left-4 flex gap-2 items-center">
-                         <span class="relative flex h-2 w-2">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                        </span>
-                        <span class="text-green-400 text-[10px] font-bold tracking-wider">LIVE</span>
-                    </div>
+                    <iframe srcdoc="${p.html.replace(/"/g, "'")}" class="w-[200%] h-[200%] scale-50 origin-top-left pointer-events-none opacity-60"></iframe>
+                    <div class="absolute bottom-3 left-3"><span class="bg-green-500/20 text-green-400 text-[10px] font-bold px-2 py-1 rounded">LIVE</span></div>
                 </div>
-                <div class="p-5">
-                    <h4 class="text-white font-bold truncate text-lg mb-1 group-hover:text-brand-400 transition">${p.name}</h4>
-                    <p class="text-xs text-slate-500 font-mono flex items-center gap-1 truncate"><i class="ri-global-line"></i> ${p.subdomain}.zulora.in</p>
-                    <div class="mt-4 pt-3 border-t border-slate-800/50 flex justify-between items-center text-xs text-slate-500">
-                        <span>${Utils.formatDate(p.createdAt)}</span>
-                        <button class="hover:text-white transition flex items-center gap-1 bg-slate-800 px-2 py-1 rounded hover:bg-brand-600"><i class="ri-edit-circle-line"></i> Open Editor</button>
-                    </div>
+                <div class="p-4">
+                    <h4 class="text-white font-bold truncate">${p.name}</h4>
+                    <p class="text-xs text-slate-500 font-mono">${p.subdomain}.zulora.in</p>
                 </div>
             </div>`;
 
-        // Render Dashboard (Recent 3)
-        if(list) list.innerHTML = projects.slice(0, 3).map(renderCard).join('');
-        // Render All Projects View
-        if(allList) allList.innerHTML = projects.map(renderCard).join('');
+        if(list) list.innerHTML = projects.slice(0, 3).map(render).join('');
+        if(allList) allList.innerHTML = projects.map(render).join('');
     }
 };
 
-// Global Hook for external utilities if needed
-window.utils = Utils;
-
-// --- START THE ENGINE ---
-// We use "load" instead of "DOMContentLoaded" to ensure styles are ready for the boot transition.
-window.addEventListener('load', () => App.init());
+// Start System
+window.onload = App.init;
