@@ -50,10 +50,12 @@
                         'spin-slow': 'spin 3s linear infinite',
                         'float': 'float 6s ease-in-out infinite',
                         'scan': 'scan 2s linear infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
                     },
                     keyframes: {
                         float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
-                        scan: { '0%': { transform: 'translateY(-100%)' }, '100%': { transform: 'translateY(100%)' } }
+                        scan: { '0%': { transform: 'translateY(-100%)' }, '100%': { transform: 'translateY(100%)' } },
+                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
                     }
                 }
             }
@@ -103,257 +105,346 @@
 <body class="bg-void text-gray-300 antialiased overflow-hidden h-screen flex flex-col selection:bg-brand-500 selection:text-white">
 
     <div id="bootloader" class="fixed inset-0 z-[9999] bg-void flex flex-col items-center justify-center transition-opacity duration-500" aria-live="polite">
-        <div class="relative w-24 h-24 mb-8">
+        <div class="relative w-32 h-32 mb-8">
             <div class="absolute inset-0 border-2 border-white/5 rounded-full"></div>
             <div class="absolute inset-2 border-2 border-brand-500/20 rounded-full animate-spin-slow"></div>
             <div class="absolute inset-0 border-t-2 border-brand-500 rounded-full animate-spin"></div>
             
             <div class="absolute inset-0 flex items-center justify-center">
-                <div class="w-12 h-12 bg-white text-black rounded-xl flex items-center justify-center font-bold text-2xl shadow-[0_0_30px_rgba(255,255,255,0.3)]">Z</div>
+                <div class="w-16 h-16 bg-white text-black rounded-2xl flex items-center justify-center font-bold text-3xl shadow-[0_0_40px_rgba(255,255,255,0.4)] relative z-10">Z</div>
             </div>
         </div>
         
         <div class="flex flex-col items-center gap-3">
-            <h2 class="text-2xl font-display font-bold text-white tracking-widest uppercase">Zulora OS <span class="text-[10px] align-top bg-white/10 px-1.5 py-0.5 rounded text-brand-400">TITANIUM</span></h2>
+            <h2 class="text-3xl font-display font-bold text-white tracking-widest uppercase">Zulora OS <span class="text-[10px] align-top bg-gradient-to-r from-brand-500 to-purple-600 px-2 py-0.5 rounded text-white font-mono shadow-lg">TITANIUM</span></h2>
             <div class="flex items-center gap-3 font-mono text-xs text-gray-500">
                 <div class="flex gap-1">
-                    <span class="w-1 h-1 bg-ai-openai rounded-full animate-pulse"></span>
-                    <span class="w-1 h-1 bg-ai-claude rounded-full animate-pulse delay-75"></span>
-                    <span class="w-1 h-1 bg-ai-gemini rounded-full animate-pulse delay-150"></span>
+                    <span class="w-1.5 h-1.5 bg-ai-openai rounded-full animate-pulse"></span>
+                    <span class="w-1.5 h-1.5 bg-ai-claude rounded-full animate-pulse delay-75"></span>
+                    <span class="w-1.5 h-1.5 bg-ai-gemini rounded-full animate-pulse delay-150"></span>
                 </div>
                 <span id="boot-status">Initializing Neural Net...</span>
             </div>
         </div>
 
-        <div class="mt-10 w-64 h-0.5 bg-white/5 rounded-full overflow-hidden">
+        <div class="mt-12 w-64 h-1 bg-white/5 rounded-full overflow-hidden">
             <div id="boot-bar" class="h-full bg-gradient-to-r from-brand-500 via-ai-gemini to-brand-500 w-0 transition-all duration-700 ease-out"></div>
         </div>
     </div>
 
     <div id="toast-dock" class="fixed top-6 right-6 z-[10000] flex flex-col gap-3 pointer-events-none w-full max-w-sm px-4 md:px-0"></div>
 
-    <header id="navbar" class="h-16 border-b border-border bg-void/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 z-50 shrink-0 absolute top-0 w-full transition-transform duration-300">
+    <header id="navbar" class="h-20 border-b border-border bg-void/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-8 z-50 shrink-0 absolute top-0 w-full transition-transform duration-300">
         
-        <div class="flex items-center gap-4">
-            <button onclick="window.sidebar.toggle()" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors lg:hidden">
+        <div class="flex items-center gap-6">
+            <button id="mobile-menu-trigger" class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface border border-border hover:bg-white/5 text-gray-400 hover:text-white transition-colors lg:hidden active:scale-95">
                 <i class="ri-menu-4-line text-xl"></i>
             </button>
-            <div class="flex items-center gap-3 cursor-pointer group" onclick="window.router.go('home')">
-                <div class="w-8 h-8 bg-gradient-to-br from-white to-gray-400 text-black rounded-lg flex items-center justify-center font-bold text-lg shadow-lg group-hover:scale-105 transition-transform">Z</div>
+
+            <div class="flex items-center gap-3 cursor-pointer group" id="nav-logo">
+                <div class="w-10 h-10 bg-gradient-to-br from-white to-gray-400 text-black rounded-xl flex items-center justify-center font-bold text-xl shadow-lg group-hover:scale-105 transition-transform">Z</div>
                 <div class="hidden md:flex flex-col">
-                    <span class="text-sm font-bold text-white leading-none">Zulora<span class="text-brand-400">.ai</span></span>
-                    <span class="text-[9px] text-gray-500 font-mono tracking-wider uppercase mt-0.5">Enterprise v15.0</span>
+                    <span class="text-base font-bold text-white leading-none">Zulora<span class="text-brand-400">.ai</span></span>
+                    <span class="text-[10px] text-gray-500 font-mono tracking-wider uppercase mt-0.5">Enterprise v16.0</span>
                 </div>
             </div>
         </div>
 
-        <div id="nav-context" class="hidden md:flex items-center gap-1 bg-surface border border-border p-1 rounded-full absolute left-1/2 -translate-x-1/2">
-            <button onclick="window.router.go('home')" class="nav-tab px-5 py-1.5 text-xs font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-all active" data-target="home">Dashboard</button>
-            <button onclick="window.router.go('create')" class="nav-tab px-5 py-1.5 text-xs font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-all flex items-center gap-2" data-target="create">
+        <div id="nav-context" class="hidden lg:flex items-center gap-1 bg-surface border border-border p-1.5 rounded-full absolute left-1/2 -translate-x-1/2 shadow-2xl">
+            <button id="nav-home" class="nav-tab px-6 py-2 text-xs font-medium text-white bg-white/10 rounded-full transition-all shadow-inner active">
+                <i class="ri-home-5-line mr-2"></i> Dashboard
+            </button>
+            <button id="nav-create" class="nav-tab px-6 py-2 text-xs font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-all flex items-center gap-2">
                 <span class="w-1.5 h-1.5 bg-brand-500 rounded-full animate-pulse"></span> Generator
             </button>
-            <button onclick="window.router.go('projects')" class="nav-tab px-5 py-1.5 text-xs font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-all" data-target="projects">Deployments</button>
+            <button id="nav-projects" class="nav-tab px-6 py-2 text-xs font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-all">
+                <i class="ri-server-line mr-2"></i> Deployments
+            </button>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-4">
             <div id="auth-guest" class="flex items-center gap-3">
-                <button onclick="window.auth.openModal()" class="text-xs font-bold text-gray-400 hover:text-white transition-colors">Sign In</button>
-                <button onclick="window.router.go('create')" class="bg-white text-black px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-                    Start Building
+                <button id="btn-login-trigger" class="text-sm font-bold text-gray-400 hover:text-white transition-colors">Sign In</button>
+                <button id="btn-build-free" class="bg-white text-black px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.15)] flex items-center gap-2">
+                    <i class="ri-magic-line"></i> Build Free
                 </button>
             </div>
 
             <div id="auth-user" class="hidden flex items-center gap-4">
-                <div class="hidden md:flex items-center gap-2 bg-surface border border-border px-3 py-1.5 rounded-lg cursor-help hover:border-brand-500/30 transition-colors" title="AI Credits Remaining">
-                    <i class="ri-flashlight-fill text-yellow-500 text-xs"></i>
-                    <span class="text-xs font-mono font-bold text-white" id="header-credits">0</span>
-                    <span class="text-[10px] text-gray-600 uppercase">CR</span>
+                <div class="hidden md:flex items-center gap-3 bg-surface border border-border px-4 py-2 rounded-xl cursor-help hover:border-brand-500/30 transition-colors shadow-lg" title="AI Credits Remaining">
+                    <div class="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-400">
+                        <i class="ri-flashlight-fill text-sm"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xs font-mono font-bold text-white leading-none" id="header-credits">0</span>
+                        <span class="text-[9px] text-gray-600 uppercase font-bold tracking-wider">Credits</span>
+                    </div>
                 </div>
 
-                <button onclick="window.sidebar.toggleRight()" class="relative group">
-                    <div id="header-avatar" class="w-9 h-9 rounded-lg bg-white/10 border border-white/5 flex items-center justify-center text-white font-bold text-sm overflow-hidden group-hover:border-brand-500 transition-colors">
+                <button id="user-menu-trigger" class="relative group outline-none">
+                    <div id="header-avatar" class="w-10 h-10 rounded-xl bg-white/10 border border-white/5 flex items-center justify-center text-white font-bold text-sm overflow-hidden group-hover:border-brand-500 transition-colors shadow-lg">
                         U
                     </div>
-                    <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-status-live border-2 border-void rounded-full"></div>
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-status-live border-2 border-void rounded-full"></div>
                 </button>
             </div>
         </div>
     </header>
 
-    <div class="flex-1 flex overflow-hidden pt-16 relative bg-void">
+    <div class="flex-1 flex overflow-hidden pt-20 relative bg-void">
 
-        <aside id="sidebar-left" class="w-64 bg-surface border-r border-border flex flex-col hidden lg:flex z-30">
-            <div class="flex-1 overflow-y-auto p-4 space-y-1">
-                <div class="px-3 mb-2 mt-2 text-[10px] font-bold text-gray-600 uppercase tracking-widest font-mono">Workspace</div>
+        <aside id="sidebar-left" class="w-72 bg-surface border-r border-border flex flex-col hidden lg:flex z-30 shadow-2xl relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
+
+            <div class="flex-1 overflow-y-auto p-6 space-y-2 relative z-10 custom-scrollbar">
+                <div class="px-3 mb-3 mt-2 text-[10px] font-bold text-gray-600 uppercase tracking-widest font-mono">Workspace</div>
                 
-                <button onclick="window.router.go('home')" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group">
-                    <div class="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-white transition-colors"><i class="ri-dashboard-3-line"></i></div>
-                    <span>Overview</span>
+                <button id="side-home" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
+                    <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-white transition-colors shadow-inner"><i class="ri-dashboard-3-line"></i></div>
+                    <span class="font-medium">Overview</span>
                 </button>
-                <button onclick="window.router.go('create')" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group">
-                    <div class="w-8 h-8 rounded bg-brand-500/10 flex items-center justify-center text-brand-500 group-hover:text-brand-400 transition-colors"><i class="ri-openai-fill"></i></div>
-                    <span>Neural Builder</span>
+                <button id="side-create" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
+                    <div class="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-500 group-hover:text-brand-400 transition-colors shadow-inner"><i class="ri-openai-fill"></i></div>
+                    <span class="font-medium">Neural Builder</span>
                 </button>
-                <button onclick="window.router.go('projects')" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group">
-                    <div class="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-white transition-colors"><i class="ri-folder-5-line"></i></div>
-                    <span>Repositories</span>
+                <button id="side-projects" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
+                    <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-white transition-colors shadow-inner"><i class="ri-folder-5-line"></i></div>
+                    <span class="font-medium">Repositories</span>
                 </button>
 
-                <div class="px-3 mb-2 mt-6 text-[10px] font-bold text-gray-600 uppercase tracking-widest font-mono">Scale</div>
+                <div class="px-3 mb-3 mt-8 text-[10px] font-bold text-gray-600 uppercase tracking-widest font-mono">Scale</div>
                 
-                <button onclick="window.router.go('hosting')" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group">
-                    <div class="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-white transition-colors"><i class="ri-server-line"></i></div>
-                    <span>Hosting & DNS</span>
+                <button id="side-hosting" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-500 group-hover:text-purple-400 transition-colors shadow-inner"><i class="ri-server-line"></i></div>
+                    <span class="font-medium">Hosting & DNS</span>
                 </button>
-                <button onclick="window.router.go('premium')" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group">
-                    <div class="w-8 h-8 rounded bg-yellow-500/10 flex items-center justify-center text-yellow-500 group-hover:text-yellow-400 transition-colors"><i class="ri-vip-crown-2-line"></i></div>
-                    <span>Titanium Plan</span>
+                <button id="side-premium" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-500 group-hover:text-yellow-400 transition-colors shadow-inner relative z-10"><i class="ri-vip-crown-2-line"></i></div>
+                    <span class="font-medium relative z-10">Titanium Plan</span>
                 </button>
-                <button onclick="window.router.go('referral')" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all group">
-                    <div class="w-8 h-8 rounded bg-green-500/10 flex items-center justify-center text-green-500 group-hover:text-green-400 transition-colors"><i class="ri-money-dollar-circle-line"></i></div>
-                    <span>Monetization</span>
+                <button id="side-referral" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
+                    <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center text-green-500 group-hover:text-green-400 transition-colors shadow-inner"><i class="ri-money-dollar-circle-line"></i></div>
+                    <span class="font-medium">Monetization</span>
                 </button>
             </div>
 
-            <div class="p-4 border-t border-border">
-                <div class="bg-panel rounded-lg p-3 border border-border">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[10px] text-gray-500 font-mono">SYSTEM STATUS</span>
+            <div class="p-6 border-t border-border bg-surface relative z-10">
+                <div class="bg-panel rounded-xl p-4 border border-border shadow-inner">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[10px] text-gray-500 font-mono font-bold tracking-wider">SYSTEM STATUS</span>
                         <span class="flex h-2 w-2 relative">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-live opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2 w-2 bg-status-live"></span>
                         </span>
                     </div>
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-[10px] text-gray-400"><span>OpenAI</span><span class="text-status-live">Online</span></div>
-                        <div class="flex justify-between text-[10px] text-gray-400"><span>Claude 3.5</span><span class="text-status-live">Online</span></div>
-                        <div class="flex justify-between text-[10px] text-gray-400"><span>Gemini 1.5</span><span class="text-status-live">Online</span></div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-[10px] text-gray-400 font-mono"><span>OpenAI GPT-4o</span><span class="text-status-live">Online</span></div>
+                        <div class="flex justify-between text-[10px] text-gray-400 font-mono"><span>Claude 3.5</span><span class="text-status-live">Online</span></div>
+                        <div class="flex justify-between text-[10px] text-gray-400 font-mono"><span>Gemini 1.5</span><span class="text-status-live">Online</span></div>
                     </div>
                 </div>
             </div>
         </aside>
 
+        <aside id="sidebar-right" class="fixed top-0 right-0 w-80 h-full bg-surface border-l border-border transform translate-x-full transition-transform duration-300 z-[6000] shadow-2xl flex flex-col pt-20">
+             <div class="p-6 border-b border-border bg-void/50">
+                <div class="flex items-center gap-4">
+                    <div id="drawer-avatar" class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white font-bold text-xl border border-white/10 shadow-lg">U</div>
+                    <div class="overflow-hidden">
+                        <h4 id="drawer-name" class="text-base font-bold text-white truncate">Guest</h4>
+                        <p id="drawer-email" class="text-xs text-gray-500 truncate font-mono">Sign in to sync</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-4 space-y-1">
+                <div class="lg:hidden">
+                    <button id="drawer-home" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all"><i class="ri-home-5-line"></i> Dashboard</button>
+                    <button id="drawer-create" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all"><i class="ri-magic-line"></i> Builder</button>
+                    <div class="h-px bg-border my-2"></div>
+                </div>
+
+                <button id="drawer-whatsapp" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                    <i class="ri-whatsapp-line text-green-500"></i> WhatsApp Support
+                </button>
+                <button id="drawer-instagram" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                    <i class="ri-instagram-line text-pink-500"></i> Instagram
+                </button>
+                <button id="drawer-email-btn" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                    <i class="ri-mail-send-line text-blue-500"></i> Email Support
+                </button>
+            </div>
+
+            <div class="p-6 border-t border-border">
+                <button id="btn-logout" class="w-full flex items-center justify-center gap-2 text-red-400 hover:text-white text-xs font-bold py-3 border border-red-500/20 rounded-xl hover:bg-red-500 transition-all shadow-lg hover:shadow-red-500/20">
+                    <i class="ri-logout-box-line"></i> Sign Out
+                </button>
+            </div>
+        </aside>
+        
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[5999] hidden opacity-0 transition-opacity duration-300"></div>
+
         <main id="content-stage" class="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth relative bg-void">
             
-            <section id="view-home" class="view-section min-h-full p-6 md:p-10 max-w-7xl mx-auto animate-fade-in">
+            <section id="view-home" class="view-section min-h-full p-6 md:p-10 max-w-7xl mx-auto animate-fade-in-up">
                 
-                <header class="mb-10">
-                    <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">Welcome to the Matrix.</h1>
-                    <p class="text-gray-500 text-sm">Deploy scalable applications using multi-modal intelligence.</p>
+                <header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <h1 class="text-4xl md:text-6xl font-black text-white mb-2 tracking-tight">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-purple-400 to-brand-400 bg-300% animate-gradient">Neural Dashboard</span>
+                        </h1>
+                        <p class="text-gray-500 text-sm md:text-base">Manage your digital empire. Enterprise-grade hosting active.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-[10px] font-bold text-green-500 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> SERVERS OPTIMIZED
+                        </span>
+                    </div>
                 </header>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
-                    <div class="bg-surface border border-border p-5 rounded-xl hover:border-brand-500/50 transition-colors group">
-                        <div class="text-xs text-gray-500 font-mono uppercase mb-2">Compute Credits</div>
-                        <div class="text-3xl font-bold text-white font-mono" id="stat-credits">0</div>
-                        <div class="text-[10px] text-green-500 mt-1 flex items-center gap-1"><i class="ri-arrow-up-line"></i> Available</div>
-                    </div>
-                    <div class="bg-surface border border-border p-5 rounded-xl hover:border-brand-500/50 transition-colors group">
-                        <div class="text-xs text-gray-500 font-mono uppercase mb-2">Active Nodes</div>
-                        <div class="text-3xl font-bold text-white font-mono" id="stat-projects">0</div>
-                        <div class="text-[10px] text-brand-400 mt-1">Deployments</div>
-                    </div>
-                    <div class="bg-surface border border-border p-5 rounded-xl hover:border-brand-500/50 transition-colors group">
-                        <div class="text-xs text-gray-500 font-mono uppercase mb-2">Network Earnings</div>
-                        <div class="text-3xl font-bold text-white font-mono" id="stat-referrals">0</div>
-                        <div class="text-[10px] text-gray-600 mt-1">Users Invited</div>
-                    </div>
-                    <div class="bg-gradient-to-br from-brand-600 to-brand-700 p-5 rounded-xl text-white relative overflow-hidden group cursor-pointer" onclick="window.router.go('create')">
-                        <div class="absolute -right-4 -bottom-4 text-white/10 group-hover:text-white/20 transition-colors"><i class="ri-add-circle-fill text-8xl"></i></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="bg-surface border border-border p-6 rounded-2xl hover:border-brand-500/30 transition-all group relative overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-brand-500/10 rounded-full blur-2xl group-hover:bg-brand-500/20 transition-colors"></div>
                         <div class="relative z-10">
-                            <div class="text-xs font-mono uppercase opacity-80 mb-2">Quick Action</div>
-                            <div class="text-xl font-bold">New Project</div>
-                            <div class="mt-4 text-xs bg-white/20 inline-block px-2 py-1 rounded backdrop-blur">Launch Builder &rarr;</div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Compute Credits</span>
+                                <i class="ri-coin-line text-yellow-500 text-xl"></i>
+                            </div>
+                            <div class="text-4xl font-bold text-white font-mono tracking-tighter" id="stat-credits">0</div>
+                            <div class="text-[10px] text-green-500 mt-2 flex items-center gap-1 font-bold"><i class="ri-arrow-up-line"></i> READY TO BUILD</div>
+                        </div>
+                    </div>
+                    <div class="bg-surface border border-border p-6 rounded-2xl hover:border-purple-500/30 transition-all group relative overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-colors"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Active Nodes</span>
+                                <i class="ri-server-line text-purple-500 text-xl"></i>
+                            </div>
+                            <div class="text-4xl font-bold text-white font-mono tracking-tighter" id="stat-projects">0</div>
+                            <div class="text-[10px] text-brand-400 mt-2 font-bold">DEPLOYMENTS</div>
+                        </div>
+                    </div>
+                    <div class="bg-surface border border-border p-6 rounded-2xl hover:border-green-500/30 transition-all group relative overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-green-500/10 rounded-full blur-2xl group-hover:bg-green-500/20 transition-colors"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Network</span>
+                                <i class="ri-group-line text-green-500 text-xl"></i>
+                            </div>
+                            <div class="text-4xl font-bold text-white font-mono tracking-tighter" id="stat-referrals">0</div>
+                            <div class="text-[10px] text-gray-600 mt-2 font-bold">USERS INVITED</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mb-6 flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Live Deployments</h3>
-                    <div class="flex gap-2">
-                        <button class="w-8 h-8 rounded bg-surface border border-border text-gray-400 hover:text-white flex items-center justify-center"><i class="ri-layout-grid-line"></i></button>
-                        <button class="w-8 h-8 rounded bg-surface border border-border text-gray-400 hover:text-white flex items-center justify-center"><i class="ri-list-check"></i></button>
-                    </div>
-                </div>
-
-                <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div>
+                    <div class="flex items-center justify-between mb-6 border-b border-border pb-4">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                            <i class="ri-stack-line text-brand-500"></i> Active Deployments
+                        </h3>
+                        <button id="btn-create-new" class="text-xs text-brand-400 font-bold hover:text-white transition-colors bg-white/5 px-3 py-1.5 rounded-lg border border-white/5 hover:border-brand-500/50">Create New +</button>
                     </div>
 
-                <div id="project-empty" class="hidden border border-dashed border-border rounded-xl p-12 text-center">
-                    <div class="w-16 h-16 bg-surface rounded-full flex items-center justify-center text-gray-600 mx-auto mb-4 text-2xl"><i class="ri-code-s-slash-line"></i></div>
-                    <h4 class="text-white font-bold mb-1">No Active Deployments</h4>
-                    <p class="text-gray-500 text-xs mb-6">Initialize a new instance to get started.</p>
-                    <button onclick="window.router.go('create')" class="text-brand-400 text-xs font-bold hover:underline">Launch Neural Builder</button>
+                    <div id="project-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        </div>
+
+                    <div id="project-empty" class="hidden flex-col items-center justify-center py-24 border border-dashed border-border rounded-3xl bg-surface/30">
+                        <div class="w-20 h-20 bg-surface rounded-full flex items-center justify-center text-gray-700 mb-6 text-3xl shadow-inner">
+                            <i class="ri-code-box-line"></i>
+                        </div>
+                        <h4 class="text-white font-bold text-lg mb-2">System Idle</h4>
+                        <p class="text-gray-500 text-sm mb-8">No active projects detected. Initialize a new neural build.</p>
+                        <button id="btn-launch-builder" class="bg-white text-black px-8 py-3 rounded-xl font-bold hover:bg-gray-200 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            Launch Builder
+                        </button>
+                    </div>
                 </div>
             </section>
 
-            <section id="view-create" class="view-section hidden min-h-full flex flex-col">
-                <div class="flex-1 flex flex-col w-full max-w-5xl mx-auto p-4 md:p-8 h-full justify-center">
+            <section id="view-create" class="view-section hidden min-h-full flex flex-col animate-fade-in-up">
+                <div class="flex-1 flex flex-col w-full max-w-6xl mx-auto p-4 md:p-8 h-full justify-center">
                     
-                    <div class="text-center mb-8">
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[10px] font-mono mb-4">
-                            <span class="w-1.5 h-1.5 bg-ai-gemini rounded-full animate-pulse"></span> GEMINI 1.5 PRO UNLOCKED
+                    <div class="text-center mb-10">
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-[10px] font-mono font-bold mb-6 tracking-wide shadow-lg shadow-brand-500/10">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> ALL MODELS ONLINE
                         </div>
-                        <h2 class="text-3xl md:text-5xl font-black text-white mb-3">Architect Your Vision.</h2>
-                        <p class="text-gray-500 text-sm max-w-xl mx-auto">Select a neural engine and describe your application. Supports 2000+ line generation.</p>
+                        <h2 class="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">Architect Your Vision.</h2>
+                        <p class="text-gray-500 text-base max-w-xl mx-auto">Select a neural engine and describe your application. <br>The system will handle structure, styling, and logic.</p>
                     </div>
 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                        <label class="cursor-pointer group">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                        <label class="cursor-pointer group relative">
                             <input type="radio" name="ai_model" value="openai" class="peer hidden">
-                            <div class="bg-surface border border-border p-3 rounded-xl peer-checked:border-ai-openai peer-checked:bg-ai-openai/5 transition-all h-full hover:bg-white/5">
-                                <div class="flex items-center justify-center mb-2 text-ai-openai text-2xl"><i class="ri-openai-fill"></i></div>
+                            <div class="bg-surface border border-border p-4 rounded-2xl peer-checked:border-ai-openai peer-checked:bg-ai-openai/5 transition-all h-full hover:bg-white/5 flex flex-col items-center justify-center gap-3 shadow-lg">
+                                <div class="text-ai-openai text-3xl drop-shadow-md"><i class="ri-openai-fill"></i></div>
                                 <div class="text-center">
-                                    <div class="font-bold text-white text-xs">GPT-4o</div>
-                                    <div class="text-[9px] text-gray-500">Complex Logic</div>
+                                    <div class="font-bold text-white text-sm">GPT-4o</div>
+                                    <div class="text-[10px] text-gray-500 uppercase tracking-wide mt-1">Logic Core</div>
                                 </div>
                             </div>
+                            <div class="absolute inset-0 border-2 border-ai-openai rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_20px_rgba(16,163,127,0.2)]"></div>
                         </label>
-                        <label class="cursor-pointer group">
+                        <label class="cursor-pointer group relative">
                             <input type="radio" name="ai_model" value="claude" class="peer hidden" checked>
-                            <div class="bg-surface border border-border p-3 rounded-xl peer-checked:border-ai-claude peer-checked:bg-ai-claude/5 transition-all h-full hover:bg-white/5">
-                                <div class="flex items-center justify-center mb-2 text-ai-claude text-2xl"><i class="ri-brain-fill"></i></div>
+                            <div class="bg-surface border border-border p-4 rounded-2xl peer-checked:border-ai-claude peer-checked:bg-ai-claude/5 transition-all h-full hover:bg-white/5 flex flex-col items-center justify-center gap-3 shadow-lg">
+                                <div class="text-ai-claude text-3xl drop-shadow-md"><i class="ri-brain-fill"></i></div>
                                 <div class="text-center">
-                                    <div class="font-bold text-white text-xs">Claude 3.5</div>
-                                    <div class="text-[9px] text-gray-500">Best UI/UX</div>
+                                    <div class="font-bold text-white text-sm">Claude 3.5</div>
+                                    <div class="text-[10px] text-gray-500 uppercase tracking-wide mt-1">Creative UI</div>
                                 </div>
                             </div>
+                            <div class="absolute inset-0 border-2 border-ai-claude rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_20px_rgba(217,119,87,0.2)]"></div>
                         </label>
-                        <label class="cursor-pointer group">
+                        <label class="cursor-pointer group relative">
                             <input type="radio" name="ai_model" value="gemini" class="peer hidden">
-                            <div class="bg-surface border border-border p-3 rounded-xl peer-checked:border-ai-gemini peer-checked:bg-ai-gemini/5 transition-all h-full hover:bg-white/5">
-                                <div class="flex items-center justify-center mb-2 text-ai-gemini text-2xl"><i class="ri-google-fill"></i></div>
+                            <div class="bg-surface border border-border p-4 rounded-2xl peer-checked:border-ai-gemini peer-checked:bg-ai-gemini/5 transition-all h-full hover:bg-white/5 flex flex-col items-center justify-center gap-3 shadow-lg">
+                                <div class="text-ai-gemini text-3xl drop-shadow-md"><i class="ri-google-fill"></i></div>
                                 <div class="text-center">
-                                    <div class="font-bold text-white text-xs">Gemini 1.5</div>
-                                    <div class="text-[9px] text-gray-500">Long Context</div>
+                                    <div class="font-bold text-white text-sm">Gemini 1.5</div>
+                                    <div class="text-[10px] text-gray-500 uppercase tracking-wide mt-1">Deep Context</div>
                                 </div>
                             </div>
+                            <div class="absolute inset-0 border-2 border-ai-gemini rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_20px_rgba(66,133,244,0.2)]"></div>
                         </label>
-                        <label class="cursor-pointer group">
+                        <label class="cursor-pointer group relative">
                             <input type="radio" name="ai_model" value="llama" class="peer hidden">
-                            <div class="bg-surface border border-border p-3 rounded-xl peer-checked:border-ai-llama peer-checked:bg-ai-llama/5 transition-all h-full hover:bg-white/5">
-                                <div class="flex items-center justify-center mb-2 text-ai-llama text-2xl"><i class="ri-speed-fill"></i></div>
+                            <div class="bg-surface border border-border p-4 rounded-2xl peer-checked:border-ai-llama peer-checked:bg-ai-llama/5 transition-all h-full hover:bg-white/5 flex flex-col items-center justify-center gap-3 shadow-lg">
+                                <div class="text-ai-llama text-3xl drop-shadow-md"><i class="ri-speed-fill"></i></div>
                                 <div class="text-center">
-                                    <div class="font-bold text-white text-xs">Llama 3</div>
-                                    <div class="text-[9px] text-gray-500">Instant Build</div>
+                                    <div class="font-bold text-white text-sm">Llama 3</div>
+                                    <div class="text-[10px] text-gray-500 uppercase tracking-wide mt-1">Instant</div>
                                 </div>
                             </div>
+                            <div class="absolute inset-0 border-2 border-ai-llama rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_20px_rgba(139,92,246,0.2)]"></div>
                         </label>
                     </div>
 
-                    <div class="relative group">
-                        <div class="absolute -inset-0.5 bg-gradient-to-r from-brand-600 to-ai-gemini rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                        <div class="relative bg-surface rounded-2xl border border-border p-1 overflow-hidden">
-                            <textarea id="ai-prompt" rows="8" class="w-full bg-void text-gray-200 p-5 rounded-xl border-none outline-none resize-none font-mono text-sm leading-relaxed placeholder-gray-700" placeholder="// Describe your application...
-// Example: Create a full-stack SaaS dashboard with dark mode, real-time charts using Recharts, a sidebar navigation, and a responsive data table. Use Tailwind CSS for styling."></textarea>
-                            
-                            <div class="bg-surface px-4 py-3 border-t border-border flex justify-between items-center">
-                                <div class="flex gap-4 text-[10px] font-mono text-gray-500">
-                                    <span class="flex items-center gap-1"><i class="ri-coin-line text-yellow-500"></i> COST: 15 CR</span>
-                                    <span class="flex items-center gap-1"><i class="ri-code-s-slash-line text-brand-400"></i> MAX: 2500 LINES</span>
+                    <div class="relative group shadow-2xl">
+                        <div class="absolute -inset-0.5 bg-gradient-to-r from-brand-600 via-purple-600 to-brand-600 rounded-3xl blur opacity-20 group-hover:opacity-50 transition duration-500 animate-gradient"></div>
+                        <div class="relative bg-surface rounded-3xl border border-border overflow-hidden flex flex-col">
+                            <div class="bg-panel px-4 py-2 border-b border-border flex items-center justify-between">
+                                <div class="flex gap-1.5">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                                    <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                                    <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
                                 </div>
-                                <button onclick="window.ai.generate()" id="btn-generate" class="bg-white text-black px-6 py-2 rounded-lg text-xs font-bold hover:bg-gray-200 transition-all flex items-center gap-2">
-                                    <i class="ri-flashlight-fill"></i> Generate Code
+                                <span class="text-[10px] text-gray-600 font-mono">prompt.js</span>
+                            </div>
+                            
+                            <textarea id="ai-prompt" rows="8" class="w-full bg-surface text-gray-200 p-6 border-none outline-none resize-none font-mono text-sm leading-relaxed placeholder-gray-700 selection:bg-brand-500/30" placeholder="// Describe your application logic here...
+// Example: Create a responsive e-commerce dashboard with sidebar navigation, 
+// a sales overview chart using Recharts, and a product data table with sorting. 
+// Use Tailwind CSS for dark mode styling."></textarea>
+                            
+                            <div class="bg-panel px-6 py-4 border-t border-border flex justify-between items-center">
+                                <div class="flex gap-6 text-[10px] font-mono text-gray-500">
+                                    <span class="flex items-center gap-1.5"><i class="ri-coin-line text-yellow-500"></i> COST: 15 CR</span>
+                                    <span class="flex items-center gap-1.5"><i class="ri-code-s-slash-line text-brand-400"></i> OUTPUT: FULL STACK</span>
+                                </div>
+                                <button id="btn-generate" class="bg-white text-black px-8 py-3 rounded-xl text-xs font-bold hover:bg-gray-200 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95">
+                                    <i class="ri-flashlight-fill"></i> GENERATE CODE
                                 </button>
                             </div>
                         </div>
@@ -362,62 +453,87 @@
                 </div>
             </section>
 
-            <section id="view-premium" class="view-section hidden min-h-full p-6 flex flex-col items-center justify-center">
-                <div class="w-full max-w-4xl bg-surface border border-border rounded-3xl p-8 md:p-12 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600"></div>
+            <section id="view-premium" class="view-section hidden min-h-full p-6 flex flex-col items-center justify-center animate-fade-in-up">
+                <div class="w-full max-w-5xl bg-surface border border-border rounded-[2rem] p-8 md:p-16 relative overflow-hidden shadow-2xl">
+                    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-b from-yellow-500/10 to-transparent rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 shadow-[0_0_30px_#fbbf24]"></div>
                     
-                    <div class="grid md:grid-cols-2 gap-12">
+                    <div class="grid md:grid-cols-2 gap-16 items-center">
                         <div class="text-left">
-                            <div class="inline-block px-3 py-1 bg-yellow-500/10 text-yellow-500 text-[10px] font-bold rounded mb-4 border border-yellow-500/20">TITANIUM ACCESS</div>
-                            <h2 class="text-4xl font-bold text-white mb-6">Unlock the full power of the Neural Net.</h2>
-                            <ul class="space-y-4 text-sm text-gray-400">
-                                <li class="flex items-center gap-3"><i class="ri-checkbox-circle-fill text-green-500"></i> <span>1000 Monthly AI Credits</span></li>
-                                <li class="flex items-center gap-3"><i class="ri-checkbox-circle-fill text-green-500"></i> <span>Custom Domain (.com/.in)</span></li>
-                                <li class="flex items-center gap-3"><i class="ri-checkbox-circle-fill text-green-500"></i> <span>Access to Gemini 1.5 Pro</span></li>
-                                <li class="flex items-center gap-3"><i class="ri-checkbox-circle-fill text-green-500"></i> <span>Priority 24/7 Support</span></li>
+                            <div class="inline-block px-4 py-1.5 bg-yellow-500/10 text-yellow-500 text-[10px] font-bold rounded-full mb-6 border border-yellow-500/20 tracking-widest font-mono">TITANIUM ACCESS</div>
+                            <h2 class="text-5xl font-black text-white mb-6 leading-tight">Remove All <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-600">Limitations.</span></h2>
+                            
+                            <ul class="space-y-6 text-sm text-gray-400 mt-8">
+                                <li class="flex items-start gap-4 group">
+                                    <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-black transition-all"><i class="ri-check-line"></i></div>
+                                    <div>
+                                        <strong class="text-white block mb-1">1000 Monthly AI Credits</strong>
+                                        <span>Generate up to 60 full websites per month.</span>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-4 group">
+                                    <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-black transition-all"><i class="ri-check-line"></i></div>
+                                    <div>
+                                        <strong class="text-white block mb-1">Custom Domain Connection</strong>
+                                        <span>Connect .com, .in, or .org domains instantly.</span>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-4 group">
+                                    <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-black transition-all"><i class="ri-check-line"></i></div>
+                                    <div>
+                                        <strong class="text-white block mb-1">Gemini 1.5 Pro & GPT-4o</strong>
+                                        <span>Access the smartest models without waitlists.</span>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
 
-                        <div class="bg-void border border-border rounded-2xl p-6 text-center">
-                            <p class="text-xs text-gray-500 uppercase mb-2">Monthly Plan</p>
-                            <div class="text-4xl font-bold text-white mb-6">₹199</div>
+                        <div class="bg-void border border-border rounded-3xl p-8 text-center relative shadow-2xl">
+                            <div class="absolute inset-0 bg-yellow-500/5 rounded-3xl animate-pulse-slow pointer-events-none"></div>
                             
-                            <div class="bg-white p-3 rounded-xl w-40 h-40 mx-auto mb-6">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=shivenpanwar@fam&pn=Zulora&am=199&cu=INR" class="w-full h-full object-contain">
+                            <p class="text-xs text-gray-500 uppercase tracking-widest mb-2 font-bold">Monthly Plan</p>
+                            <div class="text-6xl font-black text-white mb-8 tracking-tighter">₹299</div>
+                            
+                            <div class="bg-white p-3 rounded-2xl w-48 h-48 mx-auto mb-8 shadow-xl">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=upi://pay?pa=shivenpanwar@fam&pn=Zulora%20Titanium&am=299&cu=INR" class="w-full h-full object-contain">
                             </div>
                             
-                            <div class="flex items-center gap-2 bg-surface border border-border p-2 rounded-lg mb-4">
-                                <code class="text-[10px] text-gray-400 flex-1 text-left font-mono">shivenpanwar@fam</code>
-                                <button onclick="window.utils.copy('shivenpanwar@fam')" class="text-[10px] font-bold text-white bg-white/10 px-2 py-1 rounded hover:bg-white/20">COPY</button>
+                            <div class="flex items-center gap-3 bg-surface border border-border p-3 rounded-xl mb-6">
+                                <div class="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white"><i class="ri-bank-card-line"></i></div>
+                                <code class="text-xs text-gray-400 flex-1 text-left font-mono">shivenpanwar@fam</code>
+                                <button id="btn-copy-upi" class="text-[10px] font-bold text-black bg-white px-3 py-1.5 rounded hover:bg-gray-200 transition-colors">COPY</button>
                             </div>
 
-                            <button onclick="window.location.href='upi://pay?pa=shivenpanwar@fam&pn=Zulora&am=199&cu=INR'" class="w-full bg-brand-600 text-white font-bold py-3 rounded-xl hover:bg-brand-500 transition-colors text-sm">
-                                Pay via UPI App
+                            <button id="btn-pay-upi" class="w-full bg-gradient-to-r from-brand-600 to-brand-700 text-white font-bold py-4 rounded-xl hover:from-brand-500 hover:to-brand-600 transition-all shadow-lg hover:shadow-brand-600/30 text-sm">
+                                Open UPI App
                             </button>
+                            <p class="text-[10px] text-gray-600 mt-4 font-mono">After payment, send screenshot to WhatsApp +91 6395211325</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="view-referral" class="view-section hidden min-h-full p-6 flex flex-col items-center justify-center">
-                <div class="w-full max-w-lg bg-surface border border-border rounded-3xl p-10 text-center">
-                    <div class="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center text-green-500 text-4xl mx-auto mb-6 border border-green-500/20">
+            <section id="view-referral" class="view-section hidden min-h-full p-6 flex flex-col items-center justify-center animate-fade-in-up">
+                <div class="w-full max-w-2xl bg-surface border border-border rounded-3xl p-12 text-center shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-green-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+                    
+                    <div class="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center text-green-500 text-5xl mx-auto mb-8 border border-green-500/20 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
                         <i class="ri-share-forward-fill"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Invite Developers</h2>
-                    <p class="text-gray-400 text-sm mb-8">Share your unique quantum link. Earn <strong class="text-white">15 Credits</strong> for every deployment.</p>
+                    <h2 class="text-4xl font-bold text-white mb-4">Viral Loop</h2>
+                    <p class="text-gray-400 text-sm mb-10 max-w-md mx-auto leading-relaxed">Share your unique quantum link. Earn <strong class="text-white">15 Credits</strong> for every developer who initializes a session. They get 30 Credits to start.</p>
                     
-                    <div class="bg-void border border-border p-1 rounded-xl flex items-center mb-8">
-                        <input type="text" id="ref-link" readonly class="flex-1 bg-transparent border-none text-gray-300 text-xs font-mono px-4 focus:outline-none" value="Generating...">
-                        <button onclick="window.utils.copy(document.getElementById('ref-link').value)" class="bg-surface hover:bg-white/10 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors border border-border">Copy</button>
+                    <div class="bg-void border border-border p-2 rounded-2xl flex items-center mb-10 max-w-md mx-auto shadow-inner">
+                        <input type="text" id="ref-link" readonly class="flex-1 bg-transparent border-none text-gray-300 text-xs font-mono px-4 focus:outline-none tracking-wide" value="Generating Key...">
+                        <button id="btn-copy-ref" class="bg-surface hover:bg-white/10 text-white text-xs font-bold px-6 py-3 rounded-xl transition-colors border border-border shadow-sm">Copy Link</button>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <button onclick="window.utils.share('whatsapp')" class="flex items-center justify-center gap-2 px-4 py-3 bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/20 rounded-xl font-bold hover:bg-[#25D366]/20 transition-all">
-                            <i class="ri-whatsapp-fill"></i> WhatsApp
+                    <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+                        <button id="btn-share-whatsapp" class="flex items-center justify-center gap-2 px-4 py-4 bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/20 rounded-xl font-bold hover:bg-[#25D366]/20 transition-all">
+                            <i class="ri-whatsapp-fill text-xl"></i> WhatsApp
                         </button>
-                        <button onclick="window.utils.share('instagram')" class="flex items-center justify-center gap-2 px-4 py-3 bg-pink-500/10 text-pink-500 border border-pink-500/20 rounded-xl font-bold hover:bg-pink-500/20 transition-all">
-                            <i class="ri-instagram-line"></i> Instagram
+                        <button id="btn-share-instagram" class="flex items-center justify-center gap-2 px-4 py-4 bg-pink-500/10 text-pink-500 border border-pink-500/20 rounded-xl font-bold hover:bg-pink-500/20 transition-all">
+                            <i class="ri-instagram-line text-xl"></i> Instagram
                         </button>
                     </div>
                 </div>
@@ -426,56 +542,64 @@
         </main>
     </div>
 
-    <div id="auth-modal" class="fixed inset-0 z-[9500] bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="bg-surface border border-border w-full max-w-sm p-8 rounded-3xl relative shadow-2xl transform scale-95 transition-transform duration-300">
-            <button onclick="window.auth.close()" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="ri-close-line text-xl"></i></button>
+    <div id="auth-modal" class="fixed inset-0 z-[9500] bg-black/80 backdrop-blur-xl hidden flex items-center justify-center p-4">
+        <div class="bg-surface border border-border w-full max-w-sm p-10 rounded-[2rem] relative shadow-2xl transform scale-95 transition-transform duration-300">
+            <button id="btn-auth-close" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors"><i class="ri-close-line text-2xl"></i></button>
             
-            <div class="text-center mb-8">
-                <div class="w-12 h-12 bg-white text-black rounded-xl mx-auto flex items-center justify-center font-bold text-xl mb-4">Z</div>
-                <h2 class="text-xl font-bold text-white">Access Terminal</h2>
-                <p class="text-xs text-gray-500 mt-1">Authenticate to continue.</p>
+            <div class="text-center mb-10">
+                <div class="w-16 h-16 bg-white text-black rounded-2xl mx-auto flex items-center justify-center font-bold text-3xl mb-6 shadow-lg">Z</div>
+                <h2 class="text-2xl font-bold text-white mb-2">Access Terminal</h2>
+                <p class="text-xs text-gray-500">Authenticate via secure gateway.</p>
             </div>
 
-            <button onclick="window.auth.signIn()" id="btn-google" class="w-full bg-white hover:bg-gray-100 text-black font-bold py-3.5 rounded-xl flex items-center justify-center gap-3 transition-all relative overflow-hidden group">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 group-hover:scale-110 transition-transform">
+            <button id="btn-google-login" class="w-full bg-white hover:bg-gray-200 text-black font-bold py-4 rounded-xl flex items-center justify-center gap-4 transition-all relative overflow-hidden group shadow-xl">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-6 h-6 group-hover:scale-110 transition-transform">
                 <span>Continue with Google</span>
             </button>
             
-            <p class="text-center text-[10px] text-gray-600 mt-6">Secure connection via Firebase Identity Platform.</p>
+            <p class="text-center text-[10px] text-gray-600 mt-8">
+                <i class="ri-shield-check-line text-green-500 mr-1"></i> End-to-end encrypted session.
+            </p>
         </div>
     </div>
 
     <div id="editor-modal" class="fixed inset-0 z-[9600] bg-void hidden flex-col transition-opacity duration-300 opacity-0">
-        <header class="h-14 border-b border-border flex items-center justify-between px-4 bg-surface shrink-0">
-            <div class="flex items-center gap-4">
-                <button onclick="window.editor.close()" class="text-gray-400 hover:text-white flex items-center gap-2 text-xs font-bold transition-colors">
-                    <i class="ri-arrow-left-line"></i> EXIT
+        <header class="h-16 border-b border-border flex items-center justify-between px-6 bg-surface shrink-0">
+            <div class="flex items-center gap-6">
+                <button id="btn-editor-close" class="text-gray-400 hover:text-white flex items-center gap-2 text-xs font-bold transition-colors uppercase tracking-widest">
+                    <i class="ri-arrow-left-line"></i> Exit IDE
                 </button>
-                <div class="h-4 w-px bg-border"></div>
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span class="text-xs font-mono text-gray-400" id="editor-url">https://app.zulora.in</span>
+                <div class="h-6 w-px bg-border"></div>
+                <div class="flex items-center gap-3">
+                    <div class="w-2.5 h-2.5 bg-status-live rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div>
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold text-white leading-none">Live Preview</span>
+                        <a href="#" id="editor-url" target="_blank" class="text-[10px] font-mono text-brand-400 hover:underline mt-0.5">https://app.zulora.in</a>
+                    </div>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
+            
+            <div class="flex items-center gap-4">
                 <div class="bg-void border border-border p-1 rounded-lg flex items-center">
-                    <button onclick="window.editor.device('desktop')" class="p-1.5 text-white hover:bg-white/10 rounded transition-colors"><i class="ri-computer-line"></i></button>
-                    <button onclick="window.editor.device('mobile')" class="p-1.5 text-gray-500 hover:text-white hover:bg-white/10 rounded transition-colors"><i class="ri-smartphone-line"></i></button>
+                    <button id="btn-device-desktop" class="p-2 text-white bg-white/10 rounded transition-colors"><i class="ri-computer-line"></i></button>
+                    <button id="btn-device-mobile" class="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded transition-colors"><i class="ri-smartphone-line"></i></button>
                 </div>
-                <button onclick="window.editor.save()" class="ml-2 bg-brand-600 hover:bg-brand-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow-lg shadow-brand-500/20 transition-all">Publish Live</button>
+                <button id="btn-publish" class="ml-2 bg-brand-600 hover:bg-brand-500 text-white px-6 py-2 rounded-lg text-xs font-bold shadow-lg shadow-brand-500/20 transition-all flex items-center gap-2">
+                    <i class="ri-cloud-upload-line"></i> Publish
+                </button>
             </div>
         </header>
         
-        <div class="flex-1 flex items-center justify-center bg-void p-4 md:p-8 relative overflow-hidden">
-            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#333 1px, transparent 1px); background-size: 20px 20px;"></div>
+        <div class="flex-1 flex items-center justify-center bg-void p-4 md:p-12 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#333 1px, transparent 1px); background-size: 24px 24px;"></div>
             
-            <div id="editor-frame-wrap" class="w-full h-full bg-white transition-all duration-500 shadow-2xl shadow-black overflow-hidden relative">
+            <div id="editor-frame-wrap" class="w-full h-full bg-white transition-all duration-700 shadow-2xl shadow-black overflow-hidden relative rounded-md border border-white/10">
                 <iframe id="editor-frame" class="w-full h-full border-none bg-white"></iframe>
                 
-                <div class="absolute bottom-6 right-6 bg-black/80 backdrop-blur border border-white/10 p-2 rounded-xl flex gap-2 shadow-2xl transform translate-y-0 hover:-translate-y-1 transition-transform">
-                    <button class="w-9 h-9 rounded-lg hover:bg-white/10 text-white flex items-center justify-center" title="Edit Content"><i class="ri-text"></i></button>
-                    <button class="w-9 h-9 rounded-lg hover:bg-white/10 text-white flex items-center justify-center" title="Change Theme"><i class="ri-palette-line"></i></button>
-                    <button class="w-9 h-9 rounded-lg hover:bg-white/10 text-white flex items-center justify-center" title="Inject Code"><i class="ri-code-s-slash-line"></i></button>
+                <div class="absolute bottom-8 right-8 bg-black/80 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex gap-2 shadow-2xl transform translate-y-0 hover:-translate-y-1 transition-transform">
+                    <button class="w-10 h-10 rounded-xl hover:bg-white/10 text-white flex items-center justify-center transition-colors" title="Edit Content"><i class="ri-edit-line"></i></button>
+                    <button class="w-10 h-10 rounded-xl hover:bg-white/10 text-white flex items-center justify-center transition-colors" title="Theme Settings"><i class="ri-palette-line"></i></button>
+                    <button class="w-10 h-10 rounded-xl hover:bg-white/10 text-white flex items-center justify-center transition-colors" title="Inject Code"><i class="ri-code-s-slash-line"></i></button>
                 </div>
             </div>
         </div>
