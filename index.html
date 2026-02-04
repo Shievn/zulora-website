@@ -628,6 +628,33 @@
             </button>
         </div>
     </div>
+<script>
+    // This runs independently of the main app
+    window.addEventListener('load', () => {
+        const loader = document.getElementById('master-loader');
+        
+        // Safety Timer: If app doesn't load in 8 seconds, force open
+        setTimeout(() => {
+            if (loader && loader.style.display !== 'none') {
+                console.warn("Forcing App Load via Failsafe...");
+                loader.style.opacity = '0';
+                
+                // Show a toast if something went wrong
+                const toast = document.createElement('div');
+                toast.className = 'fixed bottom-5 right-5 bg-red-900 text-white px-4 py-3 rounded-xl border border-red-700 shadow-2xl z-[10000]';
+                toast.innerHTML = '<i class="ri-wifi-off-line mr-2"></i> Connection slow or scripts failed to load.';
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    // Force show landing page if router failed
+                    document.getElementById('view-landing').classList.remove('hidden');
+                }, 500);
+            }
+        }, 8000); // 8 seconds timeout
+    });
+</script>
+</body>
 
 </body>
 </html>
