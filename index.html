@@ -60,7 +60,17 @@
 
     <script>
         window.ZULORA_CONFIG = {
-            keys: {
+            // Your Specific Firebase Config
+            firebase: {
+                apiKey: "AIzaSyC4XXmvYQap_Y1tXF-mWG82rL5MsBXjcvQ",
+                authDomain: "zulorain.firebaseapp.com",
+                projectId: "zulorain",
+                storageBucket: "zulorain.firebasestorage.app",
+                messagingSenderId: "972907481049",
+                appId: "1:972907481049:web:b4d02b9808f9e2f3f8bbc8"
+            },
+            // API Keys for AI
+            aiKeys: {
                 anthropic: "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",
                 groq: "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"
             }
@@ -324,7 +334,7 @@
 
         <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-slate-950">
             
-            <header class="lg:hidden h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-30">
+            <header class="lg:hidden h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 shrink-0 z-30">
                 <div class="font-bold text-white flex items-center gap-2">
                     <div class="w-8 h-8 rounded bg-brand-600 flex items-center justify-center text-white">Z</div>
                 </div>
