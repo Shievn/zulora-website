@@ -1,666 +1,737 @@
-/**
- * ==========================================================================================
- * ZULORA OS - CORE KERNEL (JAVASCRIPT)
- * Version: 4.0.0 (Enterprise Edition)
- * Architecture: MVC (Model-View-Controller)
- * Tech Stack: Vanilla JS, Firebase SDK, Local Neural Engine
- * ==========================================================================================
- */
+/* ==========================================================================
+   ZULORA OS - ENTERPRISE DESIGN SYSTEM (v6.0 Ultimate)
+   "The Neural Interface" Theme
+   Status: Production Ready
+   Author: Zulora Dev Team
+   ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. SYSTEM CONFIGURATION
+   1. CORE VARIABLES & TOKENS
    -------------------------------------------------------------------------- */
-const CONFIG = {
-    appName: "Zulora",
-    currency: "INR",
-    credits: {
-        signupBonus: 30, // 10 (base) + 20 (promo)
-        referralBonus: 10,
-        generationCost: 15
-    },
-    // Firebase Config (Replace with your actual keys if needed)
-    firebase: {
-        apiKey: "AIzaSyC4XXmvYQap_Y1tXF-mWG82rL5MsBXjcvQ",
-        authDomain: "zulorain.firebaseapp.com",
-        projectId: "zulorain",
-        storageBucket: "zulorain.firebasestorage.app",
-        messagingSenderId: "972907481049",
-        appId: "1:972907481049:web:b4d02b9808f9e2f3f8bbc8"
-    }
-};
+:root {
+    /* --- Brand Palette (Indigo-Violet Fusion) --- */
+    --brand-50: #eef2ff;
+    --brand-100: #e0e7ff;
+    --brand-200: #c7d2fe;
+    --brand-300: #a5b4fc;
+    --brand-400: #818cf8;
+    --brand-500: #6366f1; /* Primary Core */
+    --brand-600: #4f46e5;
+    --brand-700: #4338ca;
+    --brand-800: #3730a3;
+    --brand-900: #312e81;
+    --brand-950: #1e1b4b; /* Deep Space */
 
-/* --------------------------------------------------------------------------
-   2. UTILITY SERVICE
-   -------------------------------------------------------------------------- */
-class Utils {
-    static uuid() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-            const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
+    /* --- Secondary Palette (Emerald/Teal) --- */
+    --secondary-500: #10b981;
+    --secondary-600: #059669;
+    --secondary-glow: rgba(16, 185, 129, 0.5);
 
-    static generateRefCode() {
-        return 'REF' + Math.floor(100000 + Math.random() * 900000);
-    }
+    /* --- Accent Palette (Electric Pink) --- */
+    --accent-500: #ec4899;
+    --accent-glow: rgba(236, 72, 153, 0.5);
 
-    static async copy(text) {
-        try {
-            await navigator.clipboard.writeText(text);
-            UI.toast(`Copied: ${text}`, 'success');
-        } catch (err) {
-            UI.toast('Failed to copy', 'error');
-        }
-    }
+    /* --- Functional Colors --- */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
 
-    static wait(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    /* --- Surface & Backgrounds (Dark Mode Base) --- */
+    --bg-void: #020617;   /* Absolute Black/Blue */
+    --bg-surface: #0f172a; /* Slate 900 */
+    --bg-card: #1e293b;    /* Slate 800 */
+    --bg-glass: rgba(15, 23, 42, 0.7);
+    --bg-glass-light: rgba(255, 255, 255, 0.8);
+    --bg-overlay: rgba(0, 0, 0, 0.6);
 
-    static getUrlParam(name) {
-        return new URLSearchParams(window.location.search).get(name);
-    }
-}
+    /* --- Typography & Borders --- */
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-disabled: #475569;
+    --border-light: rgba(255, 255, 255, 0.1);
+    --border-dark: rgba(0, 0, 0, 0.1);
+    --border-highlight: rgba(99, 102, 241, 0.3);
 
-/* --------------------------------------------------------------------------
-   3. UI CONTROLLER (Toasts, Loaders, Stats)
-   -------------------------------------------------------------------------- */
-class UIController {
-    constructor() {
-        this.loader = document.getElementById('master-loader');
-        this.toastContainer = document.getElementById('toast-container');
-    }
-
-    init() {
-        // Hide Master Loader after 1.5s
-        setTimeout(() => {
-            if(this.loader) {
-                this.loader.style.opacity = '0';
-                setTimeout(() => this.loader.style.display = 'none', 500);
-            }
-        }, 1500);
-    }
-
-    toast(message, type = 'info') {
-        const toast = document.createElement('div');
-        let bgClass = 'bg-slate-900 border-slate-700 text-white';
-        let icon = '<i class="ri-information-line text-blue-400"></i>';
-
-        if (type === 'success') {
-            bgClass = 'bg-slate-900 border-green-900 text-white';
-            icon = '<i class="ri-checkbox-circle-fill text-green-500"></i>';
-        }
-        if (type === 'error') {
-            bgClass = 'bg-slate-900 border-red-900 text-white';
-            icon = '<i class="ri-error-warning-fill text-red-500"></i>';
-        }
-
-        toast.className = `${bgClass} border px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 min-w-[300px] animate-bounce-in`;
-        toast.innerHTML = `
-            <div class="text-xl">${icon}</div>
-            <div class="font-medium text-sm">${message}</div>
-        `;
-
-        this.toastContainer.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(100%)';
-            setTimeout(() => toast.remove(), 300);
-        }, 4000);
-    }
-
-    updateStats(profile) {
-        // Sidebar
-        this.setText('sidebar-name', profile.displayName || 'Creator');
-        this.setText('sidebar-credits', profile.credits);
-        
-        // Mobile Header
-        this.setText('mobile-credits', `${profile.credits} Cr`);
-
-        // Dashboard
-        this.setText('dash-credits-lg', profile.credits);
-        this.setText('dash-referrals-count', profile.referrals || 0);
-        
-        // Referral Input
-        const input = document.getElementById('referral-link-input');
-        if(input) input.value = `${window.location.origin}?ref=${profile.referralCode}`;
-    }
-
-    setText(id, text) {
-        const el = document.getElementById(id);
-        if(el) el.innerText = text;
-    }
-}
-const UI = new UIController();
-
-/* --------------------------------------------------------------------------
-   4. ROUTER (View Navigation)
-   -------------------------------------------------------------------------- */
-class Router {
-    constructor() {
-        this.landing = document.getElementById('view-landing');
-        this.auth = document.getElementById('view-auth');
-        this.shell = document.getElementById('app-shell');
-        this.internalViews = document.querySelectorAll('.view-section');
-    }
-
-    // High Level Navigation (Landing <-> Auth <-> App)
-    go(route) {
-        if (route === 'landing') {
-            this.landing.classList.remove('hidden');
-            this.auth.classList.add('hidden');
-            this.shell.classList.add('hidden');
-        } 
-        else if (route === 'auth') {
-            this.landing.classList.add('hidden');
-            this.auth.classList.remove('hidden');
-            this.shell.classList.add('hidden');
-        } 
-        else if (route === 'app') {
-            this.landing.classList.add('hidden');
-            this.auth.classList.add('hidden');
-            this.shell.classList.remove('hidden');
-        }
-        // Internal App Routes
-        else {
-            if (this.shell.classList.contains('hidden')) this.go('app');
-            this.switchInternal(route);
-        }
-    }
-
-    // Internal Dashboard Navigation
-    switchInternal(viewId) {
-        const target = document.getElementById(`view-${viewId}`);
-        if (!target) return;
-
-        this.internalViews.forEach(v => {
-            v.classList.add('hidden');
-            v.classList.remove('active');
-        });
-
-        target.classList.remove('hidden');
-        // Animation frame to allow transitions
-        requestAnimationFrame(() => target.classList.add('active'));
-
-        // Update Nav Active States
-        document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(el => el.classList.remove('active'));
-        // (Simple logic: highlighting handled via onclick classes in HTML or specific logic here)
-    }
-}
-const router = new Router();
-window.router = router;
-
-/* --------------------------------------------------------------------------
-   5. DATABASE SERVICE (Persistence)
-   -------------------------------------------------------------------------- */
-class DBService {
-    constructor() { this.db = null; }
+    /* --- Effects & Shadows --- */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-neon: 0 0 15px rgba(99, 102, 241, 0.6), 0 0 30px rgba(99, 102, 241, 0.3);
     
-    init() { this.db = firebase.firestore(); }
-
-    async getProfile(user) {
-        const docRef = this.db.collection('users').doc(user.uid);
-        const doc = await docRef.get();
-        if (doc.exists) return doc.data();
-        return await this.createProfile(user);
-    }
-
-    async createProfile(user) {
-        // Check for Referral
-        const refSource = localStorage.getItem('zulora_ref_source');
-        let credits = CONFIG.credits.signupBonus;
-
-        // If referred, give credit to referrer (Mocked logic for client-side)
-        if (refSource) {
-            console.log("Referred by:", refSource);
-            // In a real app, cloud functions handle the cross-user credit update
-            UI.toast('Referral bonus applied!', 'success');
-        }
-
-        const profile = {
-            uid: user.uid,
-            email: user.email,
-            displayName: user.email.split('@')[0],
-            credits: credits,
-            referralCode: Utils.generateRefCode(),
-            referrals: 0,
-            projects: [],
-            createdAt: new Date().toISOString()
-        };
-
-        await this.db.collection('users').doc(user.uid).set(profile);
-        return profile;
-    }
-
-    async update(uid, data) {
-        await this.db.collection('users').doc(uid).update(data);
-    }
-}
-const DB = new DBService();
-
-/* --------------------------------------------------------------------------
-   6. AUTHENTICATION CONTROLLER
-   -------------------------------------------------------------------------- */
-class AuthController {
-    constructor() {
-        this.auth = null;
-        this.user = null;
-        this.profile = null;
-        this.mode = 'login';
-    }
-
-    init() {
-        if (!firebase.apps.length) firebase.initializeApp(CONFIG.firebase);
-        this.auth = firebase.auth();
-        DB.init();
-
-        // Check URL Ref
-        const ref = Utils.getUrlParam('ref');
-        if (ref) {
-            localStorage.setItem('zulora_ref_source', ref);
-            this.toggle('signup'); // Auto switch to signup
-            // Pre-fill hidden input if exists
-             const refInput = document.getElementById('auth-referral');
-             if(refInput) refInput.value = ref;
-        }
-
-        // Listener
-        this.auth.onAuthStateChanged(async (u) => {
-            if (u) {
-                this.user = u;
-                this.profile = await DB.getProfile(u);
-                
-                // Initialize App Data
-                App.initDashboard(this.profile);
-                router.go('app');
-                UI.toast(`Welcome back, ${this.profile.displayName}`, 'success');
-
-                // CHECK PENDING AI PROMPT (From Landing Page)
-                const pendingPrompt = localStorage.getItem('zulora_pending_prompt');
-                if(pendingPrompt) {
-                    localStorage.removeItem('zulora_pending_prompt');
-                    router.go('create');
-                    document.getElementById('ai-prompt-input').value = pendingPrompt;
-                    // Optional: Auto-generate
-                    // AI.generate(); 
-                    UI.toast('Restored your prompt. Ready to build!', 'info');
-                }
-
-            } else {
-                // Stay on Landing Page unless manually navigated
-                // If we are on app shell, kick to landing
-                if (!document.getElementById('app-shell').classList.contains('hidden')) {
-                    router.go('landing');
-                }
-            }
-            UI.init(); // Hide master loader
-        });
-    }
-
-    toggle(mode) {
-        this.mode = mode;
-        const btn = document.getElementById('auth-submit-btn');
-        const loginTab = document.getElementById('tab-login');
-        const signupTab = document.getElementById('tab-signup');
-        const refField = document.getElementById('referral-field');
-
-        if (mode === 'signup') {
-            btn.innerText = "Create Free Account";
-            loginTab.classList.replace('bg-indigo-600', 'text-slate-400');
-            loginTab.classList.replace('text-white', 'text-slate-400'); // simple toggle logic
-            signupTab.className = "flex-1 py-2 text-sm font-bold text-white bg-indigo-600 rounded shadow-lg transition-all";
-            loginTab.className = "flex-1 py-2 text-sm font-bold text-slate-400 hover:text-white transition-all";
-            refField.classList.remove('hidden');
-        } else {
-            btn.innerText = "Log In to Dashboard";
-            loginTab.className = "flex-1 py-2 text-sm font-bold text-white bg-indigo-600 rounded shadow-lg transition-all";
-            signupTab.className = "flex-1 py-2 text-sm font-bold text-slate-400 hover:text-white transition-all";
-            refField.classList.add('hidden');
-        }
-    }
-
-    async submit() {
-        const email = document.getElementById('auth-email').value;
-        const pass = document.getElementById('auth-password').value;
-        if (!email || !pass) return UI.toast('Please enter email and password', 'error');
-
-        const btn = document.getElementById('auth-submit-btn');
-        const originalText = btn.innerText;
-        btn.innerText = "Processing...";
-        btn.disabled = true;
-
-        try {
-            if (this.mode === 'signup') {
-                await this.auth.createUserWithEmailAndPassword(email, pass);
-            } else {
-                await this.auth.signInWithEmailAndPassword(email, pass);
-            }
-            // onAuthStateChanged handles redirection
-        } catch (err) {
-            UI.toast(err.message, 'error');
-            btn.innerText = originalText;
-            btn.disabled = false;
-        }
-    }
-
-    logout() {
-        this.auth.signOut();
-        router.go('landing');
-        UI.toast('Logged out successfully');
-    }
-}
-const auth = new AuthController();
-window.auth = auth;
-
-/* --------------------------------------------------------------------------
-   7. AI ENGINE (Hybrid Logic)
-   -------------------------------------------------------------------------- */
-class AIEngine {
+    /* --- Animation Timings (Physics Based) --- */
+    --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
     
-    // Triggered from Landing Page Input
-    generateFromLanding() {
-        const input = document.getElementById('hero-input');
-        const val = input.value.trim();
-        
-        if (!val) return UI.toast('Please describe your business first.', 'error');
+    /* --- Z-Index Hierarchy --- */
+    --z-base: 0;
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    --z-loader: 9999;
+}
 
-        // Store prompt
-        localStorage.setItem('zulora_pending_prompt', val);
-        
-        // Redirect to Auth to capture lead
-        router.go('auth');
-        auth.toggle('signup'); // Encourage signup
-        UI.toast('Please create an account to save your website.', 'info');
+/* --------------------------------------------------------------------------
+   2. GLOBAL RESET & BASE SETTINGS
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent; /* Mobile Optimization */
+}
+
+html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scrollbars */
+    background-color: var(--bg-void);
+    color: var(--text-main);
+    line-height: 1.5;
+    height: 100%;
+}
+
+/* Custom Selection Style */
+::selection {
+    background: var(--brand-500);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+img, video, iframe {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s var(--ease-smooth);
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   3. UTILITY CLASSES & MIXINS
+   -------------------------------------------------------------------------- */
+
+/* Custom Scrollbar - The "Invisible" Feel */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-light) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 99px;
+    border: 2px solid transparent; /* Creates padding effect */
+    background-clip: content-box;
+    transition: background 0.3s;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #475569;
+}
+
+/* Glassmorphism Engine */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.glass-panel-dark {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Text Gradient Utility */
+.text-gradient {
+    background: linear-gradient(135deg, var(--brand-400), #c084fc 50%, #f472b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
+/* Focus Ring Utility */
+.focus-ring:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--bg-void), 0 0 0 4px var(--brand-500);
+}
+
+/* --------------------------------------------------------------------------
+   4. ADVANCED KEYFRAME ANIMATIONS
+   -------------------------------------------------------------------------- */
+
+/* A. Fade In Up (Smooth Entry) */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
     }
-
-    fillPrompt(text) {
-        document.getElementById('ai-prompt-input').value = text;
-    }
-
-    useTemplate(type) {
-        const templates = {
-            'business': 'A corporate landing page for a SaaS company with blue theme, hero section, pricing, and features.',
-            'portfolio': 'A minimalist dark-themed portfolio for a creative designer with gallery and contact form.',
-            'store': 'A modern e-commerce homepage for a fashion brand with product grid and newsletter.'
-        };
-        this.fillPrompt(templates[type]);
-        router.go('create');
-        UI.toast('Template loaded. Click Generate.', 'success');
-    }
-
-    async generate() {
-        const promptInput = document.getElementById('ai-prompt-input');
-        const prompt = promptInput.value.trim();
-        const profile = auth.profile;
-
-        if (!prompt) return UI.toast('Please enter a description.', 'error');
-        if (profile.credits < CONFIG.credits.generationCost) {
-            router.go('premium');
-            return UI.toast('Insufficient Credits. Upgrade Plan.', 'error');
-        }
-
-        // UI Loading State
-        const btn = document.getElementById('btn-generate');
-        btn.innerText = "Building...";
-        btn.disabled = true;
-
-        await Utils.wait(1500); // Simulate AI Thinking
-
-        try {
-            // Generate Code (Local Engine to bypass CORS/API costs for demo)
-            const html = this.localNeuralEngine(prompt, profile);
-            
-            // Deduct Credits
-            profile.credits -= CONFIG.credits.generationCost;
-            await DB.update(profile.uid, { credits: profile.credits });
-            UI.updateStats(profile);
-
-            // Save Project
-            const project = {
-                id: Utils.uuid(),
-                name: prompt.substring(0, 15) + '...',
-                subdomain: `${profile.displayName.toLowerCase().replace(/\s/g,'')}-${Math.floor(Math.random()*999)}`,
-                html: html,
-                createdAt: new Date().toISOString()
-            };
-
-            if (!profile.projects) profile.projects = [];
-            profile.projects.unshift(project);
-            await DB.update(profile.uid, { projects: profile.projects });
-
-            // Reset UI
-            promptInput.value = '';
-            btn.innerText = `Generate (${CONFIG.credits.generationCost} Cr)`;
-            btn.disabled = false;
-            
-            UI.toast('Website Generated Successfully!', 'success');
-            
-            // Open Editor
-            editor.open(project);
-            App.renderProjectsList(profile.projects);
-
-        } catch (err) {
-            console.error(err);
-            UI.toast('Generation failed.', 'error');
-            btn.innerText = "Generate";
-            btn.disabled = false;
-        }
-    }
-
-    // --- LOCAL GENERATOR (Ensures result) ---
-    localNeuralEngine(prompt, user) {
-        const p = prompt.toLowerCase();
-        const isDark = p.includes('dark');
-        
-        let theme = isDark ? 'bg-slate-900 text-white' : 'bg-white text-slate-900';
-        let nav = isDark ? 'bg-slate-900/90 border-slate-800' : 'bg-white/90 border-slate-100';
-
-        // Dynamic Content Logic
-        let heroTitle = "Build the Future.";
-        let heroSub = "We provide the best solutions for your growth.";
-        
-        if (p.includes('coffee')) {
-            heroTitle = "Fresh Brewed Happiness.";
-            heroSub = "Experience the finest beans roasted to perfection.";
-        } else if (p.includes('portfolio')) {
-            heroTitle = `I am ${user.displayName}.`;
-            heroSub = "Visual Designer & Creative Developer based in India.";
-        } else if (p.includes('pizza') || p.includes('food')) {
-            heroTitle = "Taste the Authentic.";
-            heroSub = "Fresh ingredients, wood-fired oven, delivered hot.";
-        }
-
-        return `
-<!DOCTYPE html>
-<html>
-<head>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-</head>
-<body class="${theme} antialiased font-sans">
-    <nav class="fixed w-full z-50 ${nav} backdrop-blur border-b">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
-            <div class="font-bold text-xl tracking-tight">Brand.</div>
-            <div class="space-x-6 text-sm font-medium opacity-80">
-                <a href="#" class="hover:text-indigo-500">Home</a>
-                <a href="#" class="hover:text-indigo-500">Services</a>
-                <a href="#" class="hover:text-indigo-500">Contact</a>
-            </div>
-        </div>
-    </nav>
-    <section class="pt-32 pb-20 px-6 text-center">
-        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight">${heroTitle}</h1>
-        <p class="text-xl opacity-70 mb-8 max-w-2xl mx-auto">${heroSub}</p>
-        <button class="px-8 py-3 bg-indigo-600 text-white rounded-full font-bold hover:bg-indigo-700 transition">Get Started</button>
-    </section>
-    <section class="py-20 px-6">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
-            <div class="p-8 border border-gray-200 dark:border-gray-800 rounded-2xl hover:shadow-xl transition">
-                <i class="ri-rocket-line text-3xl text-indigo-500 mb-4 block"></i>
-                <h3 class="text-xl font-bold mb-2">Fast & Secure</h3>
-                <p class="opacity-70">Built for speed and performance.</p>
-            </div>
-            <div class="p-8 border border-gray-200 dark:border-gray-800 rounded-2xl hover:shadow-xl transition">
-                <i class="ri-palette-line text-3xl text-purple-500 mb-4 block"></i>
-                <h3 class="text-xl font-bold mb-2">Modern Design</h3>
-                <p class="opacity-70">Crafted with attention to detail.</p>
-            </div>
-            <div class="p-8 border border-gray-200 dark:border-gray-800 rounded-2xl hover:shadow-xl transition">
-                <i class="ri-customer-service-line text-3xl text-pink-500 mb-4 block"></i>
-                <h3 class="text-xl font-bold mb-2">24/7 Support</h3>
-                <p class="opacity-70">We are always here to help you.</p>
-            </div>
-        </div>
-    </section>
-    <footer class="py-10 text-center opacity-60 border-t border-gray-200 dark:border-gray-800">
-        &copy; ${new Date().getFullYear()} ${user.displayName}. Powered by Zulora.
-    </footer>
-</body>
-</html>`;
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
     }
 }
-const ai = new AIEngine();
-window.ai = ai;
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s var(--ease-snappy) forwards;
+}
+
+/* B. Background Blob Floating (Organic Movement) */
+@keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob {
+    animation: blob 15s infinite ease-in-out;
+}
+
+/* C. Shimmer Effect (For skeletons/loading) */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.shimmer-bg {
+    background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+}
+
+/* D. Pulse Slow (Breathing Effect) */
+@keyframes pulseSlow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.animate-pulse-slow {
+    animation: pulseSlow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* E. Pop In (Modals) */
+@keyframes popIn {
+    0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.animate-pop-in {
+    animation: popIn 0.4s var(--ease-spring) forwards;
+}
+
+/* F. Slide In From Right (Toasts) */
+@keyframes slideInRight {
+    from { transform: translateX(120%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* G. Spin (Loaders) */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+    animation: spin 3s linear infinite;
+}
+
+/* H. Float Y (Hover effect simulation) */
+@keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+    animation: floatY 6s ease-in-out infinite;
+}
 
 /* --------------------------------------------------------------------------
-   8. EDITOR CONTROLLER
+   5. COMPONENT STYLING: NAVIGATION
    -------------------------------------------------------------------------- */
-class EditorController {
-    constructor() {
-        this.modal = document.getElementById('editor-modal');
-        this.frame = document.getElementById('preview-frame');
-        this.currentProject = null;
+
+/* Landing Page Nav */
+#landing-nav {
+    transition: all 0.4s var(--ease-smooth);
+}
+
+#landing-nav.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 64px;
+}
+
+/* Sidebar Navigation Items */
+.nav-item {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s var(--ease-smooth);
+    border: 1px solid transparent;
+}
+
+/* Active State Indicator */
+.nav-item.active {
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0.05) 100%);
+    color: #fff !important;
+    border-left: 3px solid var(--brand-500);
+    padding-left: calc(1rem - 3px); /* Compensate for border width */
+}
+
+.nav-item.active i {
+    color: var(--brand-400);
+    filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6));
+}
+
+/* Hover Shine Effect */
+.nav-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    transition: 0.5s;
+    pointer-events: none;
+    transform: skewX(-20deg);
+}
+
+.nav-item:hover::after {
+    left: 150%;
+    transition: 0.7s ease-in-out;
+}
+
+/* --------------------------------------------------------------------------
+   6. COMPONENT STYLING: INPUTS & FORMS
+   -------------------------------------------------------------------------- */
+
+/* The Hero Input Field */
+#hero-input {
+    transition: all 0.3s;
+    background: transparent;
+    font-weight: 500;
+}
+#hero-input:focus {
+    color: var(--brand-900);
+}
+#hero-input::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+    transition: opacity 0.2s;
+}
+#hero-input:focus::placeholder {
+    opacity: 0.5;
+}
+
+/* AI Prompt Input (Dark Mode) */
+#ai-prompt-input {
+    background-image: linear-gradient(#1e293b, #1e293b), linear-gradient(to right, #334155, #334155);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    line-height: 1.6;
+}
+
+#ai-prompt-input:focus {
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 0 0 2px rgba(99, 102, 241, 0.3);
+    border-color: var(--brand-500);
+}
+
+/* Auth Input Fields */
+.auth-input {
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+.auth-input:focus {
+    border-color: var(--brand-500);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    background-color: rgba(30, 41, 59, 0.8);
+}
+
+/* --------------------------------------------------------------------------
+   7. COMPONENT STYLING: BUTTONS
+   -------------------------------------------------------------------------- */
+
+/* Base Button Physics */
+button {
+    transition: transform 0.1s var(--ease-smooth), box-shadow 0.2s var(--ease-smooth), background-color 0.2s;
+}
+button:active {
+    transform: scale(0.97);
+}
+
+/* Primary "Generate" Button with Pulse */
+#btn-generate {
+    position: relative;
+    overflow: hidden;
+    background-size: 200% auto;
+    transition: 0.5s;
+}
+
+#btn-generate:hover {
+    background-position: right center; /* change the direction of the change here */
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+}
+
+#btn-generate::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+#btn-generate:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Loading State for Buttons */
+.btn-loading {
+    color: transparent !important;
+    pointer-events: none;
+    position: relative;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.2em;
+    height: 1.2em;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    transform: translate(-50%, -50%);
+}
+
+/* --------------------------------------------------------------------------
+   8. COMPONENT STYLING: CARDS & CONTAINERS
+   -------------------------------------------------------------------------- */
+
+/* Stat Cards (Dashboard) */
+.stat-card-hover:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 10px 40px -10px rgba(99, 102, 241, 0.15);
+    transform: translateY(-4px);
+    background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+}
+
+/* Project Cards */
+.project-card {
+    transition: all 0.4s var(--ease-spring);
+    position: relative;
+    isolation: isolate;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    background: linear-gradient(to bottom, rgba(99, 102, 241, 0.3), transparent);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.project-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.4);
+    z-index: 10;
+}
+
+.project-card:hover::before {
+    opacity: 1;
+}
+
+/* Premium Plan - "Most Popular" Badge Ribbon */
+.premium-ribbon {
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    background: linear-gradient(90deg, var(--brand-600), var(--brand-500));
+    width: 120px;
+    text-align: center;
+    transform: rotate(45deg);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 20;
+}
+
+/* --------------------------------------------------------------------------
+   9. EDITOR INTERFACE
+   -------------------------------------------------------------------------- */
+
+/* Editor Iframe Container */
+#editor-frame-container {
+    background: #fff;
+    transition: width 0.6s var(--ease-elastic), height 0.6s var(--ease-elastic), border-radius 0.6s;
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.7);
+    transform-origin: center top;
+}
+
+/* Desktop View */
+#editor-frame-container.desktop-view {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    border: 1px solid #334155;
+}
+
+/* Mobile View Simulation */
+#editor-frame-container.mobile-view {
+    width: 375px !important;
+    height: 720px !important;
+    max-height: 85vh;
+    border-radius: 40px;
+    border: 12px solid #1e293b;
+    position: relative;
+    margin: 0 auto;
+}
+
+/* Mobile View Notch Simulation */
+#editor-frame-container.mobile-view::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 24px;
+    background: #1e293b;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+    z-index: 50;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Loader inside editor */
+.iframe-loader {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   10. TOAST NOTIFICATIONS (SLICK ANIMATIONS)
+   -------------------------------------------------------------------------- */
+#toast-container {
+    perspective: 1000px;
+}
+
+.animate-bounce-in {
+    animation: toastBounceIn 0.6s var(--ease-elastic) forwards;
+}
+
+@keyframes toastBounceIn {
+    0% {
+        opacity: 0;
+        transform: translateX(100%) scale(0.8) skewX(-10deg);
     }
-
-    open(project) {
-        this.currentProject = project;
-        this.modal.classList.remove('hidden');
-        document.getElementById('editor-subdomain').innerText = `${project.subdomain}.zulora.in`;
-        
-        // Write content
-        const doc = this.frame.contentWindow.document;
-        doc.open();
-        doc.write(project.html);
-        doc.close();
-
-        // Inject Click-to-Edit script
-        const script = doc.createElement('script');
-        script.textContent = `
-            document.body.addEventListener('click', e => {
-                if(['H1','P','BUTTON','A'].includes(e.target.tagName)) {
-                    e.preventDefault();
-                    e.target.contentEditable = true;
-                    e.target.focus();
-                }
-            });
-        `;
-        doc.body.appendChild(script);
+    60% {
+        transform: translateX(-5%) scale(1.02) skewX(2deg);
     }
-
-    close() {
-        this.modal.classList.add('hidden');
-        this.frame.src = 'about:blank';
-    }
-
-    setView(mode) {
-        const container = document.getElementById('editor-frame-container');
-        if (mode === 'mobile') {
-            container.style.width = '375px';
-            container.style.height = '667px';
-            container.style.border = '10px solid #1e293b';
-            container.style.borderRadius = '20px';
-        } else {
-            container.style.width = '100%';
-            container.style.height = '100%';
-            container.style.border = 'none';
-            container.style.borderRadius = '0';
-        }
-    }
-
-    save() {
-        const newHtml = this.frame.contentWindow.document.documentElement.outerHTML;
-        // Update local state
-        const projects = auth.profile.projects;
-        const idx = projects.findIndex(p => p.id === this.currentProject.id);
-        if (idx !== -1) projects[idx].html = newHtml;
-        
-        // Sync DB
-        DB.update(auth.profile.uid, { projects: projects });
-        UI.toast('Changes published!', 'success');
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1) skewX(0);
     }
 }
-const editor = new EditorController();
-window.editor = editor;
 
 /* --------------------------------------------------------------------------
-   9. REFERRAL & PAYMENT
+   11. LOADING SPINNERS & PROGRESS
    -------------------------------------------------------------------------- */
-const referral = {
-    copy: () => {
-        const val = document.getElementById('referral-link-input').value;
-        Utils.copy(val);
-    },
-    share: (platform) => {
-        const link = document.getElementById('referral-link-input').value;
-        const text = "Build AI websites with Zulora! Get 30 Free Credits:";
-        if(platform === 'whatsapp') window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + link)}`);
-        if(platform === 'twitter') window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`);
-    }
-};
-window.referral = referral;
+/* Master Loader Progress Bar */
+#loader-bar {
+    box-shadow: 0 0 15px var(--brand-500);
+    position: relative;
+    overflow: hidden;
+}
 
-const payment = {
-    openModal: () => document.getElementById('payment-modal').classList.remove('hidden'),
-    closeModal: () => document.getElementById('payment-modal').classList.add('hidden')
-};
-window.payment = payment;
+#loader-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: linear-gradient(
+        -45deg, 
+        rgba(255, 255, 255, 0.2) 25%, 
+        transparent 25%, 
+        transparent 50%, 
+        rgba(255, 255, 255, 0.2) 50%, 
+        rgba(255, 255, 255, 0.2) 75%, 
+        transparent 75%, 
+        transparent
+    );
+    background-size: 20px 20px;
+    animation: moveStripes 1s linear infinite;
+}
+
+@keyframes moveStripes {
+    0% { background-position: 0 0; }
+    100% { background-position: 50px 50px; }
+}
+
+/* AI Thinking Dots */
+.typing-dot {
+    width: 6px;
+    height: 6px;
+    background: #94a3b8;
+    border-radius: 50%;
+    display: inline-block;
+    animation: typing 1.4s infinite ease-in-out both;
+}
+
+.typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typing {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.5); background-color: var(--brand-400); }
+}
 
 /* --------------------------------------------------------------------------
-   10. APP INITIALIZER
+   12. RESPONSIVE UTILITIES & MEDIA QUERIES
    -------------------------------------------------------------------------- */
-const App = {
-    init: () => {
-        auth.init(); // Starts everything
-    },
 
-    initDashboard: (profile) => {
-        UI.updateStats(profile);
-        App.renderProjectsList(profile.projects);
-    },
-
-    renderProjectsList: (projects) => {
-        const list = document.getElementById('dashboard-projects-list');
-        const allList = document.getElementById('all-projects-container');
-        const empty = document.getElementById('dashboard-empty-state');
-
-        if (!projects || projects.length === 0) {
-            empty.classList.remove('hidden');
-            list.innerHTML = '';
-            allList.innerHTML = '<p class="text-white text-center col-span-full">No projects found.</p>';
-            return;
-        }
-
-        empty.classList.add('hidden');
-        
-        const html = projects.map(p => `
-            <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden group hover:border-indigo-500 transition cursor-pointer" onclick='editor.open(${JSON.stringify(p)})'>
-                <div class="h-40 bg-slate-800 relative overflow-hidden">
-                    <iframe srcdoc="${p.html.replace(/"/g, "'")}" class="w-[200%] h-[200%] scale-50 origin-top-left pointer-events-none"></iframe>
-                    <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition"></div>
-                </div>
-                <div class="p-4">
-                    <h4 class="text-white font-bold truncate">${p.name}</h4>
-                    <p class="text-xs text-indigo-400">${p.subdomain}.zulora.in</p>
-                </div>
-            </div>
-        `).join('');
-
-        list.innerHTML = html; // Shows all in dashboard for now (can slice for recent)
-        allList.innerHTML = html;
-        
-        document.getElementById('dash-sites-count').innerText = projects.length;
+/* --- Mobile Specific ( < 768px ) --- */
+@media (max-width: 768px) {
+    /* Hide decorative blobs on mobile to save battery */
+    .animate-blob {
+        opacity: 0.15; /* Dim them instead of hiding completely */
+        animation-duration: 20s; /* Slower animation */
     }
-};
+    
+    /* Typography Adjustments */
+    h1 { font-size: 2.5rem !important; }
+    h2 { font-size: 2rem !important; }
+    
+    /* Sidebar collapse logic logic */
+    aside {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    aside.open {
+        transform: translateX(0);
+        box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    }
 
-// Launch
-window.onload = App.init;
+    /* Mobile Nav Bar */
+    .mobile-nav-item {
+        position: relative;
+    }
+    .mobile-nav-item.active {
+        color: var(--brand-400);
+    }
+    .mobile-nav-item.active::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        background: var(--brand-400);
+        border-radius: 50%;
+        box-shadow: 0 0 5px var(--brand-400);
+    }
+}
+
+/* --- Tablet Specific ( 768px - 1024px ) --- */
+@media (min-width: 768px) and (max-width: 1024px) {
+    #view-create {
+        padding-bottom: 100px;
+    }
+    .grid-cols-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* --- Desktop Specific ( > 1024px ) --- */
+@media (min-width: 1024px) {
+    .hover-lift:hover {
+        transform: translateY(-5px);
+    }
+    
+    /* Custom Scrollbar only for desktop mouse users */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--border-light) transparent;
+    }
+}
+
+/* --- Large Screens ( > 1440px ) --- */
+@media (min-width: 1440px) {
+    .max-w-7xl {
+        max-width: 90rem; /* 1440px */
+    }
+    
+    /* Enhance font sizes for big monitors */
+    body {
+        font-size: 1.05rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   13. PRINT STYLES (Just in case)
+   -------------------------------------------------------------------------- */
+@media print {
+    body { background: white; color: black; }
+    .no-print { display: none; }
+    /* Hide navs, sidebars, buttons */
+    nav, aside, button, .hidden { display: none !important; }
+}
+
+/* End of Stylesheet */
