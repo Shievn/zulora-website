@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ZULORA OS - TITANIUM DESIGN SYSTEM (v12.0)
+   ZULORA OS - TITANIUM DESIGN SYSTEM (v13.0)
    "The Neural Interface" Theme
    Status: Production Ready | Enterprise Grade
    Author: Zulora Engineering Team
@@ -28,19 +28,25 @@
     --neon-green:  #0aff68;
     --neon-pink:   #ff0055;
     --neon-gold:   #ffd700;
+    --neon-orange: #f97316;
 
     /* --- SURFACE COLORS (Deep Space Mode) --- */
     --bg-void:    #020617; /* Absolute Black/Blue */
     --bg-surface: #0f172a; /* Slate 900 */
     --bg-card:    #1e293b; /* Slate 800 */
     --bg-overlay: rgba(2, 6, 23, 0.85);
+    
+    /* --- BORDER COLORS --- */
+    --border-light: rgba(255, 255, 255, 0.08);
+    --border-medium: rgba(255, 255, 255, 0.15);
+    --border-highlight: rgba(99, 102, 241, 0.5);
 
     /* --- GLASSMORPHISM ENGINE --- */
     --glass-heavy: rgba(15, 23, 42, 0.9);
     --glass-medium: rgba(30, 41, 59, 0.7);
     --glass-light: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.08);
     --glass-blur: 24px;
+    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
 
     /* --- TYPOGRAPHY COLORS --- */
     --text-primary: #f8fafc;
@@ -68,6 +74,7 @@
     --glow-neon: 0 0 20px rgba(0, 243, 255, 0.3);
     --glow-text: 0 0 15px rgba(255, 255, 255, 0.2);
     --glow-gold: 0 0 25px rgba(255, 215, 0, 0.3);
+    --glow-green: 0 0 20px rgba(16, 185, 129, 0.4);
 
     /* --- ANIMATION PHYSICS --- */
     --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -77,13 +84,14 @@
     
     /* --- LAYOUT Z-INDEX --- */
     --z-base: 0;
+    --z-background-fx: -1;
     --z-nav: 50;
     --z-sidebar-overlay: 9000;
     --z-sidebar: 9001;
     --z-modal-backdrop: 9500;
     --z-modal: 9600;
     --z-toast: 10000;
-    --z-loader: 11000;
+    --z-bootloader: 11000;
 }
 
 /* --------------------------------------------------------------------------
@@ -113,6 +121,8 @@ body {
     overflow-x: hidden; /* Prevent horizontal scroll */
     height: 100%;
     position: relative;
+    /* Subtle noise texture for "film grain" effect */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
 /* --- Selection Styling --- */
@@ -125,7 +135,7 @@ body {
 /* --- Typography Defaults --- */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700;
+    font-weight: 800; /* Extra bold for headlines */
     letter-spacing: -0.03em;
     color: var(--text-primary);
 }
@@ -134,10 +144,19 @@ a {
     color: inherit;
     text-decoration: none;
     transition: all 0.2s var(--ease-smooth);
+    cursor: pointer;
 }
 
-button, input, textarea, select {
+button {
     font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+input, textarea, select {
+    font-family: 'JetBrains Mono', monospace; /* Code feel for inputs */
     outline: none;
 }
 
@@ -156,8 +175,8 @@ button, input, textarea, select {
 
 /* --- Custom Scrollbar (Desktop) --- */
 .custom-scrollbar::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
@@ -165,12 +184,12 @@ button, input, textarea, select {
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background: var(--bg-card);
     border-radius: 99px;
-    border: 1px solid transparent;
+    border: 2px solid var(--bg-void); /* Creates padding effect */
     background-clip: content-box;
     transition: background 0.3s;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: var(--brand-700);
+    background-color: var(--brand-600);
 }
 
 /* --- Glassmorphism Panels --- */
@@ -178,7 +197,7 @@ button, input, textarea, select {
     background: var(--glass-light);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
-    border: 1px solid var(--glass-border);
+    border: var(--glass-border);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
@@ -195,7 +214,12 @@ button, input, textarea, select {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+}
+
+/* --- Focus Ring Utility --- */
+.focus-ring:focus-visible {
+    box-shadow: 0 0 0 2px var(--bg-void), 0 0 0 4px var(--brand-500);
 }
 
 /* --------------------------------------------------------------------------
@@ -204,7 +228,7 @@ button, input, textarea, select {
 
 /* A. Fade In Up (Standard Entry) */
 @keyframes fadeInUp {
-    0% { opacity: 0; transform: translate3d(0, 40px, 0); }
+    0% { opacity: 0; transform: translate3d(0, 30px, 0); }
     100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 .animate-fade-in-up {
@@ -246,7 +270,7 @@ button, input, textarea, select {
     to { transform: rotate(360deg); }
 }
 .animate-spin-slow {
-    animation: spinSlow 4s linear infinite;
+    animation: spinSlow 3s linear infinite;
 }
 
 /* F. Shimmer Loading Effect */
@@ -257,7 +281,7 @@ button, input, textarea, select {
 .shimmer-effect {
     background: linear-gradient(90deg, var(--bg-card) 25%, var(--brand-900) 50%, var(--bg-card) 75%);
     background-size: 200% 100%;
-    animation: shimmer 1.5s infinite linear;
+    animation: shimmer 2s infinite linear;
 }
 
 /* G. Toast Slide In */
@@ -270,126 +294,160 @@ button, input, textarea, select {
     animation: toastSlideIn 0.5s var(--ease-elastic) forwards;
 }
 
+/* H. Pulse Glow (For Live Badges) */
+@keyframes pulseGlow {
+    0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--neon-green); }
+    50% { opacity: 0.5; box-shadow: 0 0 0 var(--neon-green); }
+}
+.animate-pulse-glow {
+    animation: pulseGlow 2s infinite;
+}
+
 /* --------------------------------------------------------------------------
-   5. COMPONENT STYLING: NAVIGATION & SIDEBAR
+   5. COMPONENT STYLING: NAVIGATION BAR
    -------------------------------------------------------------------------- */
 
 /* Global Navbar */
 #navbar {
     transition: all 0.4s var(--ease-smooth);
     will-change: background-color, backdrop-filter;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Sidebar Drawer (The "Three Dots" Menu) */
-#app-sidebar {
-    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.7);
-    border-left: 1px solid var(--border-light);
-    will-change: transform;
+#navbar.scrolled {
+    background: rgba(2, 6, 23, 0.95);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    height: 64px; /* Shrink on scroll */
 }
 
-#sidebar-overlay {
-    backdrop-filter: blur(4px);
-    transition: opacity 0.3s ease;
+/* Brand Logo Hover */
+#navbar .group:hover .w-10 {
+    box-shadow: 0 0 20px var(--glow-brand);
 }
 
-/* Navigation Items (Sidebar) */
-.nav-item {
+/* Nav Buttons (Desktop) */
+#navbar button.hover\:text-white {
     position: relative;
-    overflow: hidden;
-    border: 1px solid transparent;
-    transition: all 0.2s var(--ease-smooth);
 }
 
-/* Active State with Glow */
-.nav-item.active {
-    background: linear-gradient(90deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0.05) 100%);
-    border-left: 3px solid var(--brand-500);
-    color: white !important;
-    text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
-    padding-left: calc(1rem - 3px);
-}
-
-.nav-item.active i {
-    color: var(--brand-400);
-    filter: drop-shadow(0 0 5px var(--brand-500));
-}
-
-/* Hover Sweep Effect */
-.nav-item::after {
+#navbar button.hover\:text-white::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-    transform: skewX(-20deg);
-    transition: 0.5s;
-    pointer-events: none;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--brand-500);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
 }
 
-.nav-item:hover::after {
-    left: 150%;
-    transition: 0.6s ease-in-out;
+#navbar button.hover\:text-white:hover::after {
+    width: 100%;
+    box-shadow: 0 0 8px var(--brand-500);
 }
 
-/* --------------------------------------------------------------------------
-   6. COMPONENT STYLES: AUTHENTICATION MODAL (GOOGLE)
-   -------------------------------------------------------------------------- */
-
-/* Modal Container */
-#auth-modal {
-    perspective: 1000px;
+/* Build Free Button (Navbar) */
+#nav-logged-out button.bg-white {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
 }
 
-#auth-modal-content {
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--border-light);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-    transition: all 0.3s var(--ease-elastic);
-}
-
-/* Google Button Styling */
-#google-signin-btn {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-}
-
-#google-signin-btn:hover {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+#nav-logged-out button.bg-white:hover {
     transform: translateY(-1px);
-    border-color: rgba(255, 255, 255, 0.3);
-}
-
-#google-signin-btn:active {
-    transform: scale(0.98);
+    box-shadow: 0 0 15px rgba(255,255,255,0.4);
 }
 
 /* --------------------------------------------------------------------------
-   7. COMPONENT STYLES: PREMIUM & PAYMENT
+   6. COMPONENT STYLING: SIDEBAR DRAWER (THE "THREE DOTS" MENU)
    -------------------------------------------------------------------------- */
 
-/* Premium Card (Gold Theme) */
-#view-premium .bg-gradient-to-b {
-    background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
-    border: 1px solid rgba(255, 215, 0, 0.2); /* Gold Border */
-    box-shadow: 0 0 40px rgba(255, 215, 0, 0.05);
+/* Sidebar Container */
+#sidebar-drawer {
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.8);
+    border-left: 1px solid var(--border-light);
+    will-change: transform;
+    display: flex;
+    flex-direction: column;
 }
 
-/* UPI Copy Box */
-.bg-slate-950.border.border-slate-800 {
-    transition: border-color 0.3s;
+/* Overlay Backdrop */
+#sidebar-overlay {
+    backdrop-filter: blur(8px); /* Heavy blur for focus */
+    transition: opacity 0.4s var(--ease-smooth);
 }
-.bg-slate-950.border.border-slate-800:hover {
+
+/* Drawer Header */
+#sidebar-drawer .border-b {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(10px);
+}
+
+/* User Profile Card inside Drawer */
+#sidebar-drawer .bg-gradient-to-br {
+    border: 1px solid var(--border-medium);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#sidebar-drawer .bg-gradient-to-br:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     border-color: var(--brand-500);
 }
 
+/* Menu Items (The Links) */
+#sidebar-drawer .nav-item-drawer {
+    /* Base style handled by Tailwind classes in HTML, these are enhancements */
+}
+
+/* Hover Sweep Effect for Drawer Items */
+#sidebar-drawer button.group {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
+}
+
+#sidebar-drawer button.group:hover {
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+    border-color: rgba(99, 102, 241, 0.2);
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+#sidebar-drawer button.group i {
+    transition: transform 0.3s var(--ease-elastic);
+}
+
+#sidebar-drawer button.group:hover i {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 5px currentColor);
+}
+
 /* --------------------------------------------------------------------------
-   8. COMPONENT STYLES: INPUTS & HERO
+   7. COMPONENT STYLES: HERO SECTION (HOME)
    -------------------------------------------------------------------------- */
 
-/* The Magic Hero Input */
+/* The Background Glow Blob */
+#view-home .absolute.bg-brand-600\/10 {
+    animation: pulseFast 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulseFast {
+    0% { opacity: 0.1; transform: translate(-50%, 0) scale(1); }
+    100% { opacity: 0.2; transform: translate(-50%, 0) scale(1.1); }
+}
+
+/* Hero Text Gradient */
+h1 .text-transparent {
+    background-size: 200% auto;
+    animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
+}
+
+/* Hero Input Box (The "Prompt") */
 #hero-prompt {
     font-size: 1.125rem;
     font-weight: 500;
@@ -402,115 +460,246 @@ button, input, textarea, select {
     transition: opacity 0.3s;
 }
 #hero-prompt:focus::placeholder {
-    opacity: 0.5;
+    opacity: 0.3;
+}
+#hero-prompt:focus {
+    background-color: rgba(30, 41, 59, 0.8);
+    box-shadow: inset 0 0 0 2px var(--brand-500);
 }
 
-/* AI Prompt Input (Dark Mode) */
+/* Hero Generate Button */
+#view-home button.bg-brand-600 {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px var(--glow-brand);
+}
+
+#view-home button.bg-brand-600:hover {
+    box-shadow: 0 0 40px var(--glow-brand);
+    transform: translateY(-2px);
+}
+
+#view-home button.bg-brand-600::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+    transform: scale(0);
+    transition: transform 0.5s ease-out;
+}
+
+#view-home button.bg-brand-600:active::after {
+    transform: scale(1);
+    transition: 0s;
+}
+
+/* --------------------------------------------------------------------------
+   8. COMPONENT STYLES: DASHBOARD STATS
+   -------------------------------------------------------------------------- */
+
+/* Stat Card Container */
+.grid-cols-1 .bg-slate-900\/50 {
+    transition: all 0.4s var(--ease-spring);
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(10px);
+}
+
+.grid-cols-1 .bg-slate-900\/50:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: var(--border-highlight);
+    background: rgba(15, 23, 42, 0.7);
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+}
+
+/* Icon Glow inside Stat Card */
+.grid-cols-1 .bg-slate-900\/50:hover i {
+    text-shadow: 0 0 15px currentColor;
+}
+
+/* Number Counter Animation (Simulated via CSS for loaded state) */
+#dash-credits, #dash-sites, #dash-referrals {
+    transition: color 0.3s;
+}
+
+/* --------------------------------------------------------------------------
+   9. COMPONENT STYLES: AI BUILDER (CREATE)
+   -------------------------------------------------------------------------- */
+
+/* Engine Selection Cards */
+input[type="radio"]:checked + div {
+    background: rgba(99, 102, 241, 0.05);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.1), inset 0 0 0 1px var(--brand-500);
+    transform: scale(1.02);
+}
+
+input[type="radio"] + div {
+    transition: all 0.3s var(--ease-smooth);
+}
+
+input[type="radio"] + div:hover {
+    border-color: var(--text-tertiary);
+    background: rgba(255,255,255,0.02);
+}
+
+/* Prompt Textarea */
 #ai-prompt-input {
-    background-image: linear-gradient(#1e293b, #1e293b), linear-gradient(to right, #334155, #334155);
+    background-image: linear-gradient(#0f172a, #0f172a), linear-gradient(to right, #334155, #0f172a);
     background-origin: border-box;
     background-clip: padding-box, border-box;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+    transition: all 0.3s var(--ease-smooth);
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
     line-height: 1.6;
 }
 
 #ai-prompt-input:focus {
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 0 0 2px rgba(99, 102, 241, 0.3);
-    border-color: var(--brand-500);
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 0 2px var(--brand-500);
+    border-color: transparent;
 }
 
-/* --------------------------------------------------------------------------
-   9. COMPONENT STYLES: BUTTONS & INTERACTIONS
-   -------------------------------------------------------------------------- */
-
-/* Base Button Physics */
-button {
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.1s var(--ease-smooth), box-shadow 0.2s, background-color 0.2s;
-    user-select: none;
-}
-
-button:active {
-    transform: scale(0.97);
-}
-
-/* The "Generate" Button (Pulsing Core) */
+/* Initialize Build Button */
 #btn-generate {
-    background: var(--brand-600);
-    isolation: isolate;
-}
-
-#btn-generate::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at center, var(--brand-400) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: -1;
-}
-
-#btn-generate:hover::before {
-    opacity: 0.3;
+    background: linear-gradient(135deg, var(--brand-600), var(--brand-700));
 }
 
 #btn-generate:hover {
-    box-shadow: 0 0 30px var(--glow-brand);
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-600));
+    box-shadow: 0 0 25px var(--glow-brand);
 }
 
 /* --------------------------------------------------------------------------
-   10. EDITOR INTERFACE (THE WORKSTATION)
+   10. COMPONENT STYLES: PREMIUM & PAYMENT (GOLD THEME)
    -------------------------------------------------------------------------- */
+
+/* The Premium Card */
+#view-premium .bg-gradient-to-b {
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
+    border: 1px solid rgba(255, 215, 0, 0.15); /* Subtle Gold Border */
+    box-shadow: 0 0 60px rgba(255, 215, 0, 0.05);
+}
+
+/* Titanium Badge */
+#view-premium .text-brand-400 {
+    color: var(--neon-gold);
+    border-color: rgba(255, 215, 0, 0.3);
+    background: rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+/* Payment Box */
+#view-premium .bg-slate-900 {
+    border: 1px solid var(--border-light);
+    transition: transform 0.3s;
+}
+
+#view-premium .bg-slate-900:hover {
+    border-color: var(--neon-gold);
+    transform: translateY(-2px);
+}
+
+/* UPI Copy Button */
+#view-premium button.text-white.bg-slate-800:hover {
+    background: var(--neon-gold);
+    color: black;
+    box-shadow: 0 0 10px var(--neon-gold);
+}
+
+/* --------------------------------------------------------------------------
+   11. COMPONENT STYLES: AUTHENTICATION MODAL (GOOGLE)
+   -------------------------------------------------------------------------- */
+
+/* Modal Container */
+#auth-modal {
+    perspective: 1000px;
+    z-index: 9999;
+}
+
+#auth-modal .bg-slate-900 {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--border-medium);
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.8);
+    transition: all 0.3s var(--ease-elastic);
+}
+
+/* Google Button Styling */
+#google-signin-btn {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+#google-signin-btn:hover {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    border-color: white;
+}
+
+#google-signin-btn:active {
+    transform: scale(0.98);
+}
+
+/* --------------------------------------------------------------------------
+   12. EDITOR INTERFACE (THE WORKSTATION)
+   -------------------------------------------------------------------------- */
+
+/* Header */
+#editor-modal header {
+    background: rgba(2, 6, 23, 0.9);
+    backdrop-filter: blur(10px);
+}
 
 /* The Iframe Container */
 #editor-frame-container {
     transition: width 0.6s var(--ease-elastic), height 0.6s var(--ease-elastic), border-radius 0.6s, border-width 0.6s;
     transform-origin: center top;
-    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.9);
     background: #ffffff; /* Frame bg is always white for website contrast */
 }
 
-/* Mobile View Simulation (iPhone Look) */
+/* Mobile View Simulation (iPhone 14 Pro Look) */
 #editor-frame-container.mobile-view {
-    width: 375px !important;
-    height: 720px !important;
-    max-height: 85vh;
-    border-radius: 40px;
-    border: 12px solid #1e293b;
+    width: 393px !important; /* iPhone Width */
+    height: 852px !important; /* iPhone Height */
+    max-height: 90vh;
+    border-radius: 50px;
+    border: 12px solid #2d2d2d;
     position: relative;
+    box-shadow: 0 0 0 2px #444, 0 20px 50px rgba(0,0,0,0.5);
 }
 
-/* The Notch */
+/* The Dynamic Island / Notch */
 #editor-frame-container.mobile-view::after {
     content: '';
     position: absolute;
-    top: 0;
+    top: 15px;
     left: 50%;
     transform: translateX(-50%);
     width: 120px;
-    height: 24px;
-    background: #1e293b;
-    border-bottom-left-radius: 14px;
-    border-bottom-right-radius: 14px;
+    height: 35px;
+    background: #000;
+    border-radius: 20px;
     z-index: 50;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------
-   11. TOAST NOTIFICATIONS
+   13. PROJECT CARDS (DASHBOARD)
    -------------------------------------------------------------------------- */
-#toast-dock {
-    perspective: 1000px;
+.project-card-enter {
+    animation: fadeInUp 0.5s ease-out forwards;
 }
 
-.toast-enter {
-    animation: toastSlideIn 0.5s var(--ease-elastic) forwards;
+/* Iframe Thumbnail Interaction */
+.group:hover iframe {
+    transform: scale(1.05);
+    filter: grayscale(0%);
+    opacity: 1;
 }
 
 /* --------------------------------------------------------------------------
-   12. LOADING INDICATORS
+   14. LOADING INDICATORS (BOOTLOADER)
    -------------------------------------------------------------------------- */
 
 /* Master Boot Bar */
@@ -547,41 +736,55 @@ button:active {
 }
 
 /* --------------------------------------------------------------------------
-   13. RESPONSIVE MEDIA QUERIES
+   15. RESPONSIVE MEDIA QUERIES
    -------------------------------------------------------------------------- */
 
 /* Mobile (Up to 768px) */
 @media (max-width: 768px) {
-    h1 { font-size: 2.75rem !important; }
+    /* Typography Adjustments */
+    h1 { font-size: 2.5rem !important; }
     h2 { font-size: 2rem !important; }
     
     /* Disable heavy blurs for battery life */
     .animate-pulse-fast { animation: none; opacity: 0.1; }
     
-    /* Mobile Sidebar Transition */
-    #app-sidebar {
+    /* Sidebar Full Width on Mobile */
+    #sidebar-drawer {
         width: 85%;
-        max-width: 300px;
+        max-width: 320px;
+    }
+
+    /* Grid Stacking */
+    .grid { grid-template-columns: 1fr; }
+    
+    /* Premium Card Padding */
+    #view-premium .bg-gradient-to-b {
+        padding: 1.5rem;
+    }
+}
+
+/* Tablet (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .max-w-7xl { padding-left: 2rem; padding-right: 2rem; }
+    
+    #view-create {
+        padding-bottom: 120px; /* Space for bottom nav if used */
     }
 }
 
 /* Desktop (1024px+) */
 @media (min-width: 1024px) {
-    /* Enhanced Hover States */
-    .group:hover .group-hover\:scale-110 {
-        transform: scale(1.1);
-    }
+    /* Hover Effects Enable */
+    .hover\:scale-105:hover { transform: scale(1.05); }
     
-    /* Custom Scrollbar only for mouse users */
-    * {
-        scrollbar-width: thin;
-    }
+    /* Scrollbar Aesthetics */
+    * { scrollbar-width: thin; }
 }
 
-/* Large Screens (1440px+) */
+/* 4K / Ultra-Wide */
 @media (min-width: 1440px) {
-    body { font-size: 1.05rem; }
-    .max-w-7xl { max-width: 90rem; }
+    body { font-size: 1.1rem; }
+    .max-w-7xl { max-width: 100rem; }
 }
 
 /* --------------------------------------------------------------------------
