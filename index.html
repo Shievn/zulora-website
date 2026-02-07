@@ -1,610 +1,614 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth antialiased">
+<html lang="en-IN" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     
-    <title>Zulora OS | The Neural Coding Environment</title>
-    <meta name="description" content="Generate enterprise-grade software with GPT-4o, Claude 3.5, and Gemini 1.5 Pro. The world's first AI Operating System.">
-    <meta name="theme-color" content="#030303">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Zulora.in | Build Professional Websites with AI in Seconds</title>
+    <meta name="description" content="The #1 AI Website Builder in India. Turn text prompts into fully deployed websites instantly. Get free subdomains, premium hosting, and 24/7 support.">
+    <meta name="keywords" content="AI website builder, no-code platform, zulora, free website hosting, ai generator, prompt to website, instant deployment, business website maker, online store builder">
+    <meta name="author" content="Zulora AI Team">
+    <meta name="theme-color" content="#0f0c29">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://zulora.in">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        void: '#030303',         // Absolute Zero
-                        surface: '#0a0a0a',      // Primary Surface
-                        panel: '#121212',        // Secondary Panel
-                        border: '#1f1f1f',       // Subtle Borders
-                        brand: {
-                            400: '#3b82f6', 500: '#2563eb', 600: '#1d4ed8', // Electric Blue
-                            glow: 'rgba(59, 130, 246, 0.6)'
-                        },
-                        // AI Identity Colors
-                        ai: {
-                            openai: '#10a37f', // GPT Green
-                            claude: '#d97757', // Anthropic Orange
-                            gemini: '#4285f4', // Google Blue
-                            llama:  '#8b5cf6'  // Meta Purple
-                        },
-                        // Status Indicators
-                        status: {
-                            live: '#10b981',   // Emerald
-                            busy: '#f59e0b',   // Amber
-                            error: '#ef4444'   // Rose
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
-                        display: ['Plus Jakarta Sans', 'sans-serif']
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'spin-slow': 'spin 3s linear infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'scan': 'scan 2s linear infinite',
-                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
-                    },
-                    keyframes: {
-                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
-                        scan: { '0%': { transform: 'translateY(-100%)' }, '100%': { transform: 'translateY(100%)' } },
-                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
-                    }
-                }
-            }
-        }
-    </script>
+    <meta property="og:title" content="Zulora - Build Your Dream Site with AI">
+    <meta property="og:description" content="Join 50,000+ users building businesses with Zulora. Sign up for 30 Free Credits.">
+    <meta property="og:image" content="https://zulora.in/assets/social-preview.jpg">
+    <meta property="og:url" content="https://zulora.in">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Zulora AI">
+    <meta property="og:locale" content="en_IN">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@zulora_official">
+    <meta name="twitter:title" content="Zulora AI - Text to Website in 30s">
+    <meta name="twitter:description" content="No coding required. Just prompt and publish.">
+    <meta name="twitter:image" content="https://zulora.in/assets/twitter-card.jpg">
+
+    <meta name="google-adsense-account" content="ca-pub-9266584827478576">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9266584827478576"
+     crossorigin="anonymous"></script>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="manifest" href="assets/site.webmanifest">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
 
-    <script>
-        window.ZULORA_CONFIG = {
-            // Enterprise Contact
-            admin: {
-                upi: "shivenpanwar@fam",
-                whatsapp: "916395211325",
-                email: "zulora.help@gmail.com",
-                instagram: "https://www.instagram.com/zulora_official?igsh=MTRvOGYwNGZoZ3h0aw=="
-            },
-            // Multi-Model Neural Registry
-            keys: {
-                openai: "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",
-                anthropic: "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",
-                groq: "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",
-                google: "AIzaSyDJyaaiETJuys97UIaejUcFSeOQ3tSIKvE" // Gemini 1.5 Pro Unlocked
-            },
-            // Firebase App Config
-            firebase: {
-                apiKey: "AIzaSyC4XXmvYQap_Y1tXF-mWG82rL5MsBXjcvQ",
-                authDomain: "zulorain.firebaseapp.com",
-                projectId: "zulorain",
-                storageBucket: "zulorain.firebasestorage.app",
-                messagingSenderId: "972907481049",
-                appId: "1:972907481049:web:b4d02b9808f9e2f3f8bbc8"
-            }
-        };
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Zulora AI Website Builder",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "299",
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1250"
+      }
+    }
     </script>
 </head>
-<body class="bg-void text-gray-300 antialiased overflow-hidden h-screen flex flex-col selection:bg-brand-500 selection:text-white">
 
-    <div id="bootloader" class="fixed inset-0 z-[9999] bg-void flex flex-col items-center justify-center transition-opacity duration-500" aria-live="polite">
-        <div class="relative w-32 h-32 mb-8">
-            <div class="absolute inset-0 border-2 border-white/5 rounded-full"></div>
-            <div class="absolute inset-2 border-2 border-brand-500/20 rounded-full animate-spin-slow"></div>
-            <div class="absolute inset-0 border-t-2 border-brand-500 rounded-full animate-spin"></div>
-            
-            <div class="absolute inset-0 flex items-center justify-center">
-                <div class="w-16 h-16 bg-white text-black rounded-2xl flex items-center justify-center font-bold text-3xl shadow-[0_0_40px_rgba(255,255,255,0.4)] relative z-10">Z</div>
+<body id="app-root">
+
+    <nav class="navbar glass-effect" id="main-navbar">
+        <div class="container nav-container">
+            <div class="logo-wrapper">
+                <a href="/" class="brand-link" aria-label="Zulora Home">
+                    <div class="logo-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="brand-text">
+                        <span class="name">Zulora</span>
+                        <span class="tld">.in</span>
+                    </div>
+                </a>
             </div>
-        </div>
-        
-        <div class="flex flex-col items-center gap-3">
-            <h2 class="text-3xl font-display font-bold text-white tracking-widest uppercase">Zulora OS <span class="text-[10px] align-top bg-gradient-to-r from-brand-500 to-purple-600 px-2 py-0.5 rounded text-white font-mono shadow-lg">TITANIUM</span></h2>
-            <div class="flex items-center gap-3 font-mono text-xs text-gray-500">
-                <div class="flex gap-1">
-                    <span class="w-1.5 h-1.5 bg-ai-openai rounded-full animate-pulse"></span>
-                    <span class="w-1.5 h-1.5 bg-ai-claude rounded-full animate-pulse delay-75"></span>
-                    <span class="w-1.5 h-1.5 bg-ai-gemini rounded-full animate-pulse delay-150"></span>
+
+            <ul class="nav-links desktop-only">
+                <li><a href="#features" class="nav-item">Features</a></li>
+                <li><a href="#showcase" class="nav-item">Showcase</a></li>
+                <li><a href="#pricing" class="nav-item">Pricing</a></li>
+                <li>
+                    <a href="#premium" onclick="openPaymentModal()" class="nav-item highlight-gold">
+                        <i class="fas fa-crown"></i> Premium
+                    </a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <div id="nav-user-status" class="user-status hidden">
+                    <div class="credit-pill" title="Current Balance">
+                        <i class="fas fa-coins text-gold"></i>
+                        <span id="nav-credits">0</span>
+                    </div>
+                    <div class="profile-dropdown-trigger" onclick="toggleProfileMenu()">
+                        <img id="nav-avatar" src="assets/default-avatar.png" alt="User" loading="lazy">
+                        <div class="dropdown-menu glass-panel hidden" id="profile-dropdown">
+                            <div class="menu-header">
+                                <strong id="menu-user-name">User</strong>
+                                <small id="menu-user-email">email@example.com</small>
+                            </div>
+                            <hr class="dropdown-divider">
+                            <a href="#" onclick="switchView('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            <a href="#" onclick="openPaymentModal()"><i class="fas fa-bolt"></i> Upgrade to Pro</a>
+                            <a href="#" onclick="switchDashTab('my-sites')"><i class="fas fa-layer-group"></i> My Projects</a>
+                            <a href="#" onclick="switchDashTab('referral')"><i class="fas fa-users"></i> Referrals</a>
+                            <hr class="dropdown-divider">
+                            <button id="logout-btn" class="logout-link"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+                        </div>
+                    </div>
                 </div>
-                <span id="boot-status">Initializing Neural Net...</span>
+                
+                <div id="nav-guest-status" class="guest-status">
+                    <button onclick="openAuthModal()" class="btn-primary glow-effect">
+                        <span class="btn-text">Sign In</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <button class="mobile-toggle" aria-label="Open Menu" onclick="toggleMobileMenu()">
+                    <span class="bar top"></span>
+                    <span class="bar mid"></span>
+                    <span class="bar bot"></span>
+                </button>
             </div>
         </div>
+    </nav>
 
-        <div class="mt-12 w-64 h-1 bg-white/5 rounded-full overflow-hidden">
-            <div id="boot-bar" class="h-full bg-gradient-to-r from-brand-500 via-ai-gemini to-brand-500 w-0 transition-all duration-700 ease-out"></div>
+    <div id="mobile-menu-overlay" class="mobile-menu glass-panel hidden">
+        <div class="mobile-menu-header">
+            <span class="mobile-brand">Zulora AI</span>
+            <button class="close-menu" onclick="toggleMobileMenu()">&times;</button>
+        </div>
+        <div class="mobile-links">
+            <a href="#home" onclick="switchView('landing'); toggleMobileMenu()"><i class="fas fa-home"></i> Home</a>
+            <a href="#features" onclick="toggleMobileMenu()"><i class="fas fa-star"></i> Features</a>
+            <a href="#showcase" onclick="toggleMobileMenu()"><i class="fas fa-images"></i> Showcase</a>
+            <a href="#pricing" onclick="toggleMobileMenu()"><i class="fas fa-tags"></i> Pricing</a>
+            <hr class="mobile-divider">
+            <a href="#" onclick="openPaymentModal(); toggleMobileMenu()" class="text-gold"><i class="fas fa-crown"></i> <strong>Upgrade Premium</strong></a>
+            <a href="#" onclick="switchDashTab('referral'); toggleMobileMenu()"><i class="fas fa-gift"></i> Refer & Earn</a>
+            <hr class="mobile-divider">
+            <a href="https://wa.me/916395211325" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Support</a>
+            <a href="mailto:zulora.help@gmail.com"><i class="fas fa-envelope"></i> Email Support</a>
         </div>
     </div>
 
-    <div id="toast-dock" class="fixed top-6 right-6 z-[10000] flex flex-col gap-3 pointer-events-none w-full max-w-sm px-4 md:px-0"></div>
-
-    <header id="navbar" class="h-20 border-b border-border bg-void/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-8 z-50 shrink-0 absolute top-0 w-full transition-transform duration-300">
+    <main id="view-landing" class="view-section active">
         
-        <div class="flex items-center gap-6">
-            <button id="mobile-menu-trigger" class="w-10 h-10 flex items-center justify-center rounded-xl bg-surface border border-border hover:bg-white/5 text-gray-400 hover:text-white transition-colors lg:hidden active:scale-95">
-                <i class="ri-menu-4-line text-xl"></i>
-            </button>
-
-            <div class="flex items-center gap-3 cursor-pointer group" id="nav-logo">
-                <div class="w-10 h-10 bg-gradient-to-br from-white to-gray-400 text-black rounded-xl flex items-center justify-center font-bold text-xl shadow-lg group-hover:scale-105 transition-transform">Z</div>
-                <div class="hidden md:flex flex-col">
-                    <span class="text-base font-bold text-white leading-none">Zulora<span class="text-brand-400">.ai</span></span>
-                    <span class="text-[10px] text-gray-500 font-mono tracking-wider uppercase mt-0.5">Enterprise v16.0</span>
-                </div>
-            </div>
-        </div>
-
-        <div id="nav-context" class="hidden lg:flex items-center gap-1 bg-surface border border-border p-1.5 rounded-full absolute left-1/2 -translate-x-1/2 shadow-2xl">
-            <button id="nav-home" class="nav-tab px-6 py-2 text-xs font-medium text-white bg-white/10 rounded-full transition-all shadow-inner active">
-                <i class="ri-home-5-line mr-2"></i> Dashboard
-            </button>
-            <button id="nav-create" class="nav-tab px-6 py-2 text-xs font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-all flex items-center gap-2">
-                <span class="w-1.5 h-1.5 bg-brand-500 rounded-full animate-pulse"></span> Generator
-            </button>
-            <button id="nav-projects" class="nav-tab px-6 py-2 text-xs font-medium text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-all">
-                <i class="ri-server-line mr-2"></i> Deployments
-            </button>
-        </div>
-
-        <div class="flex items-center gap-4">
-            <div id="auth-guest" class="flex items-center gap-3">
-                <button id="btn-login-trigger" class="text-sm font-bold text-gray-400 hover:text-white transition-colors">Sign In</button>
-                <button id="btn-build-free" class="bg-white text-black px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.15)] flex items-center gap-2">
-                    <i class="ri-magic-line"></i> Build Free
-                </button>
+        <section class="hero-section" id="home">
+            <div class="hero-bg-animated">
+                <div class="planet"></div>
+                <div class="stars"></div>
+                <div class="nebula"></div>
             </div>
 
-            <div id="auth-user" class="hidden flex items-center gap-4">
-                <div class="hidden md:flex items-center gap-3 bg-surface border border-border px-4 py-2 rounded-xl cursor-help hover:border-brand-500/30 transition-colors shadow-lg" title="AI Credits Remaining">
-                    <div class="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-400">
-                        <i class="ri-flashlight-fill text-sm"></i>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-xs font-mono font-bold text-white leading-none" id="header-credits">0</span>
-                        <span class="text-[9px] text-gray-600 uppercase font-bold tracking-wider">Credits</span>
-                    </div>
-                </div>
-
-                <button id="user-menu-trigger" class="relative group outline-none">
-                    <div id="header-avatar" class="w-10 h-10 rounded-xl bg-white/10 border border-white/5 flex items-center justify-center text-white font-bold text-sm overflow-hidden group-hover:border-brand-500 transition-colors shadow-lg">
-                        U
-                    </div>
-                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-status-live border-2 border-void rounded-full"></div>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <div class="flex-1 flex overflow-hidden pt-20 relative bg-void">
-
-        <aside id="sidebar-left" class="w-72 bg-surface border-r border-border flex flex-col hidden lg:flex z-30 shadow-2xl relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
-
-            <div class="flex-1 overflow-y-auto p-6 space-y-2 relative z-10 custom-scrollbar">
-                <div class="px-3 mb-3 mt-2 text-[10px] font-bold text-gray-600 uppercase tracking-widest font-mono">Workspace</div>
-                
-                <button id="side-home" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
-                    <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-white transition-colors shadow-inner"><i class="ri-dashboard-3-line"></i></div>
-                    <span class="font-medium">Overview</span>
-                </button>
-                <button id="side-create" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
-                    <div class="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-500 group-hover:text-brand-400 transition-colors shadow-inner"><i class="ri-openai-fill"></i></div>
-                    <span class="font-medium">Neural Builder</span>
-                </button>
-                <button id="side-projects" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
-                    <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-white transition-colors shadow-inner"><i class="ri-folder-5-line"></i></div>
-                    <span class="font-medium">Repositories</span>
-                </button>
-
-                <div class="px-3 mb-3 mt-8 text-[10px] font-bold text-gray-600 uppercase tracking-widest font-mono">Scale</div>
-                
-                <button id="side-hosting" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
-                    <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-500 group-hover:text-purple-400 transition-colors shadow-inner"><i class="ri-server-line"></i></div>
-                    <span class="font-medium">Hosting & DNS</span>
-                </button>
-                <button id="side-premium" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-500 group-hover:text-yellow-400 transition-colors shadow-inner relative z-10"><i class="ri-vip-crown-2-line"></i></div>
-                    <span class="font-medium relative z-10">Titanium Plan</span>
-                </button>
-                <button id="side-referral" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
-                    <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center text-green-500 group-hover:text-green-400 transition-colors shadow-inner"><i class="ri-money-dollar-circle-line"></i></div>
-                    <span class="font-medium">Monetization</span>
-                </button>
-            </div>
-
-            <div class="p-6 border-t border-border bg-surface relative z-10">
-                <div class="bg-panel rounded-xl p-4 border border-border shadow-inner">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-[10px] text-gray-500 font-mono font-bold tracking-wider">SYSTEM STATUS</span>
-                        <span class="flex h-2 w-2 relative">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-live opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-status-live"></span>
-                        </span>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex justify-between text-[10px] text-gray-400 font-mono"><span>OpenAI GPT-4o</span><span class="text-status-live">Online</span></div>
-                        <div class="flex justify-between text-[10px] text-gray-400 font-mono"><span>Claude 3.5</span><span class="text-status-live">Online</span></div>
-                        <div class="flex justify-between text-[10px] text-gray-400 font-mono"><span>Gemini 1.5</span><span class="text-status-live">Online</span></div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <aside id="sidebar-right" class="fixed top-0 right-0 w-80 h-full bg-surface border-l border-border transform translate-x-full transition-transform duration-300 z-[6000] shadow-2xl flex flex-col pt-20">
-             <div class="p-6 border-b border-border bg-void/50">
-                <div class="flex items-center gap-4">
-                    <div id="drawer-avatar" class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white font-bold text-xl border border-white/10 shadow-lg">U</div>
-                    <div class="overflow-hidden">
-                        <h4 id="drawer-name" class="text-base font-bold text-white truncate">Guest</h4>
-                        <p id="drawer-email" class="text-xs text-gray-500 truncate font-mono">Sign in to sync</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="flex-1 overflow-y-auto p-4 space-y-1">
-                <div class="lg:hidden">
-                    <button id="drawer-home" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all"><i class="ri-home-5-line"></i> Dashboard</button>
-                    <button id="drawer-create" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all"><i class="ri-magic-line"></i> Builder</button>
-                    <div class="h-px bg-border my-2"></div>
-                </div>
-
-                <button id="drawer-whatsapp" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                    <i class="ri-whatsapp-line text-green-500"></i> WhatsApp Support
-                </button>
-                <button id="drawer-instagram" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                    <i class="ri-instagram-line text-pink-500"></i> Instagram
-                </button>
-                <button id="drawer-email-btn" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
-                    <i class="ri-mail-send-line text-blue-500"></i> Email Support
-                </button>
-            </div>
-
-            <div class="p-6 border-t border-border">
-                <button id="btn-logout" class="w-full flex items-center justify-center gap-2 text-red-400 hover:text-white text-xs font-bold py-3 border border-red-500/20 rounded-xl hover:bg-red-500 transition-all shadow-lg hover:shadow-red-500/20">
-                    <i class="ri-logout-box-line"></i> Sign Out
-                </button>
-            </div>
-        </aside>
-        
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[5999] hidden opacity-0 transition-opacity duration-300"></div>
-
-        <main id="content-stage" class="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth relative bg-void">
-            
-            <section id="view-home" class="view-section min-h-full p-6 md:p-10 max-w-7xl mx-auto animate-fade-in-up">
-                
-                <header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <div>
-                        <h1 class="text-4xl md:text-6xl font-black text-white mb-2 tracking-tight">
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-purple-400 to-brand-400 bg-300% animate-gradient">Neural Dashboard</span>
+            <div class="container hero-content">
+                <div class="hero-grid">
+                    <div class="hero-text" data-aos="fade-right">
+                        <div class="announcement-pill">
+                            <span class="pill-badge">V5.0 LIVE</span>
+                            <span class="pill-text">Create Infinite Websites with AI Architect</span>
+                        </div>
+                        <h1 class="hero-title">
+                            Web Design is <span class="gradient-text-anim">Dead.</span><br>
+                            Zulora is <span class="text-white">Alive.</span>
                         </h1>
-                        <p class="text-gray-500 text-sm md:text-base">Manage your digital empire. Enterprise-grade hosting active.</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <span class="px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-[10px] font-bold text-green-500 flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> SERVERS OPTIMIZED
-                        </span>
-                    </div>
-                </header>
+                        <p class="hero-desc">
+                            Describe your business in plain English. Our neural network will generate code, design interfaces, and deploy to a <strong>.zulora.in</strong> subdomain in seconds. No coding required.
+                        </p>
+                        
+                        <div class="hero-cta-group">
+                            <button onclick="openAuthModal()" class="btn-mega btn-gradient">
+                                <i class="fas fa-magic"></i> Generate Website Free
+                            </button>
+                            <button onclick="scrollToDemo()" class="btn-mega btn-glass">
+                                <i class="fas fa-play"></i> Watch Demo
+                            </button>
+                        </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <div class="bg-surface border border-border p-6 rounded-2xl hover:border-brand-500/30 transition-all group relative overflow-hidden">
-                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-brand-500/10 rounded-full blur-2xl group-hover:bg-brand-500/20 transition-colors"></div>
-                        <div class="relative z-10">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Compute Credits</span>
-                                <i class="ri-coin-line text-yellow-500 text-xl"></i>
+                        <div class="hero-trust">
+                            <div class="avatars">
+                                <img src="assets/u1.jpg" alt="" loading="lazy">
+                                <img src="assets/u2.jpg" alt="" loading="lazy">
+                                <img src="assets/u3.jpg" alt="" loading="lazy">
                             </div>
-                            <div class="text-4xl font-bold text-white font-mono tracking-tighter" id="stat-credits">0</div>
-                            <div class="text-[10px] text-green-500 mt-2 flex items-center gap-1 font-bold"><i class="ri-arrow-up-line"></i> READY TO BUILD</div>
+                            <div class="trust-text">
+                                <div class="stars">★★★★★</div>
+                                <span>Used by <strong>50,000+</strong> Creators in India</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="bg-surface border border-border p-6 rounded-2xl hover:border-purple-500/30 transition-all group relative overflow-hidden">
-                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-colors"></div>
-                        <div class="relative z-10">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Active Nodes</span>
-                                <i class="ri-server-line text-purple-500 text-xl"></i>
+
+                    <div class="hero-visual" data-aos="fade-left">
+                        <div class="browser-mockup tilt-effect">
+                            <div class="browser-header">
+                                <div class="dots"><span></span><span></span><span></span></div>
+                                <div class="url-bar">https://pizza-shop.zulora.in</div>
                             </div>
-                            <div class="text-4xl font-bold text-white font-mono tracking-tighter" id="stat-projects">0</div>
-                            <div class="text-[10px] text-brand-400 mt-2 font-bold">DEPLOYMENTS</div>
-                        </div>
-                    </div>
-                    <div class="bg-surface border border-border p-6 rounded-2xl hover:border-green-500/30 transition-all group relative overflow-hidden">
-                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-green-500/10 rounded-full blur-2xl group-hover:bg-green-500/20 transition-colors"></div>
-                        <div class="relative z-10">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Network</span>
-                                <i class="ri-group-line text-green-500 text-xl"></i>
+                            <div class="browser-body">
+                                <div class="ai-typing-effect">
+                                    <span class="prompt-text">> Create a pizza shop website...</span>
+                                    <div class="code-stream">
+                                        <span class="code-line color-1">&lt;div class="hero"&gt;</span>
+                                        <span class="code-line color-2">  &lt;h1&gt;Best Pizza&lt;/h1&gt;</span>
+                                        <span class="code-line color-3">  &lt;button&gt;Order&lt;/button&gt;</span>
+                                        <span class="code-line color-1">&lt;/div&gt;</span>
+                                    </div>
+                                    <div class="loading-bar"></div>
+                                </div>
                             </div>
-                            <div class="text-4xl font-bold text-white font-mono tracking-tighter" id="stat-referrals">0</div>
-                            <div class="text-[10px] text-gray-600 mt-2 font-bold">USERS INVITED</div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div>
-                    <div class="flex items-center justify-between mb-6 border-b border-border pb-4">
-                        <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                            <i class="ri-stack-line text-brand-500"></i> Active Deployments
-                        </h3>
-                        <button id="btn-create-new" class="text-xs text-brand-400 font-bold hover:text-white transition-colors bg-white/5 px-3 py-1.5 rounded-lg border border-white/5 hover:border-brand-500/50">Create New +</button>
+        <div class="container ad-wrapper">
+            <div id="google-ads-header" class="ad-placeholder">
+                <span class="ad-label">Advertisement</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-9266584827478576"
+                     data-ad-slot="HEADER_SLOT_ID_HERE"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+        </div>
+
+        <section class="stats-ticker glass-panel">
+            <div class="container stats-grid">
+                <div class="stat-item">
+                    <h3 class="counter" data-target="50000">10000</h3>
+                    <p>Websites Created</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="counter" data-target="150000">1000</h3>
+                    <p>AI Prompts Processed</p>
+                </div>
+                <div class="stat-item">
+                    <h3>100%</h3>
+                    <p>Uptime Guarantee</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24/7</h3>
+                    <p>Human Support</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="section-padding">
+            <div class="container">
+                <div class="section-header center">
+                    <h2 class="section-title">The Zulora Advantage</h2>
+                    <p class="section-subtitle">Why we are the #1 AI Website Builder in India.</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="icon-box purple"><i class="fas fa-brain"></i></div>
+                        <h3>GPT-4 Turbo Engine</h3>
+                        <p>We use the smartest AI models to write clean, semantic HTML5 code that ranks on Google.</p>
                     </div>
-
-                    <div id="project-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        </div>
-
-                    <div id="project-empty" class="hidden flex-col items-center justify-center py-24 border border-dashed border-border rounded-3xl bg-surface/30">
-                        <div class="w-20 h-20 bg-surface rounded-full flex items-center justify-center text-gray-700 mb-6 text-3xl shadow-inner">
-                            <i class="ri-code-box-line"></i>
-                        </div>
-                        <h4 class="text-white font-bold text-lg mb-2">System Idle</h4>
-                        <p class="text-gray-500 text-sm mb-8">No active projects detected. Initialize a new neural build.</p>
-                        <button id="btn-launch-builder" class="bg-white text-black px-8 py-3 rounded-xl font-bold hover:bg-gray-200 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
-                            Launch Builder
-                        </button>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="icon-box blue"><i class="fas fa-globe"></i></div>
+                        <h3>Instant Hosting</h3>
+                        <p>No servers to manage. Get a free <code>yourname.zulora.in</code> subdomain instantly.</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="icon-box gold"><i class="fas fa-mobile-alt"></i></div>
+                        <h3>100% Responsive</h3>
+                        <p>Websites look perfect on Mobile, Tablet, and Desktop automatically.</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="icon-box pink"><i class="fas fa-headset"></i></div>
+                        <h3>VIP Support</h3>
+                        <p>Direct access to our engineering team via WhatsApp and Instagram.</p>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section id="view-create" class="view-section hidden min-h-full flex flex-col animate-fade-in-up">
-                <div class="flex-1 flex flex-col w-full max-w-6xl mx-auto p-4 md:p-8 h-full justify-center">
-                    
-                    <div class="text-center mb-10">
-                        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-[10px] font-mono font-bold mb-6 tracking-wide shadow-lg shadow-brand-500/10">
-                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> ALL MODELS ONLINE
+        <div class="container ad-wrapper">
+            <div id="google-ads-mid" class="ad-placeholder">
+                <span class="ad-label">Advertisement</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-9266584827478576"
+                     data-ad-slot="MID_SLOT_ID_HERE"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+        </div>
+
+        <section id="pricing" class="section-padding">
+            <div class="container">
+                <div class="section-header center">
+                    <h2 class="section-title">Simple Credit Pricing</h2>
+                    <p class="section-subtitle">Pay as you go. No hidden fees.</p>
+                </div>
+
+                <div class="pricing-wrapper">
+                    <div class="pricing-card">
+                        <div class="card-header">
+                            <h3>Starter</h3>
+                            <div class="price">Free</div>
+                            <p>For testing the waters</p>
                         </div>
-                        <h2 class="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">Architect Your Vision.</h2>
-                        <p class="text-gray-500 text-base max-w-xl mx-auto">Select a neural engine and describe your application. <br>The system will handle structure, styling, and logic.</p>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> 30 Free Credits on Signup</li>
+                            <li><i class="fas fa-check"></i> 10 Credits / Generation</li>
+                            <li><i class="fas fa-check"></i> 25 Credits / Deployment</li>
+                            <li><i class="fas fa-check"></i> Community Support</li>
+                        </ul>
+                        <button onclick="openAuthModal()" class="btn-outline">Start Free</button>
                     </div>
 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                        <label class="cursor-pointer group relative">
-                            <input type="radio" name="ai_model" value="openai" class="peer hidden">
-                            <div class="bg-surface border border-border p-4 rounded-2xl peer-checked:border-ai-openai peer-checked:bg-ai-openai/5 transition-all h-full hover:bg-white/5 flex flex-col items-center justify-center gap-3 shadow-lg">
-                                <div class="text-ai-openai text-3xl drop-shadow-md"><i class="ri-openai-fill"></i></div>
-                                <div class="text-center">
-                                    <div class="font-bold text-white text-sm">GPT-4o</div>
-                                    <div class="text-[10px] text-gray-500 uppercase tracking-wide mt-1">Logic Core</div>
-                                </div>
-                            </div>
-                            <div class="absolute inset-0 border-2 border-ai-openai rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_20px_rgba(16,163,127,0.2)]"></div>
-                        </label>
-                        <label class="cursor-pointer group relative">
-                            <input type="radio" name="ai_model" value="claude" class="peer hidden" checked>
-                            <div class="bg-surface border border-border p-4 rounded-2xl peer-checked:border-ai-claude peer-checked:bg-ai-claude/5 transition-all h-full hover:bg-white/5 flex flex-col items-center justify-center gap-3 shadow-lg">
-                                <div class="text-ai-claude text-3xl drop-shadow-md"><i class="ri-brain-fill"></i></div>
-                                <div class="text-center">
-                                    <div class="font-bold text-white text-sm">Claude 3.5</div>
-                                    <div class="text-[10px] text-gray-500 uppercase tracking-wide mt-1">Creative UI</div>
-                                </div>
-                            </div>
-                            <div class="absolute inset-0 border-2 border-ai-claude rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_20px_rgba(217,119,87,0.2)]"></div>
-                        </label>
-                        <label class="cursor-pointer group relative">
-                            <input type="radio" name="ai_model" value="gemini" class="peer hidden">
-                            <div class="bg-surface border border-border p-4 rounded-2xl peer-checked:border-ai-gemini peer-checked:bg-ai-gemini/5 transition-all h-full hover:bg-white/5 flex flex-col items-center justify-center gap-3 shadow-lg">
-                                <div class="text-ai-gemini text-3xl drop-shadow-md"><i class="ri-google-fill"></i></div>
-                                <div class="text-center">
-                                    <div class="font-bold text-white text-sm">Gemini 1.5</div>
-                                    <div class="text-[10px] text-gray-500 uppercase tracking-wide mt-1">Deep Context</div>
-                                </div>
-                            </div>
-                            <div class="absolute inset-0 border-2 border-ai-gemini rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_20px_rgba(66,133,244,0.2)]"></div>
-                        </label>
-                        <label class="cursor-pointer group relative">
-                            <input type="radio" name="ai_model" value="llama" class="peer hidden">
-                            <div class="bg-surface border border-border p-4 rounded-2xl peer-checked:border-ai-llama peer-checked:bg-ai-llama/5 transition-all h-full hover:bg-white/5 flex flex-col items-center justify-center gap-3 shadow-lg">
-                                <div class="text-ai-llama text-3xl drop-shadow-md"><i class="ri-speed-fill"></i></div>
-                                <div class="text-center">
-                                    <div class="font-bold text-white text-sm">Llama 3</div>
-                                    <div class="text-[10px] text-gray-500 uppercase tracking-wide mt-1">Instant</div>
-                                </div>
-                            </div>
-                            <div class="absolute inset-0 border-2 border-ai-llama rounded-2xl opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_20px_rgba(139,92,246,0.2)]"></div>
-                        </label>
+                    <div class="pricing-card premium glow-border">
+                        <div class="badge-pop">MOST POPULAR</div>
+                        <div class="card-header">
+                            <h3>Premium Pro</h3>
+                            <div class="price">₹299<span class="period">/mo</span></div>
+                            <p>For serious business</p>
+                        </div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> <strong>1000 Monthly Credits</strong></li>
+                            <li><i class="fas fa-check"></i> Unlimited Deployments</li>
+                            <li><i class="fas fa-check"></i> Priority WhatsApp Support</li>
+                            <li><i class="fas fa-check"></i> Gold Profile Badge</li>
+                            <li><i class="fas fa-check"></i> Remove "Built by Zulora"</li>
+                        </ul>
+                        <button onclick="openPaymentModal()" class="btn-primary full-width">Upgrade Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="reviews" class="section-padding">
+            <div class="container">
+                <h2 class="section-title center">What Users Say</h2>
+                <div class="reviews-grid">
+                    <div class="review-box glass-panel">
+                        <div class="stars">★★★★★</div>
+                        <p>"I built my restaurant website in 5 minutes. The UPI payment integration guide was super helpful."</p>
+                        <div class="reviewer">
+                            <img src="assets/u1.jpg" alt="User">
+                            <span>Rahul K., Delhi</span>
+                        </div>
+                    </div>
+                    <div class="review-box glass-panel">
+                        <div class="stars">★★★★★</div>
+                        <p>"Best AI tool in India. The support team on Instagram helped me fix my domain issue instantly."</p>
+                        <div class="reviewer">
+                            <img src="assets/u2.jpg" alt="User">
+                            <span>Priya S., Mumbai</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <main id="view-dashboard" class="view-section hidden">
+        <div class="dashboard-layout">
+            
+            <aside class="dash-sidebar">
+                <div class="user-info-card">
+                    <img id="dash-avatar" src="assets/default-avatar.png" class="avatar-lg">
+                    <h3 id="dash-name">User Name</h3>
+                    <span id="dash-plan" class="badge-free">Starter Plan</span>
+                </div>
+                
+                <div class="credit-box-lg">
+                    <small>Balance</small>
+                    <h2 class="neon-gold"><span id="dash-credits">0</span> Cr</h2>
+                    <button class="btn-xs btn-gold" onclick="openPaymentModal()">+ Top Up</button>
+                </div>
+
+                <nav class="sidebar-menu">
+                    <button class="menu-btn active" onclick="switchDashTab('builder')">
+                        <i class="fas fa-magic"></i> AI Builder
+                    </button>
+                    <button class="menu-btn" onclick="switchDashTab('my-sites')">
+                        <i class="fas fa-server"></i> My Websites
+                    </button>
+                    <button class="menu-btn" onclick="switchDashTab('referral')">
+                        <i class="fas fa-gift"></i> Refer & Earn
+                    </button>
+                    <button class="menu-btn" onclick="switchDashTab('settings')">
+                        <i class="fas fa-cog"></i> Settings
+                    </button>
+                    <button class="menu-btn" onclick="switchDashTab('support')">
+                        <i class="fas fa-headset"></i> Help Center
+                    </button>
+                </nav>
+
+                <div id="google-ads-sidebar" class="ad-sidebar">
+                    <span class="ad-label-sm">Ad</span>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-9266584827478576"
+                         data-ad-slot="SIDEBAR_SLOT_ID_HERE"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                </div>
+            </aside>
+
+            <section class="dash-content">
+                
+                <div id="tab-builder" class="dash-tab active">
+                    <div class="content-header">
+                        <h1>Create New Website</h1>
+                        <p>Describe your dream site, and our AI will code it pixel-perfect.</p>
                     </div>
 
-                    <div class="relative group shadow-2xl">
-                        <div class="absolute -inset-0.5 bg-gradient-to-r from-brand-600 via-purple-600 to-brand-600 rounded-3xl blur opacity-20 group-hover:opacity-50 transition duration-500 animate-gradient"></div>
-                        <div class="relative bg-surface rounded-3xl border border-border overflow-hidden flex flex-col">
-                            <div class="bg-panel px-4 py-2 border-b border-border flex items-center justify-between">
-                                <div class="flex gap-1.5">
-                                    <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
-                                    <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
-                                    <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
-                                </div>
-                                <span class="text-[10px] text-gray-600 font-mono">prompt.js</span>
+                    <div class="builder-interface glass-panel">
+                        <div class="input-group">
+                            <label>Describe your website:</label>
+                            <textarea id="ai-prompt" placeholder="E.g., A portfolio for a wedding photographer with a gallery, contact form, and dark theme..."></textarea>
+                        </div>
+                        
+                        <div class="control-row">
+                            <div class="subdomain-selector">
+                                <span class="prefix">https://</span>
+                                <input type="text" id="subdomain-input" placeholder="project-name">
+                                <span class="suffix">.zulora.in</span>
                             </div>
-                            
-                            <textarea id="ai-prompt" rows="8" class="w-full bg-surface text-gray-200 p-6 border-none outline-none resize-none font-mono text-sm leading-relaxed placeholder-gray-700 selection:bg-brand-500/30" placeholder="// Describe your application logic here...
-// Example: Create a responsive e-commerce dashboard with sidebar navigation, 
-// a sales overview chart using Recharts, and a product data table with sorting. 
-// Use Tailwind CSS for dark mode styling."></textarea>
-                            
-                            <div class="bg-panel px-6 py-4 border-t border-border flex justify-between items-center">
-                                <div class="flex gap-6 text-[10px] font-mono text-gray-500">
-                                    <span class="flex items-center gap-1.5"><i class="ri-coin-line text-yellow-500"></i> COST: 15 CR</span>
-                                    <span class="flex items-center gap-1.5"><i class="ri-code-s-slash-line text-brand-400"></i> OUTPUT: FULL STACK</span>
-                                </div>
-                                <button id="btn-generate" class="bg-white text-black px-8 py-3 rounded-xl text-xs font-bold hover:bg-gray-200 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95">
-                                    <i class="ri-flashlight-fill"></i> GENERATE CODE
+                            <div class="action-buttons">
+                                <button id="generate-btn" class="btn-primary icon-spin-hover">
+                                    <i class="fas fa-robot"></i> Generate (-10 Cr)
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                </div>
-            </section>
-
-            <section id="view-premium" class="view-section hidden min-h-full p-6 flex flex-col items-center justify-center animate-fade-in-up">
-                <div class="w-full max-w-5xl bg-surface border border-border rounded-[2rem] p-8 md:p-16 relative overflow-hidden shadow-2xl">
-                    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-b from-yellow-500/10 to-transparent rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 shadow-[0_0_30px_#fbbf24]"></div>
-                    
-                    <div class="grid md:grid-cols-2 gap-16 items-center">
-                        <div class="text-left">
-                            <div class="inline-block px-4 py-1.5 bg-yellow-500/10 text-yellow-500 text-[10px] font-bold rounded-full mb-6 border border-yellow-500/20 tracking-widest font-mono">TITANIUM ACCESS</div>
-                            <h2 class="text-5xl font-black text-white mb-6 leading-tight">Remove All <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-600">Limitations.</span></h2>
-                            
-                            <ul class="space-y-6 text-sm text-gray-400 mt-8">
-                                <li class="flex items-start gap-4 group">
-                                    <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-black transition-all"><i class="ri-check-line"></i></div>
-                                    <div>
-                                        <strong class="text-white block mb-1">1000 Monthly AI Credits</strong>
-                                        <span>Generate up to 60 full websites per month.</span>
-                                    </div>
-                                </li>
-                                <li class="flex items-start gap-4 group">
-                                    <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-black transition-all"><i class="ri-check-line"></i></div>
-                                    <div>
-                                        <strong class="text-white block mb-1">Custom Domain Connection</strong>
-                                        <span>Connect .com, .in, or .org domains instantly.</span>
-                                    </div>
-                                </li>
-                                <li class="flex items-start gap-4 group">
-                                    <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-black transition-all"><i class="ri-check-line"></i></div>
-                                    <div>
-                                        <strong class="text-white block mb-1">Gemini 1.5 Pro & GPT-4o</strong>
-                                        <span>Access the smartest models without waitlists.</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-void border border-border rounded-3xl p-8 text-center relative shadow-2xl">
-                            <div class="absolute inset-0 bg-yellow-500/5 rounded-3xl animate-pulse-slow pointer-events-none"></div>
-                            
-                            <p class="text-xs text-gray-500 uppercase tracking-widest mb-2 font-bold">Monthly Plan</p>
-                            <div class="text-6xl font-black text-white mb-8 tracking-tighter">₹299</div>
-                            
-                            <div class="bg-white p-3 rounded-2xl w-48 h-48 mx-auto mb-8 shadow-xl">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=upi://pay?pa=shivenpanwar@fam&pn=Zulora%20Titanium&am=299&cu=INR" class="w-full h-full object-contain">
+                    <div class="preview-container hidden" id="preview-section">
+                        <div class="preview-toolbar">
+                            <span class="preview-label">Live Preview</span>
+                            <div class="device-toggles">
+                                <button title="Mobile"><i class="fas fa-mobile-alt"></i></button>
+                                <button title="Desktop"><i class="fas fa-desktop"></i></button>
                             </div>
-                            
-                            <div class="flex items-center gap-3 bg-surface border border-border p-3 rounded-xl mb-6">
-                                <div class="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white"><i class="ri-bank-card-line"></i></div>
-                                <code class="text-xs text-gray-400 flex-1 text-left font-mono">shivenpanwar@fam</code>
-                                <button id="btn-copy-upi" class="text-[10px] font-bold text-black bg-white px-3 py-1.5 rounded hover:bg-gray-200 transition-colors">COPY</button>
-                            </div>
-
-                            <button id="btn-pay-upi" class="w-full bg-gradient-to-r from-brand-600 to-brand-700 text-white font-bold py-4 rounded-xl hover:from-brand-500 hover:to-brand-600 transition-all shadow-lg hover:shadow-brand-600/30 text-sm">
-                                Open UPI App
+                            <button id="deploy-btn" class="btn-success pulse-anim">
+                                <i class="fas fa-cloud-upload-alt"></i> Deploy Live (-25 Cr)
                             </button>
-                            <p class="text-[10px] text-gray-600 mt-4 font-mono">After payment, send screenshot to WhatsApp +91 6395211325</p>
+                        </div>
+                        <iframe id="website-preview" title="Website Preview"></iframe>
+                    </div>
+                </div>
+
+                <div id="tab-referral" class="dash-tab hidden">
+                    <div class="referral-hero glass-panel">
+                        <div class="gift-icon"><i class="fas fa-gift"></i></div>
+                        <h2>Invite Friends, Get Free Credits!</h2>
+                        <p>Share your link. They get 30 Credits. You get <strong>15 Credits</strong> when they join.</p>
+                        
+                        <div class="copy-box">
+                            <input type="text" id="referral-link-display" readonly value="Loading link...">
+                            <button onclick="copyReferral()"><i class="fas fa-copy"></i> Copy</button>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <section id="view-referral" class="view-section hidden min-h-full p-6 flex flex-col items-center justify-center animate-fade-in-up">
-                <div class="w-full max-w-2xl bg-surface border border-border rounded-3xl p-12 text-center shadow-2xl relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-64 h-64 bg-green-500/10 rounded-full blur-[80px] pointer-events-none"></div>
-                    
-                    <div class="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center text-green-500 text-5xl mx-auto mb-8 border border-green-500/20 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
-                        <i class="ri-share-forward-fill"></i>
-                    </div>
-                    <h2 class="text-4xl font-bold text-white mb-4">Viral Loop</h2>
-                    <p class="text-gray-400 text-sm mb-10 max-w-md mx-auto leading-relaxed">Share your unique quantum link. Earn <strong class="text-white">15 Credits</strong> for every developer who initializes a session. They get 30 Credits to start.</p>
-                    
-                    <div class="bg-void border border-border p-2 rounded-2xl flex items-center mb-10 max-w-md mx-auto shadow-inner">
-                        <input type="text" id="ref-link" readonly class="flex-1 bg-transparent border-none text-gray-300 text-xs font-mono px-4 focus:outline-none tracking-wide" value="Generating Key...">
-                        <button id="btn-copy-ref" class="bg-surface hover:bg-white/10 text-white text-xs font-bold px-6 py-3 rounded-xl transition-colors border border-border shadow-sm">Copy Link</button>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto">
-                        <button id="btn-share-whatsapp" class="flex items-center justify-center gap-2 px-4 py-4 bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/20 rounded-xl font-bold hover:bg-[#25D366]/20 transition-all">
-                            <i class="ri-whatsapp-fill text-xl"></i> WhatsApp
-                        </button>
-                        <button id="btn-share-instagram" class="flex items-center justify-center gap-2 px-4 py-4 bg-pink-500/10 text-pink-500 border border-pink-500/20 rounded-xl font-bold hover:bg-pink-500/20 transition-all">
-                            <i class="ri-instagram-line text-xl"></i> Instagram
-                        </button>
+                <div id="tab-support" class="dash-tab hidden">
+                    <div class="support-grid">
+                        <a href="https://www.instagram.com/zulora_official" target="_blank" class="support-card">
+                            <i class="fab fa-instagram"></i>
+                            <h3>Instagram</h3>
+                        </a>
+                        <a href="https://wa.me/916395211325" target="_blank" class="support-card">
+                            <i class="fab fa-whatsapp"></i>
+                            <h3>WhatsApp</h3>
+                        </a>
+                        <a href="mailto:zulora.help@gmail.com" class="support-card">
+                            <i class="fas fa-envelope"></i>
+                            <h3>Email</h3>
+                        </a>
                     </div>
                 </div>
+
             </section>
+        </div>
+    </main>
 
-        </main>
-    </div>
-
-    <div id="auth-modal" class="fixed inset-0 z-[9500] bg-black/80 backdrop-blur-xl hidden flex items-center justify-center p-4">
-        <div class="bg-surface border border-border w-full max-w-sm p-10 rounded-[2rem] relative shadow-2xl transform scale-95 transition-transform duration-300">
-            <button id="btn-auth-close" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors"><i class="ri-close-line text-2xl"></i></button>
-            
-            <div class="text-center mb-10">
-                <div class="w-16 h-16 bg-white text-black rounded-2xl mx-auto flex items-center justify-center font-bold text-3xl mb-6 shadow-lg">Z</div>
-                <h2 class="text-2xl font-bold text-white mb-2">Access Terminal</h2>
-                <p class="text-xs text-gray-500">Authenticate via secure gateway.</p>
+    <div id="auth-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <button class="close-modal" onclick="closeAuthModal()">&times;</button>
+            <div class="modal-header">
+                <div class="logo-icon-sm">Z</div>
+                <h2>Welcome Back</h2>
+                <p>Sign in to your Zulora account</p>
             </div>
-
-            <button id="btn-google-login" class="w-full bg-white hover:bg-gray-200 text-black font-bold py-4 rounded-xl flex items-center justify-center gap-4 transition-all relative overflow-hidden group shadow-xl">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-6 h-6 group-hover:scale-110 transition-transform">
-                <span>Continue with Google</span>
-            </button>
-            
-            <p class="text-center text-[10px] text-gray-600 mt-8">
-                <i class="ri-shield-check-line text-green-500 mr-1"></i> End-to-end encrypted session.
-            </p>
+            <div class="modal-body">
+                <button id="google-login-btn" class="btn-google">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G">
+                    Continue with Google
+                </button>
+                <div class="auth-terms">
+                    By continuing, you agree to our Terms of Service.
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="editor-modal" class="fixed inset-0 z-[9600] bg-void hidden flex-col transition-opacity duration-300 opacity-0">
-        <header class="h-16 border-b border-border flex items-center justify-between px-6 bg-surface shrink-0">
-            <div class="flex items-center gap-6">
-                <button id="btn-editor-close" class="text-gray-400 hover:text-white flex items-center gap-2 text-xs font-bold transition-colors uppercase tracking-widest">
-                    <i class="ri-arrow-left-line"></i> Exit IDE
-                </button>
-                <div class="h-6 w-px bg-border"></div>
-                <div class="flex items-center gap-3">
-                    <div class="w-2.5 h-2.5 bg-status-live rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div>
-                    <div class="flex flex-col">
-                        <span class="text-xs font-bold text-white leading-none">Live Preview</span>
-                        <a href="#" id="editor-url" target="_blank" class="text-[10px] font-mono text-brand-400 hover:underline mt-0.5">https://app.zulora.in</a>
+    <div id="payment-modal" class="modal-overlay hidden">
+        <div class="modal-card payment-card">
+            <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+            <div class="payment-header">
+                <i class="fas fa-crown gold-icon"></i>
+                <h2>Upgrade to Premium</h2>
+                <p class="price-lg">₹299 <small>/month</small></p>
+            </div>
+            <div class="payment-body">
+                <ul class="benefit-list">
+                    <li>✅ 1000 Credits Included</li>
+                    <li>✅ Priority Support</li>
+                    <li>✅ Verified Profile Badge</li>
+                    <li>✅ Remove "Zulora Branding"</li>
+                </ul>
+                <div class="upi-section">
+                    <p>Scan to Pay via UPI</p>
+                    <div id="qr-placeholder" class="qr-code-box">
+                        <i class="fas fa-qrcode"></i>
+                        <span>Loading QR...</span>
                     </div>
+                    <p class="upi-id-text">UPI ID: <strong>shivenpanwar@fam</strong></p>
+                    <button onclick="initiateUPIPayment()" class="btn-pay">
+                        Pay with UPI App <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
-            
-            <div class="flex items-center gap-4">
-                <div class="bg-void border border-border p-1 rounded-lg flex items-center">
-                    <button id="btn-device-desktop" class="p-2 text-white bg-white/10 rounded transition-colors"><i class="ri-computer-line"></i></button>
-                    <button id="btn-device-mobile" class="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded transition-colors"><i class="ri-smartphone-line"></i></button>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>Zulora.in</h3>
+                <p>Empowering 50,000+ Indians to bring their business online with AI.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
                 </div>
-                <button id="btn-publish" class="ml-2 bg-brand-600 hover:bg-brand-500 text-white px-6 py-2 rounded-lg text-xs font-bold shadow-lg shadow-brand-500/20 transition-all flex items-center gap-2">
-                    <i class="ri-cloud-upload-line"></i> Publish
-                </button>
             </div>
-        </header>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#">Website Builder</a></li>
+                    <li><a href="#">Templates</a></li>
+                    <li><a href="#">Showcase</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Refund Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <p>Agra, Uttar Pradesh, India</p>
+                <p>zulora.help@gmail.com</p>
+                <p>+91 6395211325</p>
+            </div>
+        </div>
         
-        <div class="flex-1 flex items-center justify-center bg-void p-4 md:p-12 relative overflow-hidden">
-            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#333 1px, transparent 1px); background-size: 24px 24px;"></div>
-            
-            <div id="editor-frame-wrap" class="w-full h-full bg-white transition-all duration-700 shadow-2xl shadow-black overflow-hidden relative rounded-md border border-white/10">
-                <iframe id="editor-frame" class="w-full h-full border-none bg-white"></iframe>
-                
-                <div class="absolute bottom-8 right-8 bg-black/80 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex gap-2 shadow-2xl transform translate-y-0 hover:-translate-y-1 transition-transform">
-                    <button class="w-10 h-10 rounded-xl hover:bg-white/10 text-white flex items-center justify-center transition-colors" title="Edit Content"><i class="ri-edit-line"></i></button>
-                    <button class="w-10 h-10 rounded-xl hover:bg-white/10 text-white flex items-center justify-center transition-colors" title="Theme Settings"><i class="ri-palette-line"></i></button>
-                    <button class="w-10 h-10 rounded-xl hover:bg-white/10 text-white flex items-center justify-center transition-colors" title="Inject Code"><i class="ri-code-s-slash-line"></i></button>
-                </div>
+        <div class="container footer-ad">
+            <div class="ad-placeholder">
+                <span class="ad-label">Advertisement</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-9266584827478576"
+                     data-ad-slot="FOOTER_SLOT_ID_HERE"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
             </div>
         </div>
-    </div>
 
+        <div class="footer-bottom center">
+            <p>&copy; 2026 Zulora AI Technologies. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            easing: 'ease-out-cubic'
+        });
+    </script>
+    
     <script src="script.js"></script>
 
 </body>
