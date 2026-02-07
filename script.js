@@ -333,8 +333,6 @@ function generateDynamicSite(prompt) {
     const theme = themes[category];
     const heroTitle = `Welcome to Your ${category.charAt(0).toUpperCase() + category.slice(1)} Business`;
 
-    // 3. Construct HTML (No Prompt Leakage)
-    return `
         // 3. Construct HTML (The "Titan" Template)
     // This is a massive, single-file website generator
     return `
