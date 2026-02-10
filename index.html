@@ -1,652 +1,856 @@
 <!DOCTYPE html>
-<html lang="en-IN" class="scroll-smooth">
+<html lang="en-IN" class="no-js">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     
-    <meta name="google-adsense-account" content="ca-pub-9266584827478576">
-    
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9266584827478576"
-     crossorigin="anonymous"></script>
-
-    <title>Zulora.in | India's #1 AI Website Builder, Hosting & Business Tools</title>
-    <meta name="description" content="Build professional websites in 30 seconds with Zulora AI. Free hosting, custom subdomains, and instant UPI payments. Features for E-Commerce, Gaming, and Restaurants. Join 50,000+ creators.">
-    <meta name="keywords" content="AI website builder, free website maker, zulora, text to website, artificial intelligence web design, business blog, online store builder india, portfolio maker, gaming website builder">
+    <title>Zulora Studio | Build the Future of the Web with AI</title>
+    <meta name="description" content="Experience the fastest way to build professional websites. Zulora's AI turns your ideas into reality with a futuristic, drag-and-drop visual editor. Get a custom subdomain, free hosting, and powerful tools.">
+    <meta name="keywords" content="ai website builder, futuristic web design, no-code platform, visual editor, custom subdomain, free hosting, zulora, nebula architecture, dark mode builder">
     <meta name="author" content="Zulora AI Team">
-    <meta name="theme-color" content="#020010">
-    <meta name="robots" content="index, follow, max-image-preview:large">
-    <link rel="canonical" href="https://zulora.in">
+    <meta name="theme-color" content="#0a0a0f"> <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zulora.in/">
+    <meta property="og:title" content="Zulora Studio - Where Ideas Become Reality">
+    <meta property="og:description" content="Build stunning websites with AI in minutes. Dive into the future of web creation.">
+    <meta property="og:image" content="https://zulora.in/assets/og-nebula.jpg">
 
-    <meta property="og:title" content="Zulora - The AI That Builds Websites">
-    <meta property="og:description" content="Launch your dream business online instantly. No coding required.">
-    <meta property="og:image" content="https://source.unsplash.com/1200x630/?futuristic,technology">
-    <meta property="og:url" content="https://zulora.in">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="en_IN">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Zulora AI - Build Faster">
-    <meta name="twitter:description" content="Launch your website today with Zulora's Neural Engine.">
-    <meta name="twitter:image" content="https://source.unsplash.com/1200x600/?coding,screen">
-
-    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="icon" type="image/png" href="assets/favicon-nebula.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Zulora AI",
-      "applicationCategory": "DesignApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "299",
-        "priceCurrency": "INR"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "ratingCount": "52000"
-      }
-    }
-    </script>
 </head>
 
-<body id="app-root">
+<body id="app-root" class="theme-dark">
 
-    <nav class="navbar glass-effect" id="main-navbar">
-        <div class="container nav-container">
-            <div class="logo-wrapper">
-                <a href="/" class="brand-link" aria-label="Zulora Home">
-                    <div class="logo-icon">
-                        <i class="fas fa-bolt"></i>
+    <div id="view-landing" class="view-layer active">
+        
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand" onclick="window.scrollTo(0,0)">
+                    <div class="brand-logo">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 2L2 9L16 16L30 9L16 2Z" fill="url(#paint0_linear)"/>
+                            <path d="M2 23L16 30L30 23V9L16 16L2 9V23Z" fill="url(#paint1_linear)" fill-opacity="0.8"/>
+                            <defs>
+                                <linearGradient id="paint0_linear" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#4F46E5"/>
+                                    <stop offset="1" stop-color="#9333EA"/>
+                                </linearGradient>
+                                <linearGradient id="paint1_linear" x1="2" y1="9" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#9333EA"/>
+                                    <stop offset="1" stop-color="#4F46E5"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
                     </div>
-                    <div class="brand-text">
-                        <span class="name">Zulora</span>
-                        <span class="tld">.in</span>
-                    </div>
-                </a>
-            </div>
+                    <span class="brand-text">Zulora</span>
+                </div>
+                
+                <div class="nav-links desktop-only">
+                    <a href="#features" class="nav-item">Features</a>
+                    <a href="#showcase" class="nav-item">Showcase</a>
+                    <a href="#pricing" class="nav-item">Pricing</a>
+                    <a href="#resources" class="nav-item">Resources</a>
+                </div>
 
-            <ul class="nav-links desktop-only">
-                <li><a href="#home" class="nav-item">Home</a></li>
-                <li><a href="#features" class="nav-item">Features</a></li>
-                <li><a href="#templates" class="nav-item">Templates</a></li>
-                <li><a href="#blog" class="nav-item">Blog</a></li>
-                <li><a href="#pricing" class="nav-item">Pricing</a></li>
-                <li>
-                    <a href="#premium" onclick="openPaymentModal()" class="nav-item highlight-gold">
-                        <i class="fas fa-crown"></i> Premium
-                    </a>
-                </li>
-            </ul>
-
-            <div class="nav-actions">
-                <div id="nav-user-status" class="user-status hidden">
-                    <div class="credit-pill" title="Your AI Credits">
-                        <i class="fas fa-coins text-gold"></i>
-                        <span id="nav-credits">0</span>
+                <div class="nav-actions">
+                    <div id="auth-guest" class="auth-state">
+                        <button onclick="openAuthModal()" class="btn-text">Log In</button>
+                        <button onclick="openAuthModal()" class="btn-primary glow-effect">
+                            <span>Get Started</span>
+                        </button>
                     </div>
-                    <div class="profile-dropdown-trigger" onclick="toggleProfileMenu()">
-                        <img id="nav-avatar" src="https://source.unsplash.com/100x100/?portrait,face" alt="Profile">
-                        <div class="dropdown-menu glass-panel hidden" id="profile-dropdown">
-                            <div class="menu-header">
-                                <strong id="menu-user-name">User</strong>
-                                <small id="menu-user-email">email@example.com</small>
+                    
+                    <div id="auth-user" class="auth-state hidden" onclick="switchView('studio')">
+                        <div class="user-chip glass-effect">
+                            <div class="avatar-wrapper">
+                                <img id="nav-avatar" src="https://source.unsplash.com/100x100/?avatar,user" alt="Profile">
+                                <div class="status-indicator"></div>
                             </div>
-                            <hr class="dropdown-divider">
-                            <a href="#" onclick="switchView('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                            <a href="#" onclick="openPaymentModal()"><i class="fas fa-bolt"></i> Upgrade Plan</a>
-                            <a href="#" onclick="switchDashTab('my-sites')"><i class="fas fa-globe"></i> My Websites</a>
-                            <a href="#" onclick="switchDashTab('referral')"><i class="fas fa-gift"></i> Refer & Earn</a>
-                            <hr class="dropdown-divider">
-                            <button id="logout-btn" class="logout-link"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+                            <span id="nav-username">Dashboard</span>
                         </div>
+                    </div>
+                    
+                    <button id="mobile-menu-trigger" class="hamburger-btn" aria-label="Open Menu">
+                        <div class="bar bar-1"></div>
+                        <div class="bar bar-2"></div>
+                        <div class="bar bar-3"></div>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div id="mobile-drawer" class="drawer-overlay hidden">
+            <div class="drawer-content glass-effect">
+                <div class="drawer-header">
+                    <div class="drawer-brand">
+                        <div class="brand-logo-sm">
+                            </div>
+                        <span>Zulora</span>
+                    </div>
+                    <button id="close-drawer-btn" class="icon-btn"><i class="fas fa-times"></i></button>
+                </div>
+                
+                <div class="drawer-body">
+                    <div class="drawer-user-info hidden glass-panel" id="drawer-user-panel">
+                        <img src="https://source.unsplash.com/100x100/?avatar" class="drawer-avatar">
+                        <div class="drawer-meta">
+                            <h4 id="drawer-name">User Name</h4>
+                            <p id="drawer-email">user@example.com</p>
+                        </div>
+                        <button class="btn-xs btn-outline">Settings</button>
+                    </div>
+
+                    <div class="drawer-links">
+                        <a href="#home" onclick="closeDrawer()" class="active"><i class="fas fa-home"></i> Home</a>
+                        <a href="#" onclick="switchView('studio'); closeDrawer()"><i class="fas fa-wand-magic-sparkles"></i> AI Builder</a>
+                        <a href="#showcase" onclick="closeDrawer()"><i class="fas fa-layer-group"></i> Templates</a>
+                        <a href="#pricing" onclick="closeDrawer()"><i class="fas fa-tag"></i> Pricing</a>
+                        <a href="#" class="premium-link glow-text" onclick="openPaymentModal(); closeDrawer()"><i class="fas fa-crown"></i> Upgrade to Pro</a>
+                    </div>
+
+                    <hr class="drawer-divider">
+
+                    <p class="drawer-label">Resources</p>
+                    <div class="drawer-links">
+                         <a href="#blog" onclick="closeDrawer()"><i class="fas fa-rss"></i> Blog</a>
+                         <a href="#" onclick="openReferralModal(); closeDrawer()"><i class="fas fa-gift"></i> Refer & Earn</a>
+                    </div>
+                    
+                    <p class="drawer-label">Support Channels</p>
+                    <div class="drawer-support">
+                        <a href="https://wa.me/916395211325" target="_blank" class="support-item">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+                        <a href="https://www.instagram.com/zulora_official?igsh=MTRvOGYwNGZoZ3h0aw==" target="_blank" class="support-item">
+                            <i class="fab fa-instagram"></i> Instagram
+                        </a>
+                        <a href="mailto:zulora.help@gmail.com" class="support-item">
+                            <i class="fas fa-envelope"></i> Email Us
+                        </a>
                     </div>
                 </div>
                 
-                <div id="nav-guest-status" class="guest-status">
-                    <button onclick="openAuthModal()" class="btn-primary glow-effect">
-                        <span class="btn-text">Login</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
+                <div class="drawer-footer">
+                    <button onclick="openAuthModal()" class="btn-block btn-primary glow-effect">Log In / Sign Up</button>
                 </div>
-
-                <button class="mobile-toggle" aria-label="Toggle Menu" onclick="toggleMobileMenu()">
-                    <span class="bar top"></span>
-                    <span class="bar mid"></span>
-                    <span class="bar bot"></span>
-                </button>
             </div>
         </div>
-    </nav>
 
-    <div id="mobile-menu-overlay" class="mobile-menu glass-panel hidden">
-        <div class="mobile-menu-header">
-            <span class="mobile-brand">Zulora Menu</span>
-            <button class="close-menu" onclick="toggleMobileMenu()">&times;</button>
-        </div>
-        <div class="mobile-links">
-            <a href="#home" onclick="toggleMobileMenu()"><i class="fas fa-home"></i> Home</a>
-            <a href="#dashboard" onclick="switchView('dashboard'); toggleMobileMenu()"><i class="fas fa-magic"></i> AI Generator</a>
-            <a href="#templates" onclick="toggleMobileMenu()"><i class="fas fa-layer-group"></i> Templates</a>
-            <a href="#blog" onclick="toggleMobileMenu()"><i class="fas fa-rss"></i> Blog</a>
-            <a href="#pricing" onclick="toggleMobileMenu()"><i class="fas fa-tag"></i> Pricing</a>
-            <a href="#" onclick="openPaymentModal(); toggleMobileMenu()" class="text-gold"><i class="fas fa-crown"></i> <strong>Upgrade Premium</strong></a>
-            <hr class="mobile-divider">
-            <p class="menu-label">Support Channels</p>
-            <a href="https://wa.me/916395211325" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-            <a href="https://instagram.com/zulora_official" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-            <a href="mailto:zulora.help@gmail.com"><i class="fas fa-envelope"></i> Email Us</a>
-        </div>
-    </div>
-
-    <main id="view-landing" class="view-section active">
-        
-        <section class="hero-section" id="home">
-            <div class="hero-bg-animated">
-                <div class="planet"></div>
-                <div class="stars"></div>
-                <div class="nebula"></div>
-            </div>
-
-            <div class="container hero-content">
-                <div class="hero-grid">
-                    <div class="hero-text" data-aos="fade-right">
-                        <div class="announcement-pill">
-                            <span class="pill-badge">V10.0 LIVE</span>
-                            <span class="pill-text">The Most Advanced AI Web Architect</span>
+        <header class="hero-section" id="home">
+            <div class="hero-bg-layer nebula-bg"></div> <div class="hero-orb orb-1"></div> <div class="hero-orb orb-2"></div> <div class="hero-grid-lines"></div> <div class="hero-particles"></div> <div class="container hero-container">
+                <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
+                    <div class="trust-badge glass-panel">
+                        <div class="avatars-stack">
+                            <img src="https://source.unsplash.com/50x50/?face,1" alt="">
+                            <img src="https://source.unsplash.com/50x50/?face,2" alt="">
+                            <img src="https://source.unsplash.com/50x50/?face,3" alt="">
                         </div>
-                        <h1 class="hero-title">
-                            Web Design is <span class="gradient-text-anim">History.</span><br>
-                            Zulora is <span class="text-white">Future.</span>
-                        </h1>
-                        <p class="hero-desc">
-                            Describe your vision in plain English. Our neural network will generate code, design layouts, and deploy to a <strong>.zulora.in</strong> subdomain instantly.
-                        </p>
-                        
-                        <div class="hero-cta-group">
-                            <button onclick="openAuthModal()" class="btn-mega btn-gradient">
-                                <i class="fas fa-magic"></i> Generate with AI
-                            </button>
-                            <button onclick="scrollToDemo()" class="btn-mega btn-glass">
-                                <i class="fas fa-play"></i> Watch Demo
-                            </button>
-                        </div>
-
-                        <div class="hero-trust">
-                            <div class="avatars">
-                                <img src="https://source.unsplash.com/50x50/?face,smile" alt="" loading="lazy">
-                                <img src="https://source.unsplash.com/50x50/?face,man" alt="" loading="lazy">
-                                <img src="https://source.unsplash.com/50x50/?face,woman" alt="" loading="lazy">
-                            </div>
-                            <div class="trust-text">
-                                <div class="stars">★★★★★</div>
-                                <span>Trusted by <strong>52,000+</strong> Creators</span>
-                            </div>
-                        </div>
+                        <span>Trusted by <strong>1.5M+</strong> Users</span>
                     </div>
-
-                    <div class="hero-visual" data-aos="fade-left">
-                        <div class="browser-mockup tilt-effect">
-                            <div class="browser-header">
-                                <div class="dots"><span></span><span></span><span></span></div>
-                                <div class="url-bar">https://shop.zulora.in</div>
-                            </div>
-                            <div class="browser-body">
-                                <div class="ai-typing-effect">
-                                    <span class="prompt-text">> Create a candy shop website...</span>
-                                    <div class="code-stream">
-                                        <span class="code-line color-1">&lt;nav class="navbar"&gt;</span>
-                                        <span class="code-line color-2">  &lt;h1&gt;Sweet Treats&lt;/h1&gt;</span>
-                                        <span class="code-line color-3">  &lt;button&gt;Order Now&lt;/button&gt;</span>
-                                        <span class="code-line color-1">&lt;/nav&gt;</span>
-                                    </div>
-                                    <div class="loading-bar"></div>
+                    
+                    <h1 class="hero-title">
+                        Where Ideas Become<br>
+                        <span class="text-gradient glow-text">Reality.</span>
+                    </h1>
+                    <p class="hero-desc">
+                        Build fully functional apps and websites through simple conversations. The fastest way to build Web & Mobile Apps.
+                    </p>
+                    
+                    <div class="hero-input-wrapper glass-effect glow-border">
+                        <div class="input-tabs">
+                            <button class="tab-btn active"><i class="fas fa-globe"></i> Full Stack App</button>
+                            <button class="tab-btn"><i class="fas fa-mobile-alt"></i> Mobile App</button>
+                            <button class="tab-btn"><i class="far fa-window-maximize"></i> Landing Page</button>
+                        </div>
+                        <div class="input-area">
+                            <textarea id="landing-prompt" placeholder="Build me an e-commerce platform with..."></textarea>
+                            <div class="input-actions">
+                                <div class="ai-model-select glass-panel">
+                                    <i class="fas fa-robot"></i> Claude 3.5 Sonnet <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="action-buttons">
+                                    <button class="icon-btn" title="Attach File"><i class="fas fa-paperclip"></i></button>
+                                    <button class="icon-btn" title="Voice Input"><i class="fas fa-microphone"></i></button>
+                                    <button onclick="transferToStudio()" class="btn-send glow-effect">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
 
-        <div class="container ad-wrapper">
-            <div id="google-ads-header" class="ad-placeholder">
-                <span class="ad-label">Sponsored</span>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-9266584827478576"
-                     data-ad-slot="6055909205"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-            </div>
-        </div>
-
-        <section id="templates" class="section-padding">
-            <div class="container">
-                <div class="section-header center">
-                    <h2 class="section-title">Infinite Possibilities</h2>
-                    <p class="section-subtitle">Our AI is trained on thousands of premium design patterns.</p>
-                </div>
-                <div class="template-grid">
-                    <div class="template-card" data-category="ecommerce" data-aos="fade-up">
-                        <div class="card-image" style="background-image: url('https://source.unsplash.com/800x600/?ecommerce,store');"></div>
-                        <div class="card-info">
-                            <h3>E-Commerce Store</h3>
-                            <p>Perfect for selling products online.</p>
-                        </div>
-                    </div>
-                    <div class="template-card" data-category="restaurant" data-aos="fade-up" data-aos-delay="100">
-                        <div class="card-image" style="background-image: url('https://source.unsplash.com/800x600/?restaurant,food');"></div>
-                        <div class="card-info">
-                            <h3>Restaurant & Cafe</h3>
-                            <p>Menus, maps, and reservations.</p>
-                        </div>
-                    </div>
-                    <div class="template-card" data-category="gaming" data-aos="fade-up" data-aos-delay="200">
-                        <div class="card-image" style="background-image: url('https://source.unsplash.com/800x600/?gaming,esports');"></div>
-                        <div class="card-info">
-                            <h3>Gaming & Esports</h3>
-                            <p>High-energy designs for gamers.</p>
-                        </div>
-                    </div>
-                    <div class="template-card" data-category="candy" data-aos="fade-up" data-aos-delay="300">
-                        <div class="card-image" style="background-image: url('https://source.unsplash.com/800x600/?candy,sweet');"></div>
-                        <div class="card-info">
-                            <h3>Candy & Bakery</h3>
-                            <p>Colorful and sweet designs.</p>
-                        </div>
+                    <div class="quick-prompts">
+                        <button class="prompt-chip glass-panel"><i class="fas fa-bolt text-accent"></i> MeltBot <span class="badge-new">New</span></button>
+                        <button class="prompt-chip glass-panel"><i class="fas fa-lightbulb"></i> Idea Logger</button>
+                        <button class="prompt-chip glass-panel"><i class="fas fa-shoe-prints"></i> EliteFootwear</button>
+                        <button class="prompt-chip glass-panel"><i class="fas fa-random"></i> Surprise Me</button>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section id="about" class="section-padding glass-panel">
-            <div class="container">
-                <div class="text-content-block">
-                    <h2 class="section-title">The Neural Architecture Behind Zulora</h2>
-                    <p class="lead-text">Zulora.in is not just a template wrapper; it is an intelligent autonomous agent designed to democratize technology for every Indian business owner.</p>
-                    <div class="content-grid">
-                        <div class="content-col" data-aos="fade-right">
-                            <h3>Contextual Understanding</h3>
-                            <p>Our proprietary AI model goes beyond simple keyword matching. It understands the *intent* of your business. When you ask for a "Gym Website," it automatically knows to generate sections for trainers, class schedules, membership pricing, and a contact form optimized for lead generation.</p>
-                        </div>
-                        <div class="content-col" data-aos="fade-left">
-                            <h3>Serverless Edge Deployment</h3>
-                            <p>Traditional hosting is complex and expensive. We've abstracted it away. When you click "Deploy," our system instantaneously provisions a secure, globally distributed container on the Edge Network, giving your site sub-second load times worldwide.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="container ad-wrapper">
-            <div id="google-ads-mid" class="ad-placeholder">
-                <span class="ad-label">Advertisement</span>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-9266584827478576"
-                     data-ad-slot="6055909205"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-            </div>
-        </div>
-
-        <section id="blog" class="section-padding">
-            <div class="container">
-                <div class="section-header center">
-                    <h2 class="section-title">Latest Insights</h2>
-                    <p class="section-subtitle">Tips for growing your online business.</p>
-                </div>
-                <div class="blog-grid">
-                    <article class="blog-card glass-panel" data-aos="fade-up">
-                        <div class="blog-image"><img src="https://source.unsplash.com/600x400/?startup,growth" alt="Blog 1"></div>
-                        <div class="blog-content">
-                            <div class="blog-meta">Business • Oct 25</div>
-                            <h3 class="blog-title">Why Your Small Business Needs a Website</h3>
-                            <p class="blog-excerpt">In the digital age, not having a website is like having a shop with no sign. Discover how an online presence drives credibility.</p>
-                            <a href="#" class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </article>
-                    <article class="blog-card glass-panel" data-aos="fade-up" data-aos-delay="100">
-                        <div class="blog-image"><img src="https://source.unsplash.com/600x400/?ai,future" alt="Blog 2"></div>
-                        <div class="blog-content">
-                            <div class="blog-meta">Tech • Oct 20</div>
-                            <h3 class="blog-title">How AI is Democratizing Web Design</h3>
-                            <p class="blog-excerpt">Tools like Zulora are breaking down barriers. Learn how generative AI is replacing expensive agencies and coding.</p>
-                            <a href="#" class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </article>
-                    <article class="blog-card glass-panel" data-aos="fade-up" data-aos-delay="200">
-                        <div class="blog-image"><img src="https://source.unsplash.com/600x400/?marketing,seo" alt="Blog 3"></div>
-                        <div class="blog-content">
-                            <div class="blog-meta">Marketing • Oct 15</div>
-                            <h3 class="blog-title">Simple SEO Tricks to Rank on Google</h3>
-                            <p class="blog-excerpt">You've built your site, now get it seen. We share actionable tips to improve visibility without hiring an expert.</p>
-                            <a href="#" class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section id="pricing" class="section-padding">
-            <div class="container">
-                <div class="section-header center">
-                    <h2 class="section-title">Transparent Pricing</h2>
-                    <p class="section-subtitle">Start for free. Upgrade to scale.</p>
-                </div>
-                <div class="pricing-wrapper">
-                    <div class="pricing-card" data-aos="fade-right">
-                        <div class="card-header">
-                            <h3>Starter</h3>
-                            <div class="price">Free</div>
-                            <p>Forever</p>
-                        </div>
-                        <ul class="features-list">
-                            <li><i class="fas fa-check"></i> 30 AI Credits</li>
-                            <li><i class="fas fa-check"></i> Free Subdomain</li>
-                            <li><i class="fas fa-check"></i> Basic Templates</li>
-                            <li><i class="fas fa-check"></i> Community Support</li>
-                        </ul>
-                        <button onclick="openAuthModal()" class="btn-outline">Start Free</button>
-                    </div>
-                    <div class="pricing-card premium glow-border" data-aos="fade-up">
-                        <div class="badge-pop">MOST POPULAR</div>
-                        <div class="card-header">
-                            <h3>Premium Pro</h3>
-                            <div class="price">₹299<span class="period">/mo</span></div>
-                            <p>Unlock Full Potential</p>
-                        </div>
-                        <ul class="features-list">
-                            <li><i class="fas fa-check"></i> <strong>1000 Monthly Credits</strong></li>
-                            <li><i class="fas fa-check"></i> Unlimited Deployments</li>
-                            <li><i class="fas fa-check"></i> <strong>VIP WhatsApp Support</strong></li>
-                            <li><i class="fas fa-check"></i> Remove Branding</li>
-                            <li><i class="fas fa-check"></i> Gold Profile Badge</li>
-                        </ul>
-                        <button onclick="openPaymentModal()" class="btn-primary full-width">Upgrade Now</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="faq" class="section-padding">
-            <div class="container">
-                <h2 class="section-title center">Frequently Asked Questions</h2>
-                <div class="faq-grid">
-                    <div class="faq-item">
-                        <h4>How does the AI work?</h4>
-                        <p>Zulora uses advanced Large Language Models (LLMs) to understand your text prompt and convert it into valid HTML code instantly.</p>
-                    </div>
-                    <div class="faq-item">
-                        <h4>Can I use my own domain?</h4>
-                        <p>Yes! Premium users can request custom domain mapping. By default, you get a free subdomain like <code>you.zulora.in</code>.</p>
-                    </div>
-                    <div class="faq-item">
-                        <h4>Is hosting free?</h4>
-                        <p>Yes, we provide free hosting for all websites generated on our platform through our cloud infrastructure.</p>
-                    </div>
-                    <div class="faq-item">
-                        <h4>How do I pay?</h4>
-                        <p>We support all major Indian UPI apps (PhonePe, GPay, Paytm) via our secure QR code payment gateway.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <main id="view-dashboard" class="view-section hidden">
-        <div class="dashboard-layout">
             
-            <aside class="dash-sidebar">
-                <div class="user-info-card">
-                    <img id="dash-avatar" src="https://source.unsplash.com/100x100/?abstract,user" class="avatar-lg" alt="User">
-                    <h3 id="dash-name">User</h3>
-                    <span id="dash-plan" class="badge-free">Starter Plan</span>
+            <div class="scroll-indicator">
+                <div class="mouse">
+                    <div class="wheel"></div>
                 </div>
-                
-                <div class="credit-box-lg">
-                    <small>Balance</small>
-                    <h2 class="neon-gold"><span id="dash-credits">0</span> Cr</h2>
-                    <button class="btn-xs btn-gold" onclick="openPaymentModal()">+ Top Up</button>
+                <span>Scroll to Explore</span>
+            </div>
+        </header>
+
+        <section id="features" class="section-padding relative z-10">
+            <div class="container">
+                <div class="section-header center" data-aos="fade-up">
+                    <div class="brand-logo-lg mx-auto mb-4">
+                        </div>
+                    <h2>What can Zulora do for you?</h2>
+                    <p>From concept to deployment, Zulora handles every aspect of software development so you can focus on what matters most - your vision!</p>
                 </div>
 
-                <nav class="sidebar-menu">
-                    <button class="menu-btn active" onclick="switchDashTab('builder')">
-                        <i class="fas fa-magic"></i> AI Builder
-                    </button>
-                    <button class="menu-btn" onclick="switchDashTab('my-sites')">
-                        <i class="fas fa-server"></i> My Websites
-                    </button>
-                    <button class="menu-btn" onclick="switchDashTab('referral')">
-                        <i class="fas fa-gift"></i> Refer & Earn
-                    </button>
-                    <button class="menu-btn" onclick="switchDashTab('support')">
-                        <i class="fas fa-headset"></i> Support
-                    </button>
-                    <button class="menu-btn mobile-only-btn" onclick="switchView('landing')">
-                        <i class="fas fa-arrow-left"></i> Back Home
-                    </button>
-                </nav>
-
-                <div id="google-ads-sidebar" class="ad-sidebar">
-                    <span class="ad-label-sm">Ad</span>
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-9266584827478576"
-                         data-ad-slot="6055909205"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                </div>
-            </aside>
-
-            <section class="dash-content">
-                
-                <div id="tab-builder" class="dash-tab active">
-                    <div class="content-header">
-                        <h1>Create New Website</h1>
-                        <p>Fill in the details to generate your dream site.</p>
+                <div class="features-layout">
+                    <div class="features-list" data-aos="fade-right">
+                        <div class="feature-item active">
+                            <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+                            <div class="feature-text">
+                                <h3>Build websites and mobile apps</h3>
+                                <p>Transform your ideas into fully functional websites and mobile apps with instant deployment, seamless data connections, and powerful scalability.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                            <div class="feature-text">
+                                <h3>Build custom agents</h3>
+                                <p>Create specialized AI agents tailored to your specific business needs and workflows.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-plug"></i></div>
+                            <div class="feature-text">
+                                <h3>Build powerful integrations</h3>
+                                <p>Connect with your favorite tools and services smoothly.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-users"></i></div>
+                            <div class="feature-text">
+                                <h3>Build with your favourite people</h3>
+                                <p>Collaborate in real-time with your team to bring ideas to life faster.</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="builder-interface glass-panel">
-                        <div class="form-grid-2">
-                            <div class="input-group">
-                                <label>Business Name</label>
-                                <input type="text" id="business-name" placeholder="e.g. Apex Solutions" class="modern-input">
+                    <div class="features-visual" data-aos="fade-left">
+                        <div class="device-mockup glass-effect glow-border">
+                            <div class="device-header">
+                                <span class="camera"></span>
+                                <span class="speaker"></span>
                             </div>
-                            <div class="input-group">
-                                <label>Website Category</label>
-                                <select id="site-type" class="modern-select">
-                                    <option value="business">General Business</option>
-                                    <option value="ecommerce">E-Commerce Store</option>
-                                    <option value="portfolio">Personal Portfolio</option>
-                                    <option value="restaurant">Restaurant / Cafe</option>
-                                    <option value="tech">Tech Startup</option>
-                                    <option value="gaming">Gaming / Esports</option>
-                                    <option value="candy">Candy / Bakery</option>
-                                    <option value="realestate">Real Estate</option>
-                                    <option value="education">Education / School</option>
-                                </select>
+                            <div class="device-screen">
+                                <img src="https://source.unsplash.com/400x800/?app,interface" alt="App Interface" class="screen-content active">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="showcase" class="section-padding bg-dark-alt">
+            <div class="container">
+                <div class="section-header left" data-aos="fade-up">
+                    <span class="sub-head glow-text"><i class="fas fa-star"></i> Showcase</span>
+                    <h2>Explore what the community is building</h2>
+                    <p>Discover incredible projects created with Zulora.</p>
+                </div>
+                
+                <div class="filter-tabs" data-aos="fade-up" data-aos-delay="100">
+                    <button class="filter-btn active glass-panel">All</button>
+                    <button class="filter-btn glass-panel">Landing Pages</button>
+                    <button class="filter-btn glass-panel">Advanced Apps</button>
+                    <button class="filter-btn glass-panel">Business Tools</button>
+                    <button class="filter-btn glass-panel">Personal Tools</button>
+                    <button class="filter-btn glass-panel">Mobile Apps</button>
+                </div>
+
+                <div class="project-grid">
+                    <div class="project-card card-large glass-effect glow-border" data-aos="fade-up">
+                        <div class="project-thumb">
+                            <img src="https://source.unsplash.com/1200x800/?headphones,dark" alt="Auramax">
+                            <div class="project-overlay">
+                                <button class="btn-preview glow-effect"><i class="fas fa-eye"></i> Preview</button>
+                                <button class="btn-remix glass-panel"><i class="fas fa-code-branch"></i> Remix</button>
                             </div>
                         </div>
-
-                        <div class="input-group mt-4">
-                            <label>WhatsApp Number (For Contact Button)</label>
-                            <input type="text" id="contact-info" placeholder="+91 99999 88888" class="modern-input">
+                        <div class="project-info">
+                            <h4>Auramax headphone website</h4>
+                            <span class="project-tag">Landing Pages</span>
                         </div>
+                    </div>
 
-                        <div class="input-group mt-4">
-                            <label>Description (Colors, style, features):</label>
-                            <textarea id="ai-prompt" placeholder="E.g., A sleek, dark-themed portfolio for a graphic designer. It should have a large hero image, a gallery section, and blue accents..." class="modern-textarea"></textarea>
+                    <div class="project-card glass-effect glow-border" data-aos="fade-up" data-aos-delay="100">
+                        <div class="project-thumb">
+                            <img src="https://source.unsplash.com/800x600/?dashboard,analytics" alt="Helm HR Ops">
+                            <div class="project-overlay">
+                                <button class="btn-preview glow-effect"><i class="fas fa-eye"></i> Preview</button>
+                                <button class="btn-remix glass-panel"><i class="fas fa-code-branch"></i> Remix</button>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h4>Helm HR Ops Manager</h4>
+                            <span class="project-tag">Advanced Apps</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card glass-effect glow-border" data-aos="fade-up" data-aos-delay="200">
+                        <div class="project-thumb">
+                            <img src="https://source.unsplash.com/800x600/?mobile,app,meditation" alt="Meditation App">
+                            <div class="project-overlay">
+                                <button class="btn-preview glow-effect"><i class="fas fa-eye"></i> Preview</button>
+                                <button class="btn-remix glass-panel"><i class="fas fa-code-branch"></i> Remix</button>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h4>Meditation App</h4>
+                            <span class="project-tag">Mobile Apps</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card card-large glass-effect glow-border" data-aos="fade-up">
+                        <div class="project-thumb">
+                            <img src="https://source.unsplash.com/1200x800/?spiderman,movie" alt="Spiderman Website">
+                            <div class="project-overlay">
+                                <button class="btn-preview glow-effect"><i class="fas fa-eye"></i> Preview</button>
+                                <button class="btn-remix glass-panel"><i class="fas fa-code-branch"></i> Remix</button>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h4>Spiderman launch website</h4>
+                            <span class="project-tag">Landing Pages</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="center mt-8" data-aos="fade-up">
+                    <button class="btn-outline glow-effect">Load More Projects</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="pricing" class="section-padding relative z-10">
+             <div class="container">
+                <div class="section-header center" data-aos="fade-up">
+                    <h2>Transparent pricing for every builder</h2>
+                    <p>Choose the plan that fits your building ambitions.</p>
+                </div>
+                
+                <div class="pricing-toggle center" data-aos="fade-up" data-aos-delay="100">
+                    <span class="toggle-label">Monthly</span>
+                    <label class="switch">
+                        <input type="checkbox" id="pricing-switch">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="toggle-label">Annual <span class="badge-save glow-text">Save 20%</span></span>
+                </div>
+                
+                <div class="pricing-grid">
+                    <div class="pricing-card glass-effect" data-aos="flip-left">
+                        <div class="card-header">
+                            <h3>Hobby</h3>
+                            <p class="price">₹0<span>/month</span></p>
+                            <p class="desc">For passionate individuals and side projects</p>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Unlimited public projects</li>
+                                <li><i class="fas fa-check"></i> 1 private project</li>
+                                <li><i class="fas fa-check"></i> zulora.in subdomain</li>
+                                <li><i class="fas fa-check"></i> Community support</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn-block btn-outline" onclick="openAuthModal()">Start for Free</button>
+                        </div>
+                    </div>
+                    
+                    <div class="pricing-card featured glass-effect glow-border" data-aos="flip-up">
+                        <div class="popular-tag glow-effect">Most Popular</div>
+                        <div class="card-header">
+                            <h3>Pro <i class="fas fa-crown text-accent"></i></h3>
+                            <p class="price">₹299<span>/month</span></p>
+                            <p class="desc">For serious creators and growing brands</p>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Unlimited private projects</li>
+                                <li><i class="fas fa-check"></i> Custom domain connection</li>
+                                <li><i class="fas fa-check"></i> No Zulora branding</li>
+                                <li><i class="fas fa-check"></i> Priority support</li>
+                                <li><i class="fas fa-check"></i> 1000 AI Credits/mo</li>
+                                <li><i class="fas fa-check"></i> Advanced analytics</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn-block btn-primary glow-effect" onclick="openPaymentModal()">Upgrade to Pro</button>
+                        </div>
+                    </div>
+                    
+                    <div class="pricing-card glass-effect" data-aos="flip-right">
+                         <div class="card-header">
+                            <h3>Business</h3>
+                            <p class="price">₹999<span>/month</span></p>
+                            <p class="desc">For teams and high-traffic needs</p>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Everything in Pro</li>
+                                <li><i class="fas fa-check"></i> Team collaboration (up to 5)</li>
+                                <li><i class="fas fa-check"></i> Dedicated account manager</li>
+                                <li><i class="fas fa-check"></i> 99.9% Uptime SLA</li>
+                                <li><i class="fas fa-check"></i> 5000 AI Credits/mo</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn-block btn-outline" onclick="openContactModal()">Contact Sales</button>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <footer class="main-footer bg-dark-alt">
+            <div class="container">
+                <div class="footer-top">
+                    <div class="footer-brand">
+                        <div class="brand-logo">
+                             </div>
+                        <span class="brand-text">Zulora</span>
+                        <p>Empowering creators to build the future of the web with Artificial Intelligence.</p>
+                        <div class="social-icons">
+                            <a href="https://www.instagram.com/zulora_official?igsh=MTRvOGYwNGZoZ3h0aw==" target="_blank" class="social-btn glass-panel"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-btn glass-panel"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-btn glass-panel"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-btn glass-panel"><i class="fab fa-discord"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-links-grid">
+                        <div class="footer-col">
+                            <h4>Product</h4>
+                            <a href="#features">Features</a>
+                            <a href="#showcase">Showcase</a>
+                            <a href="#pricing">Pricing</a>
+                            <a href="#">Changelog</a>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Resources</h4>
+                            <a href="#">Documentation</a>
+                            <a href="#blog">Blog</a>
+                            <a href="#">Community</a>
+                            <a href="#" onclick="openReferralModal()">Referral Program</a>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Company</h4>
+                            <a href="#">About Us</a>
+                            <a href="#">Careers</a>
+                            <a href="#" onclick="openContactModal()">Contact</a>
+                            <a href="#">Partners</a>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Legal</h4>
+                            <a href="#">Privacy Policy</a>
+                            <a href="#">Terms of Service</a>
+                            <a href="#">Cookie Policy</a>
+                            <a href="#">Acceptable Use</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Zulora AI Technologies. All rights reserved.</p>
+                    <div class="footer-meta">
+                        <span>Made with <i class="fas fa-heart text-danger glow-text"></i> in the Cloud.</span>
+                        <div class="status-badge glass-panel">
+                            <span class="status-dot online"></span> Systems Normal
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="view-studio" class="view-layer hidden">
+        <div class="studio-layout">
+            
+            <header class="studio-header glass-effect">
+                <div class="sh-left">
+                    <button class="icon-btn" onclick="switchView('landing')" title="Back to Home"><i class="fas fa-chevron-left"></i></button>
+                    <div class="project-info">
+                        <span class="project-name" id="project-name-display">My Awesome Project</span>
+                        <div class="project-meta">
+                            <span class="save-status"><i class="fas fa-cloud-upload-alt"></i> Saved</span>
+                            <span class="subdomain-badge glass-panel">my-project.zulora.in</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sh-center">
+                    <div class="device-switcher glass-panel">
+                        <button class="switcher-btn active" title="Desktop View"><i class="fas fa-desktop"></i></button>
+                        <button class="switcher-btn" title="Tablet View"><i class="fas fa-tablet-alt"></i></button>
+                        <button class="switcher-btn" title="Mobile View"><i class="fas fa-mobile-alt"></i></button>
+                    </div>
+                </div>
+                
+                <div class="sh-right">
+                    <div class="credits-pill glass-panel" onclick="openPaymentModal()">
+                        <i class="fas fa-bolt text-accent"></i> <span id="studio-credits">100</span>
+                    </div>
+                    <button class="icon-btn" title="Share"><i class="fas fa-share-alt"></i></button>
+                    <button class="btn-secondary glass-panel" onclick="openPreviewOverlay()">
+                        <i class="fas fa-play"></i> Preview
+                    </button>
+                    <button class="btn-primary glow-effect" id="publish-btn">
+                        <i class="fas fa-rocket"></i> Publish
+                    </button>
+                    <div class="avatar-wrapper sm">
+                        <img id="studio-avatar" src="https://source.unsplash.com/100x100/?avatar" alt="User">
+                    </div>
+                </div>
+            </header>
+
+            <div class="studio-body">
+                
+                <aside class="studio-sidebar-left glass-effect">
+                    <div class="sidebar-tabs">
+                        <button class="tab-btn active" title="Add Elements"><i class="fas fa-plus"></i></button>
+                        <button class="tab-btn" title="AI Architect"><i class="fas fa-wand-magic-sparkles"></i></button>
+                        <button class="tab-btn" title="Pages & Layers"><i class="fas fa-layer-group"></i></button>
+                        <button class="tab-btn" title="Theme & Styles"><i class="fas fa-palette"></i></button>
+                        <button class="tab-btn" title="Settings"><i class="fas fa-cog"></i></button>
+                    </div>
+                    
+                    <div class="sidebar-panel-content">
+                        <div id="panel-add" class="panel-section active">
+                            <div class="panel-header">
+                                <h3>Add Elements</h3>
+                            </div>
+                            <div class="element-search">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Search elements...">
+                            </div>
+                            <div class="elements-grid">
+                                <div class="element-item glass-panel" draggable="true">
+                                    <i class="fas fa-font"></i> <span>Text</span>
+                                </div>
+                                <div class="element-item glass-panel" draggable="true">
+                                    <i class="far fa-image"></i> <span>Image</span>
+                                </div>
+                                <div class="element-item glass-panel" draggable="true">
+                                    <i class="fas fa-square"></i> <span>Container</span>
+                                </div>
+                                <div class="element-item glass-panel" draggable="true">
+                                    <i class="fas fa-mouse-pointer"></i> <span>Button</span>
+                                </div>
+                                </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <main class="studio-canvas-area">
+                    <div class="canvas-toolbar glass-panel">
+                        <div class="toolbar-left">
+                            <button class="icon-btn-sm" title="Undo"><i class="fas fa-undo"></i></button>
+                            <button class="icon-btn-sm" title="Redo"><i class="fas fa-redo"></i></button>
+                        </div>
+                        <div class="toolbar-center">
+                            <span class="zoom-level">100%</span>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="icon-btn-sm active" title="Edit Mode"><i class="fas fa-mouse-pointer"></i></button>
+                            <button class="icon-btn-sm" title="Hand Tool"><i class="fas fa-hand-paper"></i></button>
+                        </div>
+                    </div>
+                    <div class="canvas-viewport">
+                        <div class="canvas-frame-wrapper glass-effect glow-border" id="canvas-wrapper">
+                            <iframe id="editor-frame" title="Website Canvas" sandbox="allow-same-origin allow-scripts"></iframe>
+                            <div id="selection-overlay" class="hidden"></div>
+                        </div>
+                    </div>
+                </main>
+
+                <aside class="studio-sidebar-right glass-effect">
+                    <div class="prop-header">
+                        <h3>Properties</h3>
+                        <button class="icon-btn-sm" title="Close"><i class="fas fa-times"></i></button>
+                    </div>
+                    
+                    <div class="prop-body">
+                        <div id="prop-empty" class="prop-state-empty">
+                            <img src="assets/empty-state-dark.svg" alt="Select an element">
+                            <p>Select an element on the canvas to edit its properties.</p>
                         </div>
                         
-                        <div class="control-row">
-                            <div class="subdomain-selector">
-                                <span class="prefix">https://</span>
-                                <input type="text" id="subdomain-input" placeholder="project-name">
-                                <span class="suffix">.zulora.in</span>
+                        <div id="prop-active" class="hidden">
+                            <div class="prop-section glass-panel">
+                                <div class="section-title">
+                                    <span>Layout</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="section-content">
+                                    <div class="prop-row two-col">
+                                        <div class="prop-field">
+                                            <label>Width</label>
+                                            <div class="input-with-unit">
+                                                <input type="number" value="100">
+                                                <select class="unit-select"><option>%</option><option>px</option></select>
+                                            </div>
+                                        </div>
+                                        <div class="prop-field">
+                                            <label>Height</label>
+                                            <div class="input-with-unit">
+                                                <input type="text" value="Auto">
+                                                <select class="unit-select"><option>px</option><option>%</option></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
                             </div>
-                            <div class="action-buttons">
-                                <button id="generate-btn" class="btn-primary icon-spin-hover">
-                                    <i class="fas fa-robot"></i> Generate Site (-10 Cr)
-                                </button>
+                            
+                            <div class="prop-section glass-panel">
+                                <div class="section-title">
+                                    <span>Typography</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="section-content">
+                                    <div class="prop-field">
+                                        <label>Font Family</label>
+                                        <select class="std-select">
+                                            <option>Inter</option>
+                                            <option>Space Grotesk</option>
+                                            <option>Arial</option>
+                                        </select>
+                                    </div>
+                                    </div>
                             </div>
+
+                            <div class="prop-section glass-panel hidden" id="prop-media-section">
+                                <div class="section-title">
+                                    <span>Image Source</span>
+                                </div>
+                                <div class="section-content">
+                                    <div class="media-preview glow-border">
+                                        <img id="prop-img-preview" src="" alt="Preview">
+                                    </div>
+                                    <div class="media-actions">
+                                        <button class="btn-sm btn-outline" onclick="document.getElementById('file-upload').click()">
+                                            <i class="fas fa-upload"></i> Upload
+                                        </button>
+                                        <input type="file" id="file-upload" hidden accept="image/*">
+                                        <button class="btn-sm btn-outline" onclick="openGalleryModal()">
+                                            <i class="far fa-images"></i> Gallery
+                                        </button>
+                                    </div>
+                                    <div class="prop-field mt-2">
+                                        <label>Alt Text</label>
+                                        <input type="text" class="std-input" placeholder="Description...">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-                </div>
+                </aside>
 
-                <div id="full-screen-preview" class="fullscreen-overlay hidden">
-                    <div class="fs-toolbar">
-                        <div class="fs-logo">Zulora Preview</div>
-                        <div class="fs-actions">
-                            <button id="close-fs-btn" class="btn-outline-sm"><i class="fas fa-times"></i> Close</button>
-                            <button id="deploy-fs-btn" class="btn-success pulse-anim"><i class="fas fa-cloud-upload-alt"></i> Deploy Live (-25 Cr)</button>
-                        </div>
-                    </div>
-                    <div class="fs-iframe-container">
-                        <iframe id="website-preview-fs" title="Full Screen Preview"></iframe>
-                    </div>
-                </div>
-
-                <div id="tab-referral" class="dash-tab hidden">
-                    <div class="referral-hero glass-panel">
-                        <div class="gift-icon"><i class="fas fa-gift"></i></div>
-                        <h2>Invite & Earn</h2>
-                        <p>Share your link. You get +15 Credits. They get +30 Credits.</p>
-                        <div class="copy-box">
-                            <input type="text" id="referral-link-display" readonly value="Loading...">
-                            <button onclick="copyReferral()"><i class="fas fa-copy"></i> Copy</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="tab-support" class="dash-tab hidden">
-                    <div class="support-grid">
-                        <a href="https://wa.me/916395211325" target="_blank" class="support-card glass-panel">
-                            <i class="fab fa-whatsapp text-green-500"></i>
-                            <h3>WhatsApp</h3>
-                        </a>
-                        <a href="https://instagram.com/zulora_official" target="_blank" class="support-card glass-panel">
-                            <i class="fab fa-instagram text-pink-500"></i>
-                            <h3>Instagram</h3>
-                        </a>
-                        <a href="mailto:zulora.help@gmail.com" class="support-card glass-panel">
-                            <i class="fas fa-envelope text-blue-500"></i>
-                            <h3>Email</h3>
-                        </a>
-                    </div>
-                </div>
-
-            </section>
+            </div>
         </div>
-    </main>
+    </div>
 
     <div id="auth-modal" class="modal-overlay hidden">
-        <div class="modal-card">
-            <button class="close-modal" onclick="closeAuthModal()">&times;</button>
+        <div class="modal-container glass-effect glow-border">
+            <button class="modal-close icon-btn" onclick="closeAuthModal()">&times;</button>
             <div class="modal-header center">
+                <div class="brand-logo-md mx-auto mb-2">
+                    </div>
                 <h2>Welcome Back</h2>
-                <p>Sign in to continue</p>
+                <p>Login to continue building your empire.</p>
             </div>
             <div class="modal-body">
-                <button id="google-login-btn" class="btn-google">
-                    <i class="fab fa-google"></i> Continue with Google
+                <button id="google-login-btn" class="btn-social google glass-panel">
+                    <img src="assets/google-icon.svg" alt="G"> Continue with Google
                 </button>
-                <div class="auth-terms center mt-4">
-                    By continuing, you agree to our Terms.
-                </div>
+                <button class="btn-social apple glass-panel">
+                    <i class="fab fa-apple"></i> Continue with Apple
+                </button>
+                <div class="divider-text">or continue with email</div>
+                <form class="auth-form">
+                    <div class="input-group glass-panel">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" placeholder="Email Address" required>
+                    </div>
+                    <button type="submit" class="btn-block btn-primary glow-effect mt-4">Continue</button>
+                </form>
+                <p class="auth-footer">
+                    By continuing, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+                </p>
             </div>
         </div>
     </div>
 
     <div id="payment-modal" class="modal-overlay hidden">
-        <div class="modal-card payment-card">
-            <button class="close-modal" onclick="closePaymentModal()">&times;</button>
-            <div class="payment-header center">
-                <i class="fas fa-crown gold-icon fa-3x mb-4"></i>
-                <h2>Premium</h2>
-                <p class="price-lg">₹299 <small>/month</small></p>
-            </div>
-            <div class="payment-body">
-                <ul class="benefit-list">
-                    <li>✅ 1000 AI Credits</li>
-                    <li>✅ Priority Support</li>
-                    <li>✅ Verified Badge</li>
-                </ul>
-                <div class="upi-section center glass-panel p-6 mt-4">
-                    <p>Scan to Pay via UPI</p>
-                    <div id="qr-placeholder" class="qr-code-box mb-4">
-                        <i class="fas fa-qrcode fa-3x opacity-50"></i>
+        <div class="modal-container glass-effect glow-border modal-lg">
+            <button class="modal-close icon-btn" onclick="closePaymentModal()">&times;</button>
+            <div class="modal-grid">
+                <div class="modal-left bg-gradient p-6 text-white">
+                    <i class="fas fa-crown text-4xl mb-4 text-accent-gold glow-text"></i>
+                    <h2>Upgrade to Pro</h2>
+                    <p class="opacity-80 mb-6">Unlock the full potential of Zulora Studio.</p>
+                    <ul class="feature-list-light">
+                        <li><i class="fas fa-check-circle"></i> Custom Domain</li>
+                        <li><i class="fas fa-check-circle"></i> Remove Zulora Branding</li>
+                        <li><i class="fas fa-check-circle"></i> 1000 AI Credits/mo</li>
+                        <li><i class="fas fa-check-circle"></i> Priority Support</li>
+                    </ul>
+                </div>
+                <div class="modal-right p-6">
+                    <div class="pricing-summary glass-panel mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-lg">Pro Plan (Monthly)</span>
+                            <span class="text-2xl font-bold">₹299</span>
+                        </div>
+                        <p class="text-sm text-muted">Billed monthly. Cancel anytime.</p>
                     </div>
-                    <p class="upi-id-text">UPI: <strong>shivenpanwar@fam</strong></p>
-                    <button onclick="initiateUPIPayment()" class="btn-pay full-width">
-                        Pay ₹299
-                    </button>
+                    
+                    <h4 class="mb-4">Payment Method</h4>
+                    <div class="payment-methods">
+                        <button class="pm-btn active glass-panel"><i class="fab fa-google-pay"></i> UPI / QR</button>
+                        <button class="pm-btn glass-panel"><i class="fas fa-credit-card"></i> Card</button>
+                    </div>
+                    
+                    <div id="upi-section" class="upi-container center mt-4">
+                        <p class="mb-2 font-medium">Scan QR to Pay</p>
+                        <div id="qr-target" class="qr-box glass-panel glow-border">
+                            </div>
+                        <p class="upi-id mt-2">UPI ID: <span class="text-accent">shivenpanwar@fam</span></p>
+                        <button class="btn-block btn-success glow-effect mt-4" onclick="verifyPayment()">
+                            <i class="fas fa-check-circle"></i> I Have Paid
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="main-footer">
-        <div class="container footer-grid">
-            <div class="footer-col">
-                <h3>Zulora.in</h3>
-                <p>Empowering Indians to build online.</p>
+    <div id="contact-modal" class="modal-overlay hidden">
+        <div class="modal-container glass-effect glow-border">
+            <button class="modal-close icon-btn" onclick="closeContactModal()">&times;</button>
+            <div class="modal-header">
+                <h2><i class="fas fa-headset text-accent"></i> Contact Support</h2>
+                <p>We're here to help you 24/7.</p>
             </div>
-            <div class="footer-col">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Refund Policy</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Contact</h4>
-                <p>Agra, India</p>
-                <p>zulora.help@gmail.com</p>
-                <p>+91 6395211325</p>
-            </div>
-        </div>
-        
-        <div class="container footer-ad mt-8">
-            <div class="ad-placeholder">
-                <span class="ad-label">Advertisement</span>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-9266584827478576"
-                     data-ad-slot="6055909205"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
+            <div class="modal-body">
+                <div class="contact-grid">
+                    <a href="https://wa.me/916395211325" target="_blank" class="contact-card glass-panel whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp Us</span>
+                        <small>Instant Response</small>
+                    </a>
+                    <a href="https://www.instagram.com/zulora_official?igsh=MTRvOGYwNGZoZ3h0aw==" target="_blank" class="contact-card glass-panel instagram">
+                        <i class="fab fa-instagram"></i>
+                        <span>DM on Instagram</span>
+                        <small>Follow for updates</small>
+                    </a>
+                    <a href="mailto:zulora.help@gmail.com" class="contact-card glass-panel email">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email Support</span>
+                        <small>Get help via email</small>
+                    </a>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="footer-bottom center mt-8 border-t border-white/10 pt-4">
-            <p>&copy; 2026 Zulora AI. All Rights Reserved.</p>
+    <div id="referral-modal" class="modal-overlay hidden">
+        <div class="modal-container glass-effect glow-border center">
+            <button class="modal-close icon-btn" onclick="closeReferralModal()">&times;</button>
+            <div class="modal-header">
+                <div class="gift-icon-lg glow-effect mb-4">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <h2>Refer & Earn Credits</h2>
+                <p>Share the future of web building and earn rewards.</p>
+            </div>
+            <div class="modal-body">
+                <div class="referral-stats glass-panel mb-6">
+                    <div class="stat-box">
+                        <span class="stat-val text-accent">50</span>
+                        <span class="stat-label">Credits per Referral</span>
+                    </div>
+                    <div class="stat-box border-l border-white/10">
+                        <span class="stat-val" id="ref-count">0</span>
+                        <span class="stat-label">Total Referrals</span>
+                    </div>
+                </div>
+                <label class="block text-left mb-2 font-medium">Your Unique Link</label>
+                <div class="copy-box glass-panel glow-border">
+                    <input type="text" id="ref-link" readonly value="https://zulora.in/join?ref=USER123">
+                    <button class="btn-copy glow-effect" onclick="copyRef()"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div class="social-share mt-6">
+                    <button class="share-btn glass-panel whatsapp"><i class="fab fa-whatsapp"></i></button>
+                    <button class="share-btn glass-panel twitter"><i class="fab fa-twitter"></i></button>
+                    <button class="share-btn glass-panel facebook"><i class="fab fa-facebook-f"></i></button>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
+
+    <div id="preview-overlay" class="fs-overlay hidden">
+        <div class="fs-bar glass-effect">
+            <div class="fs-left">
+                <span class="live-indicator"><span class="blink-dot"></span> Live Preview</span>
+                <span class="preview-url glass-panel">https://my-project.zulora.in</span>
+            </div>
+            <div class="fs-center device-toggles-sm glass-panel">
+                 <button class="active"><i class="fas fa-desktop"></i></button>
+                 <button><i class="fas fa-tablet-alt"></i></button>
+                 <button><i class="fas fa-mobile-alt"></i></button>
+            </div>
+            <div class="fs-right">
+                <button class="btn-sm btn-primary glow-effect mr-2">Publish Now</button>
+                <button class="icon-btn" onclick="closePreviewOverlay()"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="fs-frame-container">
+            <iframe id="fs-frame" class="fs-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 800, once: true });
+        // Initialize Animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true,
+            mirror: false
+        });
+        // Remove no-js class after load
+        window.addEventListener('load', () => document.documentElement.classList.remove('no-js'));
     </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <script src="script.js"></script>
 
 </body>
