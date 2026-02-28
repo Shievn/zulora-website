@@ -1,28 +1,59 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
+<html lang="en" class="scroll-smooth no-js">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     
-    <title>Zulora Studio | AI Web Architect</title>
-    <meta name="description" content="Generate, edit, and host stunning websites in seconds using Zulora AI. Founded by Shiven Panwar. Claim your custom subdomain today.">
+    <title>Zulora Studio | The Future of AI Web Architecture</title>
+    <meta name="description" content="Zulora Studio, founded by 14-year-old prodigy Shiven Panwar from Doghat, UP. Generate, edit, and host stunning AI websites instantly. Claim your custom subdomain today.">
     <meta name="author" content="Shiven Panwar">
     <meta name="theme-color" content="#030014">
     
     <link rel="icon" type="image/png" href="assets/favicon.png">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Zulora Studio",
+      "alternateName": "Zulora",
+      "url": "https://zulora.in",
+      "description": "Zulora Studio is an AI-powered Web Operating System that generates and hosts customizable websites instantly.",
+      "founder": {
+        "@type": "Person",
+        "name": "Shiven Panwar",
+        "image": "https://i.postimg.cc/mkhK7kT3/IMG-20260228-230231.jpg",
+        "jobTitle": "Founder & CEO",
+        "description": "A 14-year-old tech visionary and prodigy from Doghat, Baghpat District, Uttar Pradesh, India. He is highly innovative and redefining AI web development.",
+        "sameAs": [
+          "https://www.linkedin.com/in/shiven-panwar-aa1b31232"
+        ]
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-6395211325",
+        "contactType": "customer support",
+        "email": "zulora.help@gmail.com",
+        "availableLanguage": "en"
+      },
+      "sameAs": [
+        "https://www.instagram.com/zulora_official"
+      ]
+    }
+    </script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body id="zulora-app" class="theme-dark scroll-smooth">
+<body id="zulora-app" class="theme-dark">
 
     <div id="founder-banner" class="global-banner">
         <div class="banner-inner">
@@ -49,10 +80,10 @@
                 </div>
                 
                 <div class="nav-menu desktop-only">
-                    <a href="#features" class="nav-item">Features</a>
-                    <a href="#showcase" class="nav-item">Showcase</a>
-                    <a href="#pricing" class="nav-item">Pricing</a>
-                    <a href="#" class="nav-item" onclick="ZuloraApp.openModal('contact-modal')">Contact</a>
+                    <a href="#how-it-works" class="nav-item">How it Works</a>
+                    <a href="#features" class="nav-item">Ecosystem</a>
+                    <a href="#founder-section" class="nav-item">The Visionary</a>
+                    <a href="#pricing" class="nav-item">Pro Setup</a>
                 </div>
 
                 <div class="nav-actions">
@@ -70,10 +101,10 @@
                             <span id="nav-credit-balance">0</span>
                         </div>
                         <button class="btn-studio glow-effect" onclick="ZuloraApp.switchView('studio')">
-                            <i class="fas fa-paint-brush"></i> My Studio
+                            <i class="fas fa-paint-brush"></i> Open Studio
                         </button>
                         <div class="user-avatar-sm" onclick="ZuloraApp.toggleMobileMenu()">
-                            <img id="nav-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="User">
+                            <img id="nav-avatar" src="assets/default-avatar.png" alt="User">
                             <div class="online-dot"></div>
                         </div>
                     </div>
@@ -102,7 +133,7 @@
                 
                 <div class="drawer-scrollable">
                     <div id="drawer-user-area" class="drawer-user-card hidden">
-                        <img id="drawer-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="User" class="drawer-img">
+                        <img id="drawer-avatar" src="assets/default-avatar.png" alt="User" class="drawer-img">
                         <div class="drawer-user-meta">
                             <h4 id="drawer-username">Creator</h4>
                             <span id="drawer-email">creator@zulora.in</span>
@@ -110,11 +141,11 @@
                     </div>
 
                     <div class="drawer-section">
-                        <h5 class="drawer-title">Explore</h5>
+                        <h5 class="drawer-title">Navigation</h5>
                         <ul class="drawer-links">
                             <li><a href="#home" onclick="ZuloraApp.toggleMobileMenu()"><i class="fas fa-home"></i> Home</a></li>
-                            <li><a href="#features" onclick="ZuloraApp.toggleMobileMenu()"><i class="fas fa-star"></i> Features</a></li>
-                            <li><a href="#showcase" onclick="ZuloraApp.toggleMobileMenu()"><i class="fas fa-images"></i> Templates</a></li>
+                            <li><a href="#how-it-works" onclick="ZuloraApp.toggleMobileMenu()"><i class="fas fa-cogs"></i> How It Works</a></li>
+                            <li><a href="#founder-section" onclick="ZuloraApp.toggleMobileMenu()"><i class="fas fa-user-astronaut"></i> The Founder</a></li>
                             <li><a href="#pricing" onclick="ZuloraApp.toggleMobileMenu()"><i class="fas fa-tag"></i> Pricing</a></li>
                         </ul>
                     </div>
@@ -124,16 +155,16 @@
                     <div class="drawer-section">
                         <h5 class="drawer-title">My Account</h5>
                         <ul class="drawer-links">
-                            <li><a href="#" onclick="ZuloraApp.switchView('studio'); ZuloraApp.toggleMobileMenu()"><i class="fas fa-laptop-code text-primary"></i> Open Studio</a></li>
+                            <li><a href="#" onclick="ZuloraApp.switchView('studio'); ZuloraApp.toggleMobileMenu()"><i class="fas fa-laptop-code text-primary"></i> Open Studio Editor</a></li>
                             <li><a href="#" onclick="ZuloraApp.openModal('referral-modal'); ZuloraApp.toggleMobileMenu()"><i class="fas fa-link text-pink"></i> My Referral Link</a></li>
-                            <li><a href="#" onclick="ZuloraApp.openModal('payment-modal'); ZuloraApp.toggleMobileMenu()"><i class="fas fa-crown text-gold"></i> Upgrade to Pro</a></li>
+                            <li><a href="#" onclick="ZuloraApp.openModal('payment-modal'); ZuloraApp.toggleMobileMenu()"><i class="fas fa-crown text-gold"></i> Upgrade to Pro (UPI)</a></li>
                         </ul>
                     </div>
 
                     <hr class="drawer-hr">
 
                     <div class="drawer-section">
-                        <h5 class="drawer-title">24/7 Support</h5>
+                        <h5 class="drawer-title">Connect with HQ</h5>
                         <ul class="drawer-contact">
                             <li>
                                 <a href="https://wa.me/916395211325" target="_blank" class="contact-card whatsapp">
@@ -154,20 +185,11 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="https://www.instagram.com/zulora_official?igsh=MTRvOGYwNGZoZ3h0aw==" target="_blank" class="contact-card instagram">
-                                    <div class="c-icon"><i class="fab fa-instagram"></i></div>
-                                    <div class="c-info">
-                                        <span class="c-name">Instagram</span>
-                                        <span class="c-detail">@zulora_official</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://www.linkedin.com/in/shiven-panwar-aa1b31232?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="contact-card linkedin">
+                                <a href="https://www.linkedin.com/in/shiven-panwar-aa1b31232" target="_blank" class="contact-card linkedin">
                                     <div class="c-icon"><i class="fab fa-linkedin-in"></i></div>
                                     <div class="c-info">
                                         <span class="c-name">LinkedIn</span>
-                                        <span class="c-detail">Connect with Founder</span>
+                                        <span class="c-detail">Shiven Panwar (CEO)</span>
                                     </div>
                                 </a>
                             </li>
@@ -176,7 +198,7 @@
                 </div>
 
                 <div class="drawer-footer">
-                    <button id="drawer-auth-btn" class="btn-primary w-full" onclick="ZuloraApp.openModal('auth-modal')">Log In / Sign Up</button>
+                    <button id="drawer-auth-btn" class="btn-primary w-full" onclick="ZuloraApp.openModal('auth-modal')">Compulsory Log In</button>
                 </div>
             </div>
         </div>
@@ -194,46 +216,30 @@
                     </div>
                     
                     <h1 class="hero-title">
-                        Command the AI.<br>
-                        <span class="text-gradient">Launch your Empire.</span>
+                        Architect the Web.<br>
+                        <span class="text-gradient">With Pure Thought.</span>
                     </h1>
                     
                     <p class="hero-desc">
-                        Type your vision. Our AI builds the structure, writes the copy, and sources the images. If you mention your social or contact info, we automatically integrate functional buttons. Claim your custom subdomain instantly.
+                        Describe your dream website. Our neural network writes the code, designs the layout, and deploys it instantly to your custom subdomain. Smartly integrated with your WhatsApp, Email, or LinkedIn.
                     </p>
                     
                     <div class="ai-prompt-container glass-heavy glow-box">
                         <div class="prompt-header">
-                            <span class="ai-model-tag"><i class="fas fa-brain text-primary"></i> Zulora AI-Pro</span>
+                            <span class="ai-model-tag"><i class="fas fa-brain text-primary"></i> Zulora Core-V1</span>
                             <span class="credit-cost"><i class="fas fa-coins text-gold"></i> 10 Credits / Gen</span>
                         </div>
                         <div class="prompt-body">
-                            <textarea id="main-landing-prompt" placeholder="Build an advanced e-commerce store for luxury sneakers. Add a WhatsApp contact button for +91 6395211325..."></textarea>
+                            <textarea id="main-landing-prompt" placeholder="Build an ultra-modern SaaS landing page. Add a direct WhatsApp contact button for +91 6395211325 and link my Instagram..."></textarea>
                         </div>
                         <div class="prompt-footer">
                             <div class="prompt-tools">
-                                <button class="tool-btn" title="Upload Reference Image"><i class="fas fa-image"></i></button>
+                                <button class="tool-btn" title="Upload Brand Assets"><i class="fas fa-image"></i></button>
                                 <button class="tool-btn" title="Voice Dictation"><i class="fas fa-microphone"></i></button>
                             </div>
                             <button id="hero-generate-btn" class="btn-generate hover-lift" onclick="ZuloraApp.initiateGeneration()">
                                 <i class="fas fa-wand-magic-sparkles"></i> Generate Site
                             </button>
-                        </div>
-                    </div>
-                    
-                    <div class="hero-social-proof">
-                        <div class="proof-stat">
-                            <strong>1.2M+</strong>
-                            <span>Subdomains Claimed</span>
-                        </div>
-                        <div class="proof-divider"></div>
-                        <div class="proof-users">
-                            <div class="avatar-stack">
-                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="U1">
-                                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=100&q=80" alt="U2">
-                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="U3">
-                            </div>
-                            <span>Loved by global creators</span>
                         </div>
                     </div>
                 </div>
@@ -249,14 +255,14 @@
                             
                             <div class="ai-loader-overlay hidden" id="hero-mockup-loader">
                                 <div class="spinner-ring"></div>
-                                <span>Generating Smart UI...</span>
+                                <span>Compiling Neural Code...</span>
                             </div>
                             
                             <div class="float-tag tag-top glass-panel glow-border">
-                                <i class="fas fa-globe text-primary"></i> Subdomain Ready
+                                <i class="fas fa-globe text-primary"></i> Subdomain Claimed
                             </div>
                             <div class="float-tag tag-bottom glass-panel glow-border">
-                                <i class="fas fa-code text-success"></i> Smart Buttons Active
+                                <i class="fas fa-code text-success"></i> Smart Contacts Mapped
                             </div>
                         </div>
                     </div>
@@ -269,20 +275,116 @@
             </div>
         </header>
 
-        <section id="features" class="section-layout bg-dark-gradient">
+        <section id="how-it-works" class="section-layout bg-dark-gradient border-t border-white/5">
+            <div class="container">
+                <div class="section-header center" data-aos="fade-up">
+                    <span class="section-subtitle">The Mechanics</span>
+                    <h2 class="section-title">How Zulora Transforms Text to Tech</h2>
+                    <p class="section-desc">We eliminated the complexity of servers, codebases, and domain mapping.</p>
+                </div>
+                
+                <div class="process-timeline">
+                    <div class="timeline-step" data-aos="fade-up">
+                        <div class="step-number text-gradient">01</div>
+                        <div class="step-content glass-panel">
+                            <h3>Prompt Parsing</h3>
+                            <p>Our Natural Language Processor breaks down your request, identifying specific design themes, layout requirements, and extracting smart contact info (like your WhatsApp number).</p>
+                        </div>
+                    </div>
+                    <div class="timeline-step" data-aos="fade-up" data-aos-delay="100">
+                        <div class="step-number text-gradient">02</div>
+                        <div class="step-content glass-panel">
+                            <h3>Neural Generation</h3>
+                            <p>Instead of templates, the engine writes bespoke HTML5, Tailwind CSS, and Javascript. It injects high-fidelity placeholder images that perfectly match your niche.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-step" data-aos="fade-up" data-aos-delay="200">
+                        <div class="step-number text-gradient">03</div>
+                        <div class="step-content glass-panel">
+                            <h3>God-Mode Customization</h3>
+                            <p>Your site is loaded into our proprietary Visual Editor. Click any text to rewrite it, click any image to upload from your gallery, and adjust colors instantly.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-step" data-aos="fade-up" data-aos-delay="300">
+                        <div class="step-number text-gradient">04</div>
+                        <div class="step-content glass-panel border-green-500/30">
+                            <h3>Subdomain Deployment</h3>
+                            <p>Select your unique <strong>yourname.zulora.in</strong> address. We instantly register it, host your site on a global CDN, and submit it to Google for indexing.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="founder-section" class="section-layout border-t border-white/5 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-pink-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+            <div class="container max-w-7xl">
+                <div class="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+                    
+                    <div class="lg:col-span-5 flex justify-center" data-aos="fade-right">
+                        <div class="founder-img-wrapper relative">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500 to-pink-500 rounded-[2rem] transform rotate-3 scale-105 opacity-50 blur-lg"></div>
+                            
+                            <img src="https://i.postimg.cc/mkhK7kT3/IMG-20260228-230231.jpg" 
+                                 alt="Shiven Panwar - 14-Year-Old Founder and CEO of Zulora Studio" 
+                                 title="Shiven Panwar" 
+                                 class="relative z-10 w-full max-w-[350px] lg:max-w-[420px] aspect-[4/5] object-cover rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-white/10 mx-auto">
+                            
+                            <div class="absolute -bottom-6 -right-6 glass-heavy p-4 rounded-xl border border-white/10 shadow-2xl z-20 hidden md:block">
+                                <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">Location</p>
+                                <p class="font-bold text-white flex items-center gap-2"><i class="fas fa-map-marker-alt text-red-500"></i> Doghat, UP, India</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-7 text-center lg:text-left" data-aos="fade-left">
+                        <span class="section-subtitle text-primary"><i class="fas fa-rocket"></i> The Visionary Behind Zulora</span>
+                        <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-space">Meet Shiven Panwar</h2>
+                        
+                        <div class="glass-panel p-6 rounded-2xl border-l-4 border-primary mb-8 text-left inline-block w-full">
+                            <p class="text-xl md:text-2xl font-bold text-white leading-snug">
+                                "Age is just a metric. Innovation is a mindset." 
+                                <span class="block text-sm text-gray-400 font-normal mt-2">— Shiven Panwar, 14-Year-Old Tech Prodigy</span>
+                            </p>
+                        </div>
+
+                        <p class="text-lg text-gray-300 mb-6 leading-relaxed">
+                            Hailing from the vibrant town of <strong>Doghat in the Baghpat district of Uttar Pradesh, India</strong>, Shiven Panwar is redefining the boundaries of artificial intelligence and web architecture at just <strong>14 years old</strong>.
+                        </p>
+                        
+                        <p class="text-lg text-gray-300 mb-8 leading-relaxed">
+                            Possessing a highly innovative mindset and a prodigious talent for software engineering, Shiven recognized the immense barrier to entry for businesses wanting a premium online presence. He engineered the Zulora Quantum Engine to democratize web development—allowing anyone, anywhere, to conjure fully functional digital platforms using pure natural language.
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                            <a href="https://www.linkedin.com/in/shiven-panwar-aa1b31232" target="_blank" class="btn-primary glow-effect flex items-center justify-center gap-3">
+                                <i class="fab fa-linkedin text-xl"></i> Connect on LinkedIn
+                            </a>
+                            <a href="https://www.instagram.com/zulora_official" target="_blank" class="btn-secondary flex items-center justify-center gap-3">
+                                <i class="fab fa-instagram text-xl text-pink-500"></i> Follow the Journey
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="section-layout bg-dark-gradient border-t border-white/5">
             <div class="container">
                 <div class="section-header center" data-aos="fade-up">
                     <span class="section-subtitle">Features</span>
-                    <h2 class="section-title">The complete web ecosystem.</h2>
-                    <p class="section-desc">From intelligent generation to global hosting, Zulora has you covered.</p>
+                    <h2 class="section-title">The Complete Web Ecosystem.</h2>
+                    <p class="section-desc">Built by Shiven to give you absolute power over your digital footprint.</p>
                 </div>
                 
                 <div class="bento-grid">
                     <div class="bento-card card-large glass-panel hover-lift" data-aos="fade-up">
                         <div class="card-content">
                             <div class="icon-box text-primary"><i class="fas fa-globe-asia"></i></div>
-                            <h3>Claim Your Subdomain</h3>
-                            <p>Every generated website gets listed on Google instantly with your personalized <strong>yourname.zulora.in</strong> URL.</p>
+                            <h3>Custom Subdomain Registry</h3>
+                            <p>Forget DNS records. Every generated website is instantly mapped to your personalized <strong>yourname.zulora.in</strong> URL. Hosted on a global edge CDN for zero latency.</p>
                         </div>
                         <div class="card-visual">
                             <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80" alt="Global Network">
@@ -292,8 +394,8 @@
                     <div class="bento-card card-tall glass-panel hover-lift" data-aos="fade-up" data-aos-delay="100">
                         <div class="card-content">
                             <div class="icon-box text-pink"><i class="fas fa-address-book"></i></div>
-                            <h3>Smart Integrations</h3>
-                            <p>Mention your WhatsApp, Email, or LinkedIn in the prompt, and our AI builds functional, highly-converting CTA buttons into your site automatically.</p>
+                            <h3>Smart Social Mappings</h3>
+                            <p>If you mention your WhatsApp number, Email, or LinkedIn in the AI prompt, Zulora automatically builds functional, highly-converting CTA buttons into your hero and contact sections.</p>
                         </div>
                         <div class="card-visual mt-auto">
                             <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=400&q=80" alt="Social Media Apps">
@@ -305,7 +407,7 @@
                             <div class="text-content">
                                 <div class="icon-box text-gold"><i class="fas fa-mouse-pointer"></i></div>
                                 <h3>God-Mode Visual Editor</h3>
-                                <p>Don't like a generated image? Click it to upload from your gallery. Want to rewrite a headline? Just click and type.</p>
+                                <p>Total creative control. Click any element on your generated site to rewrite text, tweak border radiuses, change colors, or upload images directly from your Android gallery or PC files.</p>
                             </div>
                             <div class="visual-img-sm rounded">
                                 <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=400&q=80" alt="Coding Editor">
@@ -316,49 +418,12 @@
             </div>
         </section>
 
-        <section id="showcase" class="section-layout">
-            <div class="container">
-                <div class="section-header left" data-aos="fade-up">
-                    <span class="section-subtitle text-gold"><i class="fas fa-star"></i> Showcase</span>
-                    <h2 class="section-title">Start with a Masterpiece</h2>
-                    <p class="section-desc">Get inspired. Ask the AI to build something similar.</p>
-                </div>
-                
-                <div class="template-gallery">
-                    <div class="template-card card-span-2 glass-panel hover-glow" data-aos="zoom-in">
-                        <div class="template-image">
-                            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80" alt="E-Commerce">
-                            <div class="template-hover-action">
-                                <button class="btn-primary"><i class="fas fa-magic"></i> Generate Similar</button>
-                            </div>
-                        </div>
-                        <div class="template-meta">
-                            <h4>Luxury Retail</h4>
-                            <span>E-Commerce Platform</span>
-                        </div>
-                    </div>
-                    
-                    <div class="template-card glass-panel hover-glow" data-aos="zoom-in" data-aos-delay="100">
-                        <div class="template-image">
-                            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80" alt="Gaming">
-                            <div class="template-hover-action">
-                                <button class="btn-primary"><i class="fas fa-magic"></i> Generate Similar</button>
-                            </div>
-                        </div>
-                        <div class="template-meta">
-                            <h4>Cyber Esports</h4>
-                            <span>Gaming Portfolio</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="pricing" class="section-layout bg-dark-gradient">
+        <section id="pricing" class="section-layout border-t border-white/5">
              <div class="container">
                 <div class="section-header center" data-aos="fade-up">
+                    <span class="section-subtitle text-gold"><i class="fas fa-crown"></i> Pro Setup</span>
                     <h2 class="section-title">Transparent Pricing</h2>
-                    <p class="section-desc">Pay securely via UPI to unlock limitless potential.</p>
+                    <p class="section-desc">Designed for the Indian market. Pay securely via UPI.</p>
                 </div>
                 
                 <div class="pricing-container">
@@ -369,10 +434,10 @@
                         </div>
                         <div class="pb-body">
                             <ul class="feature-checklist">
-                                <li><i class="fas fa-check text-success"></i> 50 Starting Credits</li>
-                                <li><i class="fas fa-check text-success"></i> Unique Referral Link</li>
-                                <li><i class="fas fa-check text-success"></i> Standard Subdomain</li>
-                                <li><i class="fas fa-check text-success"></i> Basic Editor Access</li>
+                                <li><i class="fas fa-check text-success"></i> 50 Starting AI Credits</li>
+                                <li><i class="fas fa-check text-success"></i> Unique Referral Link Access</li>
+                                <li><i class="fas fa-check text-success"></i> Basic .zulora.in Subdomain</li>
+                                <li><i class="fas fa-check text-success"></i> God-Mode Editor Access</li>
                             </ul>
                         </div>
                         <div class="pb-footer">
@@ -381,18 +446,18 @@
                     </div>
                     
                     <div class="pricing-box premium-box glow-border" data-aos="fade-up">
-                        <div class="badge-popular">Best Value</div>
+                        <div class="badge-popular">Shiven's Pick</div>
                         <div class="pb-header">
                             <h3>Zulora Pro <i class="fas fa-crown text-gold"></i></h3>
                             <div class="price-val">₹299<span>/month</span></div>
                         </div>
                         <div class="pb-body">
                             <ul class="feature-checklist">
-                                <li><i class="fas fa-check-circle text-gold"></i> 1000 AI Credits</li>
-                                <li><i class="fas fa-check-circle text-gold"></i> Custom Subdomain Priority</li>
+                                <li><i class="fas fa-check-circle text-gold"></i> 1000 Premium AI Credits</li>
+                                <li><i class="fas fa-check-circle text-gold"></i> Premium Custom Subdomains</li>
                                 <li><i class="fas fa-check-circle text-gold"></i> Remove Zulora Watermark</li>
                                 <li><i class="fas fa-check-circle text-gold"></i> Google Search Indexing</li>
-                                <li><i class="fas fa-check-circle text-gold"></i> Direct WhatsApp Support</li>
+                                <li><i class="fas fa-check-circle text-gold"></i> Direct WhatsApp VIP Support</li>
                             </ul>
                         </div>
                         <div class="pb-footer">
@@ -410,10 +475,10 @@
                         <div class="brand-text mb-4">
                             <i class="fas fa-bolt text-primary"></i> <span class="b-main">Zulora</span>
                         </div>
-                        <p class="f-desc">The AI-powered web operating system. Built by Shiven Panwar to empower creators globally.</p>
+                        <p class="f-desc">The AI-powered web operating system. Built by 14-year-old innovator Shiven Panwar to empower creators globally from Doghat, India.</p>
                         <div class="social-links">
-                            <a href="https://www.linkedin.com/in/shiven-panwar-aa1b31232?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="https://www.instagram.com/zulora_official?igsh=MTRvOGYwNGZoZ3h0aw==" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.linkedin.com/in/shiven-panwar-aa1b31232" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://www.instagram.com/zulora_official" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                             <a href="https://wa.me/916395211325" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                             <a href="mailto:zulora.help@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
                         </div>
@@ -422,6 +487,7 @@
                     <div class="footer-links-zone">
                         <h4 class="f-heading">Platform</h4>
                         <ul>
+                            <li><a href="#how-it-works">How It Works</a></li>
                             <li><a href="#features">Features</a></li>
                             <li><a href="#pricing">Pricing</a></li>
                             <li><a href="#" onclick="ZuloraApp.switchView('studio')">God-Mode Studio</a></li>
@@ -433,6 +499,7 @@
                         <ul>
                             <li><a href="#" onclick="ZuloraApp.openModal('referral-modal')">Refer & Earn Program</a></li>
                             <li><a href="#" onclick="ZuloraApp.openModal('contact-modal')">Help & Support</a></li>
+                            <li><a href="#founder-section">About the CEO</a></li>
                             <li><a href="#">Privacy Policy</a></li>
                         </ul>
                     </div>
@@ -440,6 +507,7 @@
                 
                 <div class="footer-copyright">
                     <p>&copy; 2026 Zulora AI Technologies. Founded by Shiven Panwar. All rights reserved.</p>
+                    <p class="text-sm opacity-60">HQ: Doghat, Baghpat District, Uttar Pradesh, India</p>
                 </div>
             </div>
         </footer>
@@ -472,7 +540,7 @@
                         <i class="fas fa-bolt text-gold"></i> <span id="studio-credits-display">0</span>
                     </div>
                     <button class="btn-secondary" onclick="ZuloraApp.openModal('publish-modal')">
-                        <i class="fas fa-globe"></i> Publish
+                        <i class="fas fa-globe-asia"></i> Publish
                     </button>
                 </div>
             </header>
@@ -498,7 +566,7 @@
                                     <i class="fas fa-magic"></i> Apply Changes
                                 </button>
                                 <hr class="panel-divider my-4 border-t border-gray-700">
-                                <p class="text-xs text-muted"><i class="fas fa-info-circle"></i> Click any element on the canvas to manually upload images from your gallery or rewrite text.</p>
+                                <p class="text-xs text-muted"><i class="fas fa-info-circle"></i> Click any element on the canvas to manually upload images from your Android/PC or rewrite text.</p>
                             </div>
                         </div>
                     </div>
@@ -519,7 +587,7 @@
                     <div class="p-body p-0">
                         <div id="prop-empty" class="empty-state-view p-8 text-center text-muted">
                             <i class="fas fa-mouse-pointer text-4xl opacity-30 mb-4"></i>
-                            <p>Select an element on the canvas to edit its properties.</p>
+                            <p>Select an element on the generated website to edit its properties.</p>
                         </div>
                         
                         <div id="prop-active" class="hidden">
@@ -564,7 +632,6 @@
                         </div>
                     </div>
                 </aside>
-
             </div>
         </div>
     </div>
@@ -576,7 +643,7 @@
             <div class="modal-head center">
                 <i class="fab fa-google text-4xl mb-3 text-primary glow-fx"></i>
                 <h2>Sign in to Zulora</h2>
-                <p>Google Authentication is required to generate, save, and claim subdomains for your websites.</p>
+                <p>Google Authentication is compulsory to generate, save, and claim subdomains for your websites.</p>
             </div>
             <div class="modal-body">
                 <button id="google-signin-btn" class="btn-google-auth w-full">
@@ -596,7 +663,7 @@
             <div class="modal-head center">
                 <i class="fas fa-globe-asia text-4xl mb-3 text-success glow-fx"></i>
                 <h2>Claim Subdomain</h2>
-                <p>Choose a unique web address to list your site on Google.</p>
+                <p>Choose a unique web address to list your generated site on Google.</p>
             </div>
             <div class="modal-body">
                 <label class="block text-sm font-bold mb-2">Your desired URL:</label>
@@ -619,7 +686,7 @@
             <div class="premium-left bg-gradient-brand">
                 <i class="fas fa-crown text-5xl text-gold mb-4 glow-fx"></i>
                 <h2 class="text-3xl font-bold text-white">Zulora Pro</h2>
-                <p class="mb-6 opacity-90 text-white">Engineered for creators.</p>
+                <p class="mb-6 opacity-90 text-white">Engineered by Shiven for elite creators.</p>
                 <ul class="premium-features text-white space-y-3">
                     <li><i class="fas fa-check-circle"></i> 1000 AI Generations</li>
                     <li><i class="fas fa-check-circle"></i> Custom Domain Linking</li>
@@ -658,7 +725,7 @@
                 <i class="fas fa-gift text-3xl"></i>
             </div>
             <h2 class="text-2xl font-bold mb-2">Refer & Earn</h2>
-            <p class="text-muted mb-6 text-sm">Every user gets a unique link. Give 50 credits, get 50 credits.</p>
+            <p class="text-muted mb-6 text-sm">Every user gets a unique link. Invite friends, get 50 credits.</p>
             
             <div class="ref-link-box text-left">
                 <label class="block text-xs font-bold mb-2 uppercase tracking-wide text-gray-400">Your Unique Link</label>
@@ -675,8 +742,8 @@
         <div class="modal-content glass-heavy">
             <button class="modal-close" onclick="ZuloraApp.closeModal('contact-modal')"><i class="fas fa-times"></i></button>
             <div class="modal-head">
-                <h2><i class="fas fa-headset text-primary"></i> Support & Contact</h2>
-                <p class="text-sm text-gray-400 mt-1">Connect directly with Shiven Panwar's team.</p>
+                <h2><i class="fas fa-headset text-primary"></i> Connect with HQ</h2>
+                <p class="text-sm text-gray-400 mt-1">Connect directly with Shiven Panwar and the team.</p>
             </div>
             <div class="modal-body pb-8 px-8">
                 <div class="flex flex-col gap-3">
@@ -688,11 +755,11 @@
                         <i class="fas fa-envelope text-2xl text-red-400 w-8 text-center"></i>
                         <span class="font-semibold text-white">Email Us</span>
                     </a>
-                    <a href="https://www.linkedin.com/in/shiven-panwar-aa1b31232?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="flex items-center gap-4 p-4 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition">
+                    <a href="https://www.linkedin.com/in/shiven-panwar-aa1b31232" target="_blank" class="flex items-center gap-4 p-4 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition">
                         <i class="fab fa-linkedin text-2xl text-blue-400 w-8 text-center"></i>
-                        <span class="font-semibold text-white">Connect on LinkedIn</span>
+                        <span class="font-semibold text-white">Connect with CEO</span>
                     </a>
-                    <a href="https://www.instagram.com/zulora_official?igsh=MTRvOGYwNGZoZ3h0aw==" target="_blank" class="flex items-center gap-4 p-4 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition">
+                    <a href="https://www.instagram.com/zulora_official" target="_blank" class="flex items-center gap-4 p-4 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition">
                         <i class="fab fa-instagram text-2xl text-pink-400 w-8 text-center"></i>
                         <span class="font-semibold text-white">Instagram DM</span>
                     </a>
