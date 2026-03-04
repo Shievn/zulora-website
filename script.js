@@ -29,7 +29,7 @@ const provider = new GoogleAuthProvider();
 // ============================================================================
 const API_VAULT = {
     // Chat & Logic
-    TEXT_PRIMARY: "AIzaSyBlx0fiIzVdM-zDTQtmYU61VfZKXN3DlKQ",      
+    TEXT_PRIMARY: "AIzaSyAX8iXhy0i-xgqa8YTJM5BVq-fnUBQfOC4",      
     TEXT_BACKUP: "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",         
         
     // Image Generation
