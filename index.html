@@ -7,11 +7,12 @@
     <meta name="author" content="Shiven Panwar">
     <title>Zulora AI | Intelligent Assistant</title>
     
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="zulora-light-theme">
+<body class="zulora-midnight-theme">
 
     <div class="app-container" id="appContainer">
 
@@ -19,30 +20,26 @@
             
             <div class="sidebar-header">
                 <div class="brand-title">
-                    <span class="material-symbols-outlined brand-icon">auto_awesome</span>
+                    <span class="material-symbols-rounded brand-icon">auto_awesome</span>
                     <h2>Zulora AI</h2>
                 </div>
                 <div class="search-box">
-                    <span class="material-symbols-outlined search-icon">search</span>
-                    <input type="text" placeholder="Search your chats..." id="chatSearch" aria-label="Search chat history">
+                    <span class="material-symbols-rounded search-icon">search</span>
+                    <input type="text" placeholder="Search chats..." id="chatSearch" aria-label="Search chat history">
                 </div>
             </div>
 
             <nav class="sidebar-actions" aria-label="Primary Actions">
                 <button class="menu-btn primary-action" id="newChatBtn" aria-label="Start a new chat">
-                    <span class="material-symbols-outlined">edit_square</span> 
-                    <span>New chat</span>
+                    <span class="material-symbols-rounded">add_circle</span> 
+                    <span>New Chat</span>
                 </button>
                 <button class="menu-btn" aria-label="Open Images Library">
-                    <span class="material-symbols-outlined">image</span> 
-                    <span>Images Library</span>
+                    <span class="material-symbols-rounded">photo_library</span> 
+                    <span>Media Library</span>
                 </button>
-                <button class="menu-btn" aria-label="Open Zulora Apps">
-                    <span class="material-symbols-outlined">grid_view</span> 
-                    <span>Zulora Apps</span>
-                </button>
-                <button class="menu-btn" id="openAboutBtn" aria-label="About the Founder">
-                    <span class="material-symbols-outlined">info</span> 
+                <button class="menu-btn" id="openAboutBtn" aria-label="About Zulora">
+                    <span class="material-symbols-rounded">rocket_launch</span> 
                     <span>About Zulora</span>
                 </button>
             </nav>
@@ -59,18 +56,7 @@
                 <div class="history-category">
                     <p class="history-date-label">Previous 7 Days</p>
                     <ul class="history-list" id="historyWeek">
-                        <li class="history-item">Website Development Code</li>
-                        <li class="history-item">Physics Exam Help</li>
-                        <li class="history-item">Workout Motivation Boost</li>
-                    </ul>
-                </div>
-
-                <div class="history-category">
-                    <p class="history-date-label">Previous 30 Days</p>
-                    <ul class="history-list" id="historyMonth">
-                        <li class="history-item">Professional Ad Image Prompt</li>
-                        <li class="history-item">Google Flow Dance Video</li>
-                    </ul>
+                        </ul>
                 </div>
             </div>
 
@@ -79,9 +65,9 @@
                     <div class="avatar-circle" id="sidebarAvatar">G</div>
                     <div class="profile-info">
                         <span class="profile-name" id="sidebarUserName">Guest User</span>
-                        <span class="profile-plan">Free Plan Tracker</span>
+                        <span class="profile-plan">Free Tier (10 Chats)</span>
                     </div>
-                    <span class="material-symbols-outlined toggle-icon">keyboard_arrow_down</span>
+                    <span class="material-symbols-rounded toggle-icon">settings</span>
                 </button>
             </div>
         </aside>
@@ -90,43 +76,60 @@
             
             <header class="chat-header">
                 <div class="mobile-menu-trigger" id="mobileMenuBtn" aria-label="Open Sidebar">
-                    <span class="material-symbols-outlined">menu</span>
+                    <span class="material-symbols-rounded">menu</span>
                 </div>
                 
                 <div class="model-selector-wrapper">
                     <button class="model-selector-btn" aria-label="Select AI Model">
-                        Zulora Flash <span class="material-symbols-outlined">expand_more</span>
+                        Zulora Intelligence <span class="material-symbols-rounded">expand_more</span>
                     </button>
                 </div>
 
                 <div class="header-actions">
-                    <button class="icon-btn tooltip" title="Customer Support" id="supportBtn">
-                        <span class="material-symbols-outlined">help</span>
+                    <button class="login-prompt-btn" id="headerLoginBtn">
+                        <span class="material-symbols-rounded">login</span> Sign In
                     </button>
-                    <button class="login-prompt-btn" id="headerLoginBtn">Sign In</button>
                 </div>
             </header>
 
+            <div class="generation-loader hidden" id="generationLoader">
+                <div class="loader-content">
+                    <div class="spinner"></div>
+                    <h3 id="loaderTitle">Crafting your media...</h3>
+                    <p id="loaderDesc">Connecting to secure AI generation endpoints.</p>
+                </div>
+            </div>
+
             <div class="welcome-screen" id="welcomeScreen">
                 <div class="welcome-logo-area">
-                    <div class="large-avatar-circle">✨</div>
+                    <div class="large-avatar-circle glow-effect">✨</div>
                 </div>
-                <h1 class="greeting-text" id="greetingText">What can I help with today?</h1>
+                <h1 class="greeting-text" id="greetingText">How can I help you today?</h1>
                 
                 <div class="suggestion-grid">
                     <button class="suggestion-card restricted-action" data-type="image" aria-label="Create an image">
-                        <div class="card-icon-wrapper green-icon">
-                            <span class="material-symbols-outlined">image</span>
+                        <div class="card-icon-wrapper gradient-blue">
+                            <span class="material-symbols-rounded">brush</span>
                         </div>
                         <div class="card-text">
-                            <span class="card-title">Create image</span>
-                            <span class="card-desc">Generate stunning AI art from text prompts</span>
+                            <span class="card-title">Generate Image</span>
+                            <span class="card-desc">Create high-quality AI art from a text description</span>
                         </div>
                     </button>
                     
+                    <button class="suggestion-card restricted-action" data-type="video" aria-label="Create a video">
+                        <div class="card-icon-wrapper gradient-purple">
+                            <span class="material-symbols-rounded">movie_creation</span>
+                        </div>
+                        <div class="card-text">
+                            <span class="card-title">Generate Video</span>
+                            <span class="card-desc">Direct dynamic AI videos using custom prompts</span>
+                        </div>
+                    </button>
+
                     <button class="suggestion-card prompt-card" aria-label="Brainstorm ideas">
-                        <div class="card-icon-wrapper yellow-icon">
-                            <span class="material-symbols-outlined">lightbulb</span>
+                        <div class="card-icon-wrapper gradient-orange">
+                            <span class="material-symbols-rounded">tips_and_updates</span>
                         </div>
                         <div class="card-text">
                             <span class="card-title">Brainstorm</span>
@@ -134,23 +137,13 @@
                         </div>
                     </button>
                     
-                    <button class="suggestion-card prompt-card" aria-label="Summarize text">
-                        <div class="card-icon-wrapper orange-icon">
-                            <span class="material-symbols-outlined">article</span>
+                    <button class="suggestion-card prompt-card" aria-label="Write Code">
+                        <div class="card-icon-wrapper gradient-green">
+                            <span class="material-symbols-rounded">code_blocks</span>
                         </div>
                         <div class="card-text">
-                            <span class="card-title">Summarize text</span>
-                            <span class="card-desc">Condense long articles or documents easily</span>
-                        </div>
-                    </button>
-                    
-                    <button class="suggestion-card restricted-action" data-type="video" aria-label="Create a video">
-                        <div class="card-icon-wrapper red-icon">
-                            <span class="material-symbols-outlined">movie</span>
-                        </div>
-                        <div class="card-text">
-                            <span class="card-title">Create video</span>
-                            <span class="card-desc">Direct high-fidelity AI generated videos</span>
+                            <span class="card-title">Write Code</span>
+                            <span class="card-desc">Build websites, debug scripts, and format data</span>
                         </div>
                     </button>
                 </div>
@@ -163,59 +156,50 @@
                 
                 <div class="popup-menu hidden" id="attachmentMenu" aria-hidden="true">
                     <div class="popup-header">Attach Media</div>
-                    <label class="popup-item" tabindex="0">
-                        <span class="material-symbols-outlined blue-text">photo_camera</span> 
+                    <label class="popup-item interactive-hover" tabindex="0">
+                        <span class="material-symbols-rounded menu-icon-blue">photo_camera</span> 
                         <span>Take Photo</span>
                         <input type="file" accept="image/*" capture="environment" hidden id="cameraInput">
                     </label>
-                    <label class="popup-item" tabindex="0">
-                        <span class="material-symbols-outlined green-text">image</span> 
+                    <label class="popup-item interactive-hover" tabindex="0">
+                        <span class="material-symbols-rounded menu-icon-green">image</span> 
                         <span>Upload from Gallery</span>
                         <input type="file" accept="image/*" hidden id="galleryInput">
                     </label>
-                    <button class="popup-item">
-                        <span class="material-symbols-outlined purple-text">attach_file</span> 
-                        <span>Upload Document</span>
-                    </button>
                 </div>
 
                 <div class="popup-menu hidden" id="creationMenu" aria-hidden="true">
-                    <div class="popup-header">Generate Media Models</div>
-                    <button class="popup-item restricted-action" data-type="image">
-                        <span class="material-symbols-outlined pink-text">palette</span> 
-                        <span>Launch Image Studio</span>
+                    <div class="popup-header">Launch AI Studio</div>
+                    <button class="popup-item interactive-hover restricted-action" data-type="image">
+                        <span class="material-symbols-rounded menu-icon-purple">palette</span> 
+                        <span>Image Studio (HuggingFace/Bytez)</span>
                     </button>
-                    <button class="popup-item restricted-action" data-type="video">
-                        <span class="material-symbols-outlined red-text">movie</span> 
-                        <span>Launch Video Director</span>
-                    </button>
-                    <button class="popup-item disabled-item" title="Coming Soon">
-                        <span class="material-symbols-outlined teal-text">music_note</span> 
-                        <span>Create AI Music</span> 
-                        <span class="badge">Soon</span>
+                    <button class="popup-item interactive-hover restricted-action" data-type="video">
+                        <span class="material-symbols-rounded menu-icon-red">movie</span> 
+                        <span>Video Director (Fal AI)</span>
                     </button>
                 </div>
 
                 <div class="input-wrapper">
                     <button class="icon-btn tooltip" id="attachBtn" title="Attach Files" aria-label="Attach Files">
-                        <span class="material-symbols-outlined">add_circle</span>
+                        <span class="material-symbols-rounded">add_circle</span>
                     </button>
                     <button class="icon-btn tooltip" id="createBtn" title="Create Media" aria-label="Open Creation Menu">
-                        <span class="material-symbols-outlined action-blue">auto_awesome</span>
+                        <span class="material-symbols-rounded highlight-icon">auto_awesome</span>
                     </button>
                     
                     <textarea id="userInput" placeholder="Message Zulora AI..." rows="1" aria-label="Message Input Box"></textarea>
                     
                     <button class="icon-btn tooltip" id="voiceBtn" title="Use Voice Command" aria-label="Voice Input">
-                        <span class="material-symbols-outlined">mic</span>
+                        <span class="material-symbols-rounded">mic</span>
                     </button>
                     <button class="send-btn tooltip" id="sendBtn" title="Send Message" aria-label="Send">
-                        <span class="material-symbols-outlined">arrow_upward</span>
+                        <span class="material-symbols-rounded">arrow_upward</span>
                     </button>
                 </div>
                 
                 <p class="disclaimer-text">
-                    Zulora AI can make mistakes. Consider verifying important information. 
+                    Zulora AI can make mistakes. Verify important information. 
                     <a href="#" id="footerTermsLink">Terms & Privacy</a>
                 </p>
             </footer>
@@ -223,12 +207,12 @@
     </div>
 
     <div class="modal-overlay hidden" id="authRequiredModal" aria-modal="true">
-        <div class="modal-content auth-layout">
+        <div class="modal-content auth-layout glass-panel">
             <div class="auth-icon-container">
-                <span class="material-symbols-outlined auth-icon">lock</span>
+                <span class="material-symbols-rounded auth-icon">lock</span>
             </div>
             <h2 id="authModalTitle">Sign In Required</h2>
-            <p id="authModalText">You have reached your 10 free messages limit or requested a premium feature. Please sign in securely to continue.</p>
+            <p id="authModalText">You have reached your free messaging limit or requested a premium AI generation feature. Please sign in securely to continue.</p>
             <div class="auth-buttons">
                 <button class="btn-primary flex-center" id="googleSignInBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px" style="margin-right: 10px;">
@@ -245,10 +229,10 @@
     </div>
 
     <div class="modal-overlay hidden" id="settingsModal" aria-modal="true">
-        <div class="modal-content settings-layout">
+        <div class="modal-content settings-layout glass-panel">
             <header class="modal-header">
                 <h2>Account Settings</h2>
-                <button class="icon-btn" id="closeSettings"><span class="material-symbols-outlined">close</span></button>
+                <button class="icon-btn" id="closeSettings"><span class="material-symbols-rounded">close</span></button>
             </header>
             
             <div class="modal-body settings-scroll">
@@ -262,14 +246,14 @@
                 <div class="settings-group">
                     <h4>Help & Support</h4>
                     <div class="setting-row static-row">
-                        <span class="material-symbols-outlined text-gray">mail</span>
+                        <span class="material-symbols-rounded text-gray">mail</span>
                         <div class="setting-info">
                             <span>Email Support</span>
                             <small>zulora.help@gmail.com</small> 
                         </div>
                     </div>
                     <div class="setting-row static-row">
-                        <span class="material-symbols-outlined text-gray">call</span>
+                        <span class="material-symbols-rounded text-gray">call</span>
                         <div class="setting-info">
                             <span>Phone Support</span>
                             <small>+91 6395211325</small> 
@@ -278,40 +262,31 @@
                 </div>
 
                 <div class="settings-group">
-                    <h4>Preferences & Legal</h4>
-                    <button class="setting-row interactive-row" id="openVoiceSettingsBtn">
-                        <span class="material-symbols-outlined">graphic_eq</span>
-                        <span>Voice AI Settings</span>
-                        <span class="material-symbols-outlined chevron-right">chevron_right</span>
-                    </button>
-                    <button class="setting-row interactive-row" id="openDataControlsBtn">
-                        <span class="material-symbols-outlined">database</span>
-                        <span>Data & History Controls</span>
-                        <span class="material-symbols-outlined chevron-right">chevron_right</span>
-                    </button>
-                    
+                    <h4>Legal</h4>
                     <button class="setting-row interactive-row" id="openTermsModalBtn">
-                        <span class="material-symbols-outlined">gavel</span>
+                        <span class="material-symbols-rounded">gavel</span>
                         <span>Terms & Conditions</span>
-                        <span class="material-symbols-outlined chevron-right">chevron_right</span>
+                        <span class="material-symbols-rounded chevron-right">chevron_right</span>
                     </button>
                 </div>
 
-                <button class="logout-btn hidden" id="modalLogoutBtn">
-                    <span class="material-symbols-outlined">logout</span> Log out
-                </button>
+                <div class="settings-footer">
+                    <button class="logout-btn hidden" id="modalLogoutBtn">
+                        <span class="material-symbols-rounded">logout</span> Secure Log out
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay hidden" id="termsModal" aria-modal="true">
-        <div class="modal-content legal-layout">
+        <div class="modal-content legal-layout glass-panel">
             <header class="modal-header">
                 <div class="header-title-group">
-                    <span class="material-symbols-outlined" style="color: #64748b;">policy</span>
+                    <span class="material-symbols-rounded" style="color: var(--accent-blue);">policy</span>
                     <h2>Terms & Conditions</h2>
                 </div>
-                <button class="icon-btn" id="closeTermsModalBtn"><span class="material-symbols-outlined">close</span></button>
+                <button class="icon-btn" id="closeTermsModalBtn"><span class="material-symbols-rounded">close</span></button>
             </header>
             
             <div class="modal-body legal-scroll-area">
@@ -320,28 +295,27 @@
                     
                     <section class="legal-section">
                         <h3>1. Acceptance of Terms</h3>
-                        <p>By accessing or using the Zulora AI platform, operated under the leadership of Shiven Panwar, you agree to be bound by these Terms and Conditions. If you disagree with any part of the terms, you may not access the service.</p>
+                        <p>By accessing or using the Zulora AI platform, operated under the leadership of Shiven Panwar, you agree to be bound by these Terms and Conditions.</p>
                     </section>
 
                     <section class="legal-section">
-                        <h3>2. AI Generation & Liability</h3>
-                        <p>Zulora AI utilizes advanced third-party language and visual models (including Google Gemini, Groq, and Bytez). While we strive for accuracy, AI can produce hallucinated, inaccurate, or biased content. Zulora AI is not liable for business decisions, academic failures, or emotional distress resulting from the use of our outputs.</p>
+                        <h3>2. AI Generation API Usage</h3>
+                        <p>Zulora AI utilizes advanced third-party models including Google Gemini, Groq, Bytez, Hugging Face, and Fal AI. All generations are subject to their respective safety guidelines.</p>
                     </section>
 
                     <section class="legal-section">
-                        <h3>3. User Conduct and Restrictions</h3>
+                        <h3>3. User Conduct</h3>
                         <p>You agree not to use the image or video generation tools to create:</p>
                         <ul>
-                            <li>Deepfakes or non-consensual imagery of real persons.</li>
+                            <li>Deepfakes or non-consensual imagery.</li>
                             <li>Extremely graphic, violent, or illegal content.</li>
-                            <li>Content that infringes on copyright or intellectual property.</li>
+                            <li>Content that infringes on intellectual property.</li>
                         </ul>
-                        <p>Violation of these rules will result in immediate account termination.</p>
                     </section>
 
                     <section class="legal-section">
                         <h3>4. Data Privacy</h3>
-                        <p>We respect your privacy. Chat history is stored locally in your browser session or securely in your authenticated Firebase account. We do not sell your personal chat data to advertisers.</p>
+                        <p>Chat history is stored locally in your browser. Authentication is handled securely via Google Firebase.</p>
                     </section>
                 </div>
             </div>
@@ -353,23 +327,23 @@
     </div>
 
     <div class="modal-overlay hidden" id="aboutModal" aria-modal="true">
-        <div class="modal-content about-layout">
+        <div class="modal-content about-layout glass-panel">
             <div class="about-hero">
-                <span class="material-symbols-outlined huge-icon">rocket_launch</span>
-                <h2>About Zulora AI</h2>
+                <span class="material-symbols-rounded huge-icon">rocket_launch</span>
+                <h2>Zulora AI</h2>
             </div>
             <div class="modal-body text-center">
-                <p class="about-desc">Zulora AI is a next-generation intelligent platform designed to provide seamless text, image, and video generation directly to your mobile and desktop devices.</p>
+                <p class="about-desc">A next-generation multimodal AI platform built for the future. Engineered to integrate the world's most powerful LLMs and diffusion models.</p>
                 
                 <div class="founder-card">
-                    <div class="founder-badge">CEO</div>
+                    <div class="founder-badge">FOUNDER & CEO</div>
                     <h3>Shiven Panwar</h3>
-                    <p>Company Founder & Lead Architect</p>
+                    <p>Lead Architect & Developer</p>
                 </div>
                 
                 <ul class="contact-list">
-                    <li><span class="material-symbols-outlined">mail</span> zulora.help@gmail.com</li>
-                    <li><span class="material-symbols-outlined">call</span> +91 6395211325</li>
+                    <li><span class="material-symbols-rounded">mail</span> zulora.help@gmail.com</li>
+                    <li><span class="material-symbols-rounded">call</span> +91 6395211325</li>
                 </ul>
             </div>
             <div class="modal-footer">
