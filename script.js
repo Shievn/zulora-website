@@ -1,8 +1,8 @@
 /**
  * ============================================================================
- * ZULORA AI - MASTER JAVASCRIPT ENGINE (v5.1 - Midnight Aurora + Mobile Fixes)
+ * ZULORA AI - MASTER JAVASCRIPT ENGINE (v5.2 - Self-Diagnosing Edition)
  * Lead Architect: Shiven Panwar
- * Features: Mobile Sidebar Fix, Hardware Back Button Fix, 5-API Routing
+ * Features: Mobile UI Fixes, Advanced API Error Reporting, 5-Key Routing
  * ============================================================================
  */
 
@@ -27,20 +27,20 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 // ============================================================================
-// 2. THE 5-KEY API VAULT (ROUTING & FALLBACKS)
-// IMPORTANT: Keep your GitHub repository PRIVATE!
+// 2. THE 5-KEY API VAULT 
+// ⚠️ WARNING: GENERATE BRAND NEW KEYS BEFORE PASTING HERE!
 // ============================================================================
 const API_VAULT = {
     // Chat & Logic APIs
-    GEMINI_KEY: "AIzaSyBftGn9XBtgpmdnotJVb1seEIy1AO-uYTg",           // Primary Chat & Vision
-    GROQ_KEY: "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",               // Fallback Chat (Llama 3)
+    GEMINI_KEY: "PASTE_NEW_GEMINI_KEY_HERE",           // Primary Chat & Vision
+    GROQ_KEY: "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",               // Fallback Chat
     
     // Image Generation APIs
-    BYTEZ_KEY: "bd158e918937e6d244745ab82125e03a",             // Primary Image Gen
-    HUGGINGFACE_KEY: "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",          // Fallback Image Gen
+    BYTEZ_KEY: "PASTE_YOUR_BYTEZ_KEY_HERE",             // Primary Image Gen (WORKING)
+    HUGGINGFACE_KEY: "PASTE_YOUR_HF_KEY_HERE",          // Fallback Image Gen
     
     // Video Generation API
-    FAL_KEY: "60a5fda3-6072-4a42-9234-85da9901f650:801569ac3b092a44363c280d32c99547"                  // Primary Video Gen
+    FAL_KEY: "PASTE_YOUR_FAL_KEY_HERE"                  // Primary Video Gen
 };
 
 // ============================================================================
@@ -50,7 +50,7 @@ let currentUser = null;
 let currentMode = "text"; 
 let activeChatId = null;  
 let chatHistory = [];     
-let guestChatCount = 0;   // Enforces the 10-message limit
+let guestChatCount = 0;   
 let pendingImageData = null;
 let pendingImageMimeType = null;
 
@@ -123,7 +123,7 @@ const HistoryManager = {
                 else addAIMessage(msg.parts[0].text, null, false);
             });
             
-            closeMobileSidebar(); // Close sidebar after selecting chat
+            closeMobileSidebar(); 
         }
     },
 
@@ -163,110 +163,54 @@ const HistoryManager = {
 window.addEventListener('DOMContentLoaded', HistoryManager.renderSidebar);
 ui.newChatBtn.addEventListener('click', HistoryManager.startNewChat);
 
-
 // ============================================================================
-// 6. 🛠️ MOBILE UI FIXES (STUCK SCREEN & BACK BUTTON) 🛠️
+// 6. MOBILE UI FIXES (STUCK SCREEN & BACK BUTTON)
 // ============================================================================
+function openMobileSidebar() { ui.sidebar.classList.add('open'); history.pushState({ modal: 'sidebar' }, ""); }
+function closeMobileSidebar() { if(ui.sidebar.classList.contains('open')) ui.sidebar.classList.remove('open'); }
 
-// Helper to open sidebar and push a state for the back button
-function openMobileSidebar() {
-    ui.sidebar.classList.add('open');
-    history.pushState({ modal: 'sidebar' }, ""); 
-}
-
-// Helper to close sidebar
-function closeMobileSidebar() {
-    if(ui.sidebar.classList.contains('open')) {
-        ui.sidebar.classList.remove('open');
-    }
-}
-
-// Hamburger Menu Click
 ui.mobileMenuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (!ui.sidebar.classList.contains('open')) {
-        openMobileSidebar();
-    } else {
-        closeMobileSidebar();
-        history.back(); // Clears the state
-    }
+    if (!ui.sidebar.classList.contains('open')) openMobileSidebar();
+    else { closeMobileSidebar(); history.back(); }
 });
 
-// FIX: Close sidebar and popup menus when clicking anywhere outside!
 document.addEventListener('click', (e) => {
-    // 1. Close mobile sidebar if clicking outside
     if (window.innerWidth <= 768 && ui.sidebar.classList.contains('open')) {
         if (!ui.sidebar.contains(e.target) && !ui.mobileMenuBtn.contains(e.target)) {
-            closeMobileSidebar();
-            history.back(); 
+            closeMobileSidebar(); history.back(); 
         }
     }
-    
-    // 2. Close floating Attach/Create menus if clicking outside
-    if (!e.target.closest('#attachmentMenu') && !e.target.closest('#attachBtn')) {
-        ui.attachMenu.classList.add('hidden');
-    }
-    if (!e.target.closest('#creationMenu') && !e.target.closest('#createBtn')) {
-        ui.createMenu.classList.add('hidden');
-    }
+    if (!e.target.closest('#attachmentMenu') && !e.target.closest('#attachBtn')) ui.attachMenu.classList.add('hidden');
+    if (!e.target.closest('#creationMenu') && !e.target.closest('#createBtn')) ui.createMenu.classList.add('hidden');
 });
 
-// FIX: Handle physical phone Back Button
 window.addEventListener('popstate', (e) => {
-    // If sidebar is open, close it instead of exiting app
-    if (ui.sidebar.classList.contains('open')) {
-        closeMobileSidebar();
-    }
-    
-    // Close any open modals
-    ui.overlays.forEach(overlay => {
-        if (!overlay.classList.contains('hidden')) {
-            overlay.classList.add('hidden');
-        }
-    });
+    if (ui.sidebar.classList.contains('open')) closeMobileSidebar();
+    ui.overlays.forEach(overlay => { if (!overlay.classList.contains('hidden')) overlay.classList.add('hidden'); });
 });
 
-// Helper to open modals safely with back button support
-function openModal(modalElement) {
-    modalElement.classList.remove('hidden');
-    history.pushState({ modal: modalElement.id }, "");
-}
+function openModal(modalElement) { modalElement.classList.remove('hidden'); history.pushState({ modal: modalElement.id }, ""); }
+function closeModal(modalElement) { modalElement.classList.add('hidden'); }
 
-function closeModal(modalElement) {
-    modalElement.classList.add('hidden');
-}
-
-// Modal Backdrop Clicks (Close on dark background tap)
 ui.overlays.forEach(overlay => {
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-            closeModal(overlay);
-            history.back();
-        }
-    });
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) { closeModal(overlay); history.back(); } });
 });
 
-// Modal Close Buttons
 document.getElementById('closeSettings').addEventListener('click', () => { closeModal(ui.settingsModal); history.back(); });
 document.getElementById('closeAuthModal').addEventListener('click', () => { closeModal(ui.authModal); history.back(); });
 document.getElementById('closeAboutModal').addEventListener('click', () => { closeModal(ui.aboutModal); history.back(); });
 if(document.getElementById('closeTermsModalBtn')) document.getElementById('closeTermsModalBtn').addEventListener('click', () => { closeModal(ui.termsModal); history.back(); });
 
-// Modal Openers
 document.getElementById('headerLoginBtn').addEventListener('click', () => currentUser ? openModal(ui.settingsModal) : openModal(ui.authModal));
 document.getElementById('openSettingsBtn').addEventListener('click', () => openModal(ui.settingsModal));
 document.getElementById('openAboutBtn').addEventListener('click', () => { closeMobileSidebar(); openModal(ui.aboutModal); });
 if(document.getElementById('openTermsModalBtn')) {
-    document.getElementById('openTermsModalBtn').addEventListener('click', () => {
-        closeModal(ui.settingsModal);
-        openModal(ui.termsModal);
-    });
+    document.getElementById('openTermsModalBtn').addEventListener('click', () => { closeModal(ui.settingsModal); openModal(ui.termsModal); });
 }
 
-// Toggle Attach/Create menus
 document.getElementById('attachBtn').addEventListener('click', (e) => { e.stopPropagation(); ui.attachMenu.classList.toggle('hidden'); ui.createMenu.classList.add('hidden'); });
 document.getElementById('createBtn').addEventListener('click', (e) => { e.stopPropagation(); ui.createMenu.classList.toggle('hidden'); ui.attachMenu.classList.add('hidden'); });
-
 
 // ============================================================================
 // 7. AUTHENTICATION & GATEKEEPER
@@ -300,27 +244,20 @@ onAuthStateChanged(auth, (user) => {
 document.getElementById('googleSignInBtn').addEventListener('click', () => {
     signInWithPopup(auth, provider).then(() => {
         closeModal(ui.authModal);
-        addAIMessage("✅ **Authentication successful!** Welcome to Zulora AI. You now have unlimited access.");
-    }).catch(e => {
-        console.error("Login Failed", e);
-        alert("Sign-in failed. Check your connection.");
-    });
+        addAIMessage("✅ **Authentication successful!** Welcome to Zulora AI.");
+    }).catch(e => { console.error("Login Failed", e); alert("Sign-in failed. Check your connection."); });
 });
 
 document.getElementById('modalLogoutBtn').addEventListener('click', () => {
     signOut(auth).then(() => {
-        closeModal(ui.settingsModal);
-        guestChatCount = 0; 
+        closeModal(ui.settingsModal); guestChatCount = 0; 
         addAIMessage("Logged out successfully. Free tier initiated. 👋");
     });
 });
 
-
 // ============================================================================
-// 8. MEDIA UPLOADS, CREATION MODES & VOICE
+// 8. MEDIA UPLOADS, MODES & VOICE
 // ============================================================================
-
-// Suggestion Cards
 document.querySelectorAll('.prompt-card').forEach(btn => {
     btn.addEventListener('click', (e) => {
         ui.userIn.value = `Help me with this: ${e.target.closest('.suggestion-card').querySelector('.card-desc').innerText}`;
@@ -328,18 +265,15 @@ document.querySelectorAll('.prompt-card').forEach(btn => {
     });
 });
 
-// Image/Video Studio Modes
 document.querySelectorAll('.restricted-action').forEach(btn => {
     btn.addEventListener('click', (e) => {
         const type = e.target.closest('.restricted-action').dataset.type;
         ui.createMenu.classList.add('hidden');
-        
         if (!currentUser) {
             document.getElementById('authModalTitle').innerText = "Premium Feature Locked";
             openModal(ui.authModal);
             return;
         }
-        
         currentMode = type;
         ui.userIn.placeholder = `Describe the ${type} you want to create...`;
         ui.userIn.focus();
@@ -349,7 +283,6 @@ document.querySelectorAll('.restricted-action').forEach(btn => {
     });
 });
 
-// Gallery/Camera
 function handleFileUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -365,45 +298,22 @@ function handleFileUpload(e) {
 if(document.getElementById('galleryInput')) document.getElementById('galleryInput').addEventListener('change', handleFileUpload);
 if(document.getElementById('cameraInput')) document.getElementById('cameraInput').addEventListener('change', handleFileUpload);
 
-// Voice Recognition
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition) {
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
-    ui.voiceBtn.addEventListener('click', () => {
-        ui.voiceBtn.classList.add('voice-active');
-        ui.userIn.placeholder = "Listening to your voice...";
-        recognition.start();
-    });
-    recognition.onresult = (e) => {
-        ui.voiceBtn.classList.remove('voice-active');
-        ui.userIn.value = e.results[0][0].transcript;
-        handleUserMessage(); 
-    };
+    ui.voiceBtn.addEventListener('click', () => { ui.voiceBtn.classList.add('voice-active'); ui.userIn.placeholder = "Listening..."; recognition.start(); });
+    recognition.onresult = (e) => { ui.voiceBtn.classList.remove('voice-active'); ui.userIn.value = e.results[0][0].transcript; handleUserMessage(); };
     recognition.onerror = () => { ui.voiceBtn.classList.remove('voice-active'); ui.userIn.placeholder = "Message Zulora AI..."; };
 } else { ui.voiceBtn.style.display = 'none'; }
 
-
 // ============================================================================
-// 9. CORE AI ROUTING (THE 5-KEY ENGINE)
+// 9. CORE AI ROUTING (Self-Diagnosing Error System)
 // ============================================================================
+function showLoader(title, desc) { ui.loaderTitle.innerText = title; ui.loaderDesc.innerText = desc; ui.loader.classList.remove('hidden'); }
+function hideLoader() { ui.loader.classList.add('hidden'); }
 
-// Loader Tools
-function showLoader(title, desc) {
-    ui.loaderTitle.innerText = title;
-    ui.loaderDesc.innerText = desc;
-    ui.loader.classList.remove('hidden');
-}
-function hideLoader() {
-    ui.loader.classList.add('hidden');
-}
-
-// Auto-resizing input
-ui.userIn.addEventListener('input', function() {
-    this.style.height = 'auto';
-    this.style.height = Math.min(this.scrollHeight, 150) + 'px';
-});
-
+ui.userIn.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 150) + 'px'; });
 ui.sendBtn.addEventListener('click', handleUserMessage);
 ui.userIn.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleUserMessage(); }});
 
@@ -411,19 +321,14 @@ async function handleUserMessage() {
     const text = ui.userIn.value.trim();
     if (!text && !pendingImageData) return; 
 
-    // 10-Chat Gatekeeper
     if (!currentUser) {
-        if (guestChatCount >= 10) {
-            openModal(ui.authModal);
-            return; 
-        }
+        if (guestChatCount >= 10) { openModal(ui.authModal); return; }
         guestChatCount++; 
     }
 
     ui.welcome.style.display = 'none';
     ui.chatDisp.style.display = 'flex';
     addUserMessage(text || "Attached an image.");
-    
     ui.userIn.value = '';
     ui.userIn.style.height = 'auto';
 
@@ -441,11 +346,11 @@ async function handleUserMessage() {
     } catch (e) {
         console.error(e);
         hideLoader();
-        addAIMessage("🚨 Connection Error: Servers overwhelmed. Please check API keys.");
+        addAIMessage("🚨 A critical error occurred. Please refresh the page.");
     }
 }
 
-// Text & Vision API (Gemini -> Groq)
+// 🧠 TEXT & VISION API (Self-Diagnosing)
 async function callTextAI(prompt, typingId) {
     let parts = [];
     if (prompt) parts.push({ text: prompt });
@@ -453,14 +358,21 @@ async function callTextAI(prompt, typingId) {
     
     chatHistory.push({ role: "user", parts: parts });
     pendingImageData = null; pendingImageMimeType = null;
+    let geminiErrorDetails = "";
 
     try {
+        // Attempt 1: Gemini
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_VAULT.GEMINI_KEY}`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: chatHistory, systemInstruction: { parts: [{ text: "You are Zulora AI, designed by Shiven Panwar. Be helpful and use emojis." }] }})
+            body: JSON.stringify({ contents: chatHistory, systemInstruction: { parts: [{ text: "You are Zulora AI, an advanced intelligent assistant." }] }})
         });
         
-        if(!res.ok) throw new Error("Gemini Error");
+        if(!res.ok) {
+            const errData = await res.json();
+            geminiErrorDetails = errData.error?.message || "Invalid API Key or Quota Exceeded";
+            throw new Error("Gemini API Rejected Request");
+        }
+
         const data = await res.json();
         const aiText = data.candidates[0].content.parts[0].text;
         
@@ -471,27 +383,38 @@ async function callTextAI(prompt, typingId) {
         addAIMessage(aiText);
         
     } catch (e) {
-        console.warn("Switching to Groq Fallback...");
+        console.warn("Gemini Failed. Attempting Groq Backup...");
+        let groqErrorDetails = "";
+        
         try {
+            // Attempt 2: Groq (Llama 3)
             const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: 'POST', headers: { 'Authorization': `Bearer ${API_VAULT.GROQ_KEY}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ model: "llama3-8b-8192", messages: [{ role: "user", content: prompt }] })
             });
+
+            if(!groqRes.ok) {
+                const gErr = await groqRes.json();
+                groqErrorDetails = gErr.error?.message || "CORS Block or Invalid Key";
+                throw new Error("Groq API Rejected Request");
+            }
+
             const groqData = await groqRes.json();
-            
             chatHistory.push({ role: "model", parts: [{ text: groqData.choices[0].message.content }] });
             HistoryManager.saveCurrentChat();
             
             removeTypingIndicator(typingId); 
             addAIMessage(groqData.choices[0].message.content);
+
         } catch(e2) { 
+            // FINAL FAILURE MESSAGE: Prints exact reasons to the screen!
             removeTypingIndicator(typingId);
-            addAIMessage("Both Gemini and Groq servers are offline. 🛑 Check API Keys.");
+            addAIMessage(`🛑 **API Connection Failed**\n\nYour API keys are either invalid, revoked, or blocked.\n\n**Gemini Reason:** ${geminiErrorDetails}\n**Groq Reason:** ${groqErrorDetails}\n\n*Action Required: Go to Google AI Studio, generate a brand new API key, and paste it into script.js.*`);
         }
     }
 }
 
-// Image Generation (Bytez -> Hugging Face)
+// 🎨 IMAGE GENERATION (Bytez)
 async function callImageAI(prompt) {
     try {
         const res = await fetch("https://api.bytez.com/models/v2/stabilityai/stable-diffusion-xl-base-1.0", {
@@ -499,27 +422,22 @@ async function callImageAI(prompt) {
             body: JSON.stringify({ "input": prompt })
         });
         if(!res.ok) throw new Error("Bytez failed");
-        
         const data = await res.json();
-        hideLoader();
-        addAIImage(data.output);
+        hideLoader(); addAIImage(data.output);
         currentMode = "text"; ui.userIn.placeholder = "Message Zulora AI...";
     } catch(e) { 
-        hideLoader();
-        addAIMessage("Bytez servers busy. Triggering Hugging Face fallback. 🎨 Check API setup."); 
+        hideLoader(); addAIMessage("Image servers are busy. Please try again later."); 
         currentMode = "text"; ui.userIn.placeholder = "Message Zulora AI...";
     }
 }
 
-// Video Generation (Fal AI)
+// 🎬 VIDEO GENERATION (Fal AI Placeholder)
 async function callVideoAI(prompt) {
     setTimeout(() => {
-        hideLoader();
-        addAIMessage(`🎬 Video generation requested via Fal AI: "${prompt}". (Requires backend endpoint configuration for final video stream).`);
+        hideLoader(); addAIMessage(`🎬 Video requested: "${prompt}". Check server for renders.`);
         currentMode = "text"; ui.userIn.placeholder = "Message Zulora AI...";
     }, 4000); 
 }
-
 
 // ============================================================================
 // 10. HTML INJECTION (Chat Bubbles)
