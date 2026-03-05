@@ -32,8 +32,8 @@ const provider = new GoogleAuthProvider();
 // ============================================================================
 const API_VAULT = {
     // Chat & Logic APIs
-    GEMINI_KEY: "AIzaSyAX8iXhy0i-xgqa8YTJM5BVq-fnUBQfOC4",           // Primary Chat & Vision
-    GROQ_KEY: "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",               // Fallback Chat (Llama 3)
+    GEMINI_KEY: "AIzaSyBftGn9XBtgpmdnotJVb1seEIy1AO-uYTg",           // Primary Chat & Vision
+    GROQ_KEY: "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",               // Fallback Chat (Llama 3)
     
     // Image Generation APIs
     BYTEZ_KEY: "bd158e918937e6d244745ab82125e03a",             // Primary Image Gen
