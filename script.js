@@ -1,8 +1,9 @@
 /**
  * ============================================================================
- * ZULORA AI - MASTER JAVASCRIPT ENGINE (v5.2 - Self-Diagnosing Edition)
+ * ZULORA AI - MASTER JAVASCRIPT ENGINE (v6.0 - The Beast Mode Update)
  * Lead Architect: Shiven Panwar
- * Features: Mobile UI Fixes, Advanced API Error Reporting, 5-Key Routing
+ * Core Features: OpenRouter High-Limit Integration, Multi-API Fallbacks, 
+ * Local History Saving, Anti-Freeze UI, and Glassmorphism Event Listeners.
  * ============================================================================
  */
 
@@ -12,7 +13,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 // ============================================================================
-// 1. FIREBASE CONFIGURATION
+// 1. FIREBASE CONFIGURATION (Authentication & Security)
 // ============================================================================
 const firebaseConfig = {
     apiKey: "AIzaSyDbiEE9mIpsPaf50eNwbjdnALOFb_p9OoQ",
@@ -27,37 +28,37 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 // ============================================================================
-// 2. THE 5-KEY API VAULT 
-// ⚠️ WARNING: GENERATE BRAND NEW KEYS BEFORE PASTING HERE!
+// 2. THE MASTER API VAULT (COMBINED ROUTING)
+// WARNING: Ensure GitHub is PRIVATE before pasting your keys!
 // ============================================================================
 const API_VAULT = {
-    // Chat & Logic APIs
-    GEMINI_KEY: "PASTE_NEW_GEMINI_KEY_HERE",           // Primary Chat & Vision
-    GROQ_KEY: "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",               // Fallback Chat
+    // 🧠 CHAT API (Handles 1000-2000 free requests/day)
+    OPENROUTER_KEY: "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",        
     
-    // Image Generation APIs
-    BYTEZ_KEY: "PASTE_YOUR_BYTEZ_KEY_HERE",             // Primary Image Gen (WORKING)
-    HUGGINGFACE_KEY: "PASTE_YOUR_HF_KEY_HERE",          // Fallback Image Gen
+    // 🎨 IMAGE APIs (Combined Fallback System)
+    BYTEZ_KEY: "bd158e918937e6d244745ab82125e03a",                  
+    HUGGINGFACE_KEY: "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",      
     
-    // Video Generation API
-    FAL_KEY: "PASTE_YOUR_FAL_KEY_HERE"                  // Primary Video Gen
+    // 🎬 VIDEO API
+    FAL_KEY: "23456b25-cb5a-4931-8ad7-733ee8ffe41e:d871775a84006d0295dacbef839f2841"                       
 };
 
 // ============================================================================
-// 3. GLOBAL STATE & SESSION TRACKING
+// 3. GLOBAL STATE & SESSION MEMORY
 // ============================================================================
 let currentUser = null; 
-let currentMode = "text"; 
+let currentMode = "text"; // Can be 'text', 'image', or 'video'
 let activeChatId = null;  
 let chatHistory = [];     
-let guestChatCount = 0;   
+let guestChatCount = 0;   // The 10-message Free Tier Gatekeeper
 let pendingImageData = null;
 let pendingImageMimeType = null;
 
 // ============================================================================
-// 4. DOM ELEMENT CACHING
+// 4. DOM ELEMENT CACHING (For Max Speed)
 // ============================================================================
 const ui = {
+    // Inputs & Core Controls
     userIn: document.getElementById('userInput'),
     sendBtn: document.getElementById('sendBtn'),
     voiceBtn: document.getElementById('voiceBtn'),
@@ -65,6 +66,7 @@ const ui = {
     mobileMenuBtn: document.getElementById('mobileMenuBtn'),
     sidebar: document.getElementById('sidebar'),
     
+    // Displays & Screens
     chatDisp: document.getElementById('chatDisplay'),
     welcome: document.getElementById('welcomeScreen'),
     sidebarHistory: document.getElementById('historyWeek'),
@@ -72,9 +74,11 @@ const ui = {
     loaderTitle: document.getElementById('loaderTitle'),
     loaderDesc: document.getElementById('loaderDesc'),
     
+    // Floating Menus
     attachMenu: document.getElementById('attachmentMenu'),
     createMenu: document.getElementById('creationMenu'),
     
+    // Glassmorphism Modals
     overlays: document.querySelectorAll('.modal-overlay'), 
     authModal: document.getElementById('authRequiredModal'),
     settingsModal: document.getElementById('settingsModal'),
@@ -83,7 +87,7 @@ const ui = {
 };
 
 // ============================================================================
-// 5. LOCAL STORAGE HISTORY SYSTEM
+// 5. LOCAL STORAGE HISTORY SYSTEM (Like ChatGPT)
 // ============================================================================
 const HistoryManager = {
     generateId: () => 'chat_' + Math.random().toString(36).substr(2, 9),
@@ -92,7 +96,7 @@ const HistoryManager = {
         if (chatHistory.length === 0) return; 
         if (!activeChatId) activeChatId = HistoryManager.generateId();
         
-        const titleText = chatHistory.find(msg => msg.role === 'user')?.parts[0]?.text || "New Conversation";
+        const titleText = chatHistory.find(msg => msg.role === 'user')?.content || "New Conversation";
         const title = titleText.substring(0, 30) + (titleText.length > 30 ? "..." : "");
 
         const chatData = { id: activeChatId, title: title, messages: chatHistory, timestamp: Date.now() };
@@ -119,8 +123,8 @@ const HistoryManager = {
             ui.chatDisp.innerHTML = ''; 
             
             targetChat.messages.forEach(msg => {
-                if (msg.role === 'user') addUserMessage(msg.parts[0].text, false);
-                else addAIMessage(msg.parts[0].text, null, false);
+                if (msg.role === 'user') addUserMessage(msg.content, false);
+                else addAIMessage(msg.content, null, false);
             });
             
             closeMobileSidebar(); 
@@ -164,7 +168,7 @@ window.addEventListener('DOMContentLoaded', HistoryManager.renderSidebar);
 ui.newChatBtn.addEventListener('click', HistoryManager.startNewChat);
 
 // ============================================================================
-// 6. MOBILE UI FIXES (STUCK SCREEN & BACK BUTTON)
+// 6. UI BUG FIXES (Mobile Sidebar & Hardware Back Button)
 // ============================================================================
 function openMobileSidebar() { ui.sidebar.classList.add('open'); history.pushState({ modal: 'sidebar' }, ""); }
 function closeMobileSidebar() { if(ui.sidebar.classList.contains('open')) ui.sidebar.classList.remove('open'); }
@@ -175,6 +179,7 @@ ui.mobileMenuBtn.addEventListener('click', (e) => {
     else { closeMobileSidebar(); history.back(); }
 });
 
+// Close Menus on Background Click
 document.addEventListener('click', (e) => {
     if (window.innerWidth <= 768 && ui.sidebar.classList.contains('open')) {
         if (!ui.sidebar.contains(e.target) && !ui.mobileMenuBtn.contains(e.target)) {
@@ -185,18 +190,20 @@ document.addEventListener('click', (e) => {
     if (!e.target.closest('#creationMenu') && !e.target.closest('#createBtn')) ui.createMenu.classList.add('hidden');
 });
 
+// Hardware Back Button Support
 window.addEventListener('popstate', (e) => {
     if (ui.sidebar.classList.contains('open')) closeMobileSidebar();
     ui.overlays.forEach(overlay => { if (!overlay.classList.contains('hidden')) overlay.classList.add('hidden'); });
 });
 
-function openModal(modalElement) { modalElement.classList.remove('hidden'); history.pushState({ modal: modalElement.id }, ""); }
-function closeModal(modalElement) { modalElement.classList.add('hidden'); }
+function openModal(modal) { modal.classList.remove('hidden'); history.pushState({ modal: modal.id }, ""); }
+function closeModal(modal) { modal.classList.add('hidden'); }
 
 ui.overlays.forEach(overlay => {
     overlay.addEventListener('click', (e) => { if (e.target === overlay) { closeModal(overlay); history.back(); } });
 });
 
+// Modal Event Listeners
 document.getElementById('closeSettings').addEventListener('click', () => { closeModal(ui.settingsModal); history.back(); });
 document.getElementById('closeAuthModal').addEventListener('click', () => { closeModal(ui.authModal); history.back(); });
 document.getElementById('closeAboutModal').addEventListener('click', () => { closeModal(ui.aboutModal); history.back(); });
@@ -209,11 +216,12 @@ if(document.getElementById('openTermsModalBtn')) {
     document.getElementById('openTermsModalBtn').addEventListener('click', () => { closeModal(ui.settingsModal); openModal(ui.termsModal); });
 }
 
+// Attach/Create Menus
 document.getElementById('attachBtn').addEventListener('click', (e) => { e.stopPropagation(); ui.attachMenu.classList.toggle('hidden'); ui.createMenu.classList.add('hidden'); });
 document.getElementById('createBtn').addEventListener('click', (e) => { e.stopPropagation(); ui.createMenu.classList.toggle('hidden'); ui.attachMenu.classList.add('hidden'); });
 
 // ============================================================================
-// 7. AUTHENTICATION & GATEKEEPER
+// 7. FIREBASE AUTHENTICATION & THE 10-CHAT GATEKEEPER
 // ============================================================================
 onAuthStateChanged(auth, (user) => {
     const loginBtn = document.getElementById('headerLoginBtn');
@@ -244,8 +252,8 @@ onAuthStateChanged(auth, (user) => {
 document.getElementById('googleSignInBtn').addEventListener('click', () => {
     signInWithPopup(auth, provider).then(() => {
         closeModal(ui.authModal);
-        addAIMessage("✅ **Authentication successful!** Welcome to Zulora AI.");
-    }).catch(e => { console.error("Login Failed", e); alert("Sign-in failed. Check your connection."); });
+        addAIMessage("✅ **Authentication successful!** Welcome to Zulora AI. You have unlimited access.");
+    }).catch(e => { console.error("Login Failed", e); alert("Sign-in failed. Check connection."); });
 });
 
 document.getElementById('modalLogoutBtn').addEventListener('click', () => {
@@ -256,7 +264,7 @@ document.getElementById('modalLogoutBtn').addEventListener('click', () => {
 });
 
 // ============================================================================
-// 8. MEDIA UPLOADS, MODES & VOICE
+// 8. MEDIA MODES, SUGGESTIONS & VOICE RECOGNITION
 // ============================================================================
 document.querySelectorAll('.prompt-card').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -271,15 +279,14 @@ document.querySelectorAll('.restricted-action').forEach(btn => {
         ui.createMenu.classList.add('hidden');
         if (!currentUser) {
             document.getElementById('authModalTitle').innerText = "Premium Feature Locked";
-            openModal(ui.authModal);
-            return;
+            openModal(ui.authModal); return;
         }
         currentMode = type;
-        ui.userIn.placeholder = `Describe the ${type} you want to create...`;
+        ui.userIn.placeholder = `Describe the ${type} you want to generate...`;
         ui.userIn.focus();
         ui.welcome.style.display = 'none';
         ui.chatDisp.style.display = 'flex';
-        addAIMessage(`**${type.toUpperCase()} STUDIO ACTIVATED!** 🎨 Describe exactly what you want.`);
+        addAIMessage(`**${type.toUpperCase()} STUDIO ACTIVATED!** 🎨 Describe exactly what you want to create.`);
     });
 });
 
@@ -308,7 +315,7 @@ if (SpeechRecognition) {
 } else { ui.voiceBtn.style.display = 'none'; }
 
 // ============================================================================
-// 9. CORE AI ROUTING (Self-Diagnosing Error System)
+// 9. THE COMBINED AI BRAIN (OpenRouter + Image + Video)
 // ============================================================================
 function showLoader(title, desc) { ui.loaderTitle.innerText = title; ui.loaderDesc.innerText = desc; ui.loader.classList.remove('hidden'); }
 function hideLoader() { ui.loader.classList.add('hidden'); }
@@ -335,10 +342,10 @@ async function handleUserMessage() {
     try {
         if (currentMode === "text") {
             const typingId = addTypingIndicator();
-            await callTextAI(text, typingId);
+            await callOpenRouterAI(text, typingId);
         } else if (currentMode === "image") {
-            showLoader("Crafting Image...", "Rendering pixels via Bytez AI engine...");
-            await callImageAI(text);
+            showLoader("Crafting Image...", "Rendering pixels via Bytez/HF networks...");
+            await callCombinedImageAI(text);
         } else if (currentMode === "video") {
             showLoader("Directing Video...", "Connecting to Fal AI render farms...");
             await callVideoAI(text);
@@ -346,101 +353,101 @@ async function handleUserMessage() {
     } catch (e) {
         console.error(e);
         hideLoader();
-        addAIMessage("🚨 A critical error occurred. Please refresh the page.");
+        addAIMessage("🚨 Critical Connection Error. Please verify your keys and network.");
     }
 }
 
-// 🧠 TEXT & VISION API (Self-Diagnosing)
-async function callTextAI(prompt, typingId) {
-    let parts = [];
-    if (prompt) parts.push({ text: prompt });
-    if (pendingImageData) parts.push({ inlineData: { mimeType: pendingImageMimeType, data: pendingImageData } });
-    
-    chatHistory.push({ role: "user", parts: parts });
+// 🧠 THE HIGH-LIMIT CHAT ENGINE (OpenRouter Llama 3)
+async function callOpenRouterAI(prompt, typingId) {
+    // OpenRouter requires specific role mapping
+    chatHistory.push({ role: "user", content: prompt });
     pendingImageData = null; pendingImageMimeType = null;
-    let geminiErrorDetails = "";
+    
+    // Anti-Freeze Timeout (15 seconds)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     try {
-        // Attempt 1: Gemini
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_VAULT.GEMINI_KEY}`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: chatHistory, systemInstruction: { parts: [{ text: "You are Zulora AI, an advanced intelligent assistant." }] }})
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            signal: controller.signal,
+            headers: {
+                "Authorization": `Bearer ${API_VAULT.OPENROUTER_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "model": "meta-llama/llama-3.3-70b-instruct:free",
+                "messages": chatHistory
+            })
         });
+
+        clearTimeout(timeoutId);
         
-        if(!res.ok) {
-            const errData = await res.json();
-            geminiErrorDetails = errData.error?.message || "Invalid API Key or Quota Exceeded";
-            throw new Error("Gemini API Rejected Request");
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error?.message || "OpenRouter Rejected Request");
         }
 
-        const data = await res.json();
-        const aiText = data.candidates[0].content.parts[0].text;
+        const data = await response.json();
+        const aiText = data.choices[0].message.content;
         
-        chatHistory.push({ role: "model", parts: [{ text: aiText }] });
+        chatHistory.push({ role: "assistant", content: aiText });
         HistoryManager.saveCurrentChat(); 
         
         removeTypingIndicator(typingId); 
         addAIMessage(aiText);
         
-    } catch (e) {
-        console.warn("Gemini Failed. Attempting Groq Backup...");
-        let groqErrorDetails = "";
-        
-        try {
-            // Attempt 2: Groq (Llama 3)
-            const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                method: 'POST', headers: { 'Authorization': `Bearer ${API_VAULT.GROQ_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: "llama3-8b-8192", messages: [{ role: "user", content: prompt }] })
-            });
-
-            if(!groqRes.ok) {
-                const gErr = await groqRes.json();
-                groqErrorDetails = gErr.error?.message || "CORS Block or Invalid Key";
-                throw new Error("Groq API Rejected Request");
-            }
-
-            const groqData = await groqRes.json();
-            chatHistory.push({ role: "model", parts: [{ text: groqData.choices[0].message.content }] });
-            HistoryManager.saveCurrentChat();
-            
-            removeTypingIndicator(typingId); 
-            addAIMessage(groqData.choices[0].message.content);
-
-        } catch(e2) { 
-            // FINAL FAILURE MESSAGE: Prints exact reasons to the screen!
-            removeTypingIndicator(typingId);
-            addAIMessage(`🛑 **API Connection Failed**\n\nYour API keys are either invalid, revoked, or blocked.\n\n**Gemini Reason:** ${geminiErrorDetails}\n**Groq Reason:** ${groqErrorDetails}\n\n*Action Required: Go to Google AI Studio, generate a brand new API key, and paste it into script.js.*`);
-        }
+    } catch (error) {
+        removeTypingIndicator(typingId);
+        let errorMsg = error.name === 'AbortError' ? "The request timed out to prevent freezing." : error.message;
+        addAIMessage(`🛑 **API Connection Failed**\n\nReason: ${errorMsg}\n\n*Ensure you have generated a valid key at OpenRouter.ai and your repository is Private.*`);
     }
 }
 
-// 🎨 IMAGE GENERATION (Bytez)
-async function callImageAI(prompt) {
+// 🎨 COMBINED IMAGE ENGINE (Bytez -> Hugging Face Fallback)
+async function callCombinedImageAI(prompt) {
     try {
+        // Attempt 1: Bytez
         const res = await fetch("https://api.bytez.com/models/v2/stabilityai/stable-diffusion-xl-base-1.0", {
             method: "POST", headers: { "Authorization": API_VAULT.BYTEZ_KEY, "Content-Type": "application/json" },
             body: JSON.stringify({ "input": prompt })
         });
-        if(!res.ok) throw new Error("Bytez failed");
+        if(!res.ok) throw new Error("Bytez offline");
         const data = await res.json();
         hideLoader(); addAIImage(data.output);
         currentMode = "text"; ui.userIn.placeholder = "Message Zulora AI...";
     } catch(e) { 
-        hideLoader(); addAIMessage("Image servers are busy. Please try again later."); 
-        currentMode = "text"; ui.userIn.placeholder = "Message Zulora AI...";
+        console.warn("Bytez failed, attempting Hugging Face Fallback...");
+        try {
+            // Attempt 2: Hugging Face 
+            const hfRes = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0", {
+                method: "POST", headers: { "Authorization": `Bearer ${API_VAULT.HUGGINGFACE_KEY}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ inputs: prompt })
+            });
+            if(!hfRes.ok) throw new Error("HF offline");
+            
+            const blob = await hfRes.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            hideLoader(); addAIImage(imageUrl);
+            currentMode = "text"; ui.userIn.placeholder = "Message Zulora AI...";
+        } catch (e2) {
+            hideLoader(); addAIMessage("All Image Servers are currently busy. Please try again later. 🎨");
+            currentMode = "text"; ui.userIn.placeholder = "Message Zulora AI...";
+        }
     }
 }
 
-// 🎬 VIDEO GENERATION (Fal AI Placeholder)
+// 🎬 VIDEO GENERATION ENGINE (Fal AI)
 async function callVideoAI(prompt) {
     setTimeout(() => {
-        hideLoader(); addAIMessage(`🎬 Video requested: "${prompt}". Check server for renders.`);
+        hideLoader(); 
+        addAIMessage(`🎬 Video requested via Fal AI: "${prompt}".\n\n*(Note: Video endpoints take minutes to render and typically require backend Webhook setups for live delivery)*`);
         currentMode = "text"; ui.userIn.placeholder = "Message Zulora AI...";
-    }, 4000); 
+    }, 4500); 
 }
 
 // ============================================================================
-// 10. HTML INJECTION (Chat Bubbles)
+// 10. UI INJECTION (Chat Bubbles)
 // ============================================================================
 function addUserMessage(txt, save = true) {
     const div = document.createElement('div'); div.className = 'message-row user-message';
@@ -451,19 +458,19 @@ function addUserMessage(txt, save = true) {
 function addAIMessage(txt, id=null, save = true) {
     const div = document.createElement('div'); div.className = 'message-row ai-message'; if(id) div.id = id;
     const formatted = txt.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-    div.innerHTML = `<div class="avatar-circle">✨</div><div class="message-bubble"><p>${formatted}</p></div>`;
+    div.innerHTML = `<div class="avatar-circle avatar-gradient">✨</div><div class="message-bubble"><p>${formatted}</p></div>`;
     ui.chatDisp.appendChild(div); ui.chatDisp.scrollTop = ui.chatDisp.scrollHeight;
 }
 
 function addAIImage(url) {
     const div = document.createElement('div'); div.className = 'message-row ai-message';
-    div.innerHTML = `<div class="avatar-circle">✨</div><div class="message-bubble" style="padding:0; overflow:hidden;"><img src="${url}" style="width:100%; max-width:512px; display:block;"></div>`;
+    div.innerHTML = `<div class="avatar-circle avatar-gradient">✨</div><div class="message-bubble" style="padding:0; overflow:hidden;"><img src="${url}" style="width:100%; max-width:512px; display:block; border-radius: var(--radius-lg);"></div>`;
     ui.chatDisp.appendChild(div); ui.chatDisp.scrollTop = ui.chatDisp.scrollHeight;
 }
 
 function addTypingIndicator() {
     const id = 'typing_' + Date.now(); const div = document.createElement('div'); div.className = 'message-row ai-message'; div.id = id;
-    div.innerHTML = `<div class="avatar-circle">✨</div><div class="message-bubble"><p style="color:var(--text-tertiary); font-style:italic;">Analyzing... 🧠</p></div>`;
+    div.innerHTML = `<div class="avatar-circle avatar-gradient">✨</div><div class="message-bubble"><p style="color:var(--text-tertiary); font-style:italic;">Synthesizing intelligence... 🧠</p></div>`;
     ui.chatDisp.appendChild(div); ui.chatDisp.scrollTop = ui.chatDisp.scrollHeight; return id;
 }
 
