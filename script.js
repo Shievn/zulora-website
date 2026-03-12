@@ -33,7 +33,7 @@ const provider = new GoogleAuthProvider();
 // ============================================================================
 const API_VAULT = {
     // 🧠 CHAT API (Handles 1000-2000 free requests/day)
-    OPENROUTER_KEY: "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",        
+    OPENROUTER_KEY: "AIzaSyDLpIjYviYTAk88OSzcnnCwNeM-VuoVsx4",        
     
     // 🎨 IMAGE APIs (Combined Fallback System)
     BYTEZ_KEY: "bd158e918937e6d244745ab82125e03a",                  
