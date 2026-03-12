@@ -2,7 +2,7 @@
  * ============================================================================
  * ZULORA AI - MASTER JAVASCRIPT ENGINE (v6.0 - The Beast Mode Update)
  * Lead Architect: Shiven Panwar
- * Core Features: OpenRouter High-Limit Integration, Multi-API Fallbacks, 
+ * Core Features: GEMINI_KEY High-Limit Integration, Multi-API Fallbacks, 
  * Local History Saving, Anti-Freeze UI, and Glassmorphism Event Listeners.
  * ============================================================================
  */
@@ -33,7 +33,7 @@ const provider = new GoogleAuthProvider();
 // ============================================================================
 const API_VAULT = {
     // 🧠 CHAT API (Handles 1000-2000 free requests/day)
-    OPENROUTER_KEY: "AIzaSyDLpIjYviYTAk88OSzcnnCwNeM-VuoVsx4",        
+    GEMINI_KEY_KEY: "AIzaSyDAwV5DurXKk7W7NsYzYzKcqRJCCnDoTs4",        
     
     // 🎨 IMAGE APIs (Combined Fallback System)
     BYTEZ_KEY: "bd158e918937e6d244745ab82125e03a",                  
@@ -315,7 +315,7 @@ if (SpeechRecognition) {
 } else { ui.voiceBtn.style.display = 'none'; }
 
 // ============================================================================
-// 9. THE COMBINED AI BRAIN (OpenRouter + Image + Video)
+// 9. THE COMBINED AI BRAIN (GEMINI_KEY + Image + Video)
 // ============================================================================
 function showLoader(title, desc) { ui.loaderTitle.innerText = title; ui.loaderDesc.innerText = desc; ui.loader.classList.remove('hidden'); }
 function hideLoader() { ui.loader.classList.add('hidden'); }
@@ -342,7 +342,7 @@ async function handleUserMessage() {
     try {
         if (currentMode === "text") {
             const typingId = addTypingIndicator();
-            await callOpenRouterAI(text, typingId);
+            await callGEMINI_KEYAI(text, typingId);
         } else if (currentMode === "image") {
             showLoader("Crafting Image...", "Rendering pixels via Bytez/HF networks...");
             await callCombinedImageAI(text);
@@ -357,9 +357,9 @@ async function handleUserMessage() {
     }
 }
 
-// 🧠 THE HIGH-LIMIT CHAT ENGINE (OpenRouter Llama 3)
-async function callOpenRouterAI(prompt, typingId) {
-    // OpenRouter requires specific role mapping
+// 🧠 THE HIGH-LIMIT CHAT ENGINE (GEMINI_KEY Llama 3)
+async function callGEMINI_KEYAI(prompt, typingId) {
+    // GEMINI_KEY requires specific role mapping
     chatHistory.push({ role: "user", content: prompt });
     pendingImageData = null; pendingImageMimeType = null;
     
@@ -368,11 +368,11 @@ async function callOpenRouterAI(prompt, typingId) {
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     try {
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        const response = await fetch("https://GEMINI_KEY.ai/api/v1/chat/completions", {
             method: "POST",
             signal: controller.signal,
             headers: {
-                "Authorization": `Bearer ${API_VAULT.OPENROUTER_KEY}`,
+                "Authorization": `Bearer ${API_VAULT.GEMINI_KEY_KEY}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
@@ -385,7 +385,7 @@ async function callOpenRouterAI(prompt, typingId) {
         
         if (!response.ok) {
             const err = await response.json();
-            throw new Error(err.error?.message || "OpenRouter Rejected Request");
+            throw new Error(err.error?.message || "GEMINI_KEY Rejected Request");
         }
 
         const data = await response.json();
@@ -400,7 +400,7 @@ async function callOpenRouterAI(prompt, typingId) {
     } catch (error) {
         removeTypingIndicator(typingId);
         let errorMsg = error.name === 'AbortError' ? "The request timed out to prevent freezing." : error.message;
-        addAIMessage(`🛑 **API Connection Failed**\n\nReason: ${errorMsg}\n\n*Ensure you have generated a valid key at OpenRouter.ai and your repository is Private.*`);
+        addAIMessage(`🛑 **API Connection Failed**\n\nReason: ${errorMsg}\n\n*Ensure you have generated a valid key at GEMINI_KEY.ai and your repository is Private.*`);
     }
 }
 
